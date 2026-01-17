@@ -18,6 +18,7 @@ const LeafletHeatmap = dynamic(
 );
 import { CloudinaryUpload } from '@/components/ui/cloudinary-upload';
 import { FeedbackForm } from '@/components/FeedbackForm';
+import { ShareButtons } from '@/components/ShareButtons';
 import { ref, onValue } from "firebase/database";
 import { db as firebaseDb } from "@/lib/firebase";
 
@@ -364,7 +365,7 @@ export default function CitizenPortal() {
                   File Report
                 </button>
 
-              
+
                 <button
                   onClick={() => setShowTrackModal(true)}
                   className="px-4 py-2 text-sm font-semibold rounded-md transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50"
@@ -642,18 +643,30 @@ export default function CitizenPortal() {
                           </div>
 
                           {/* Alert Footer */}
-                          <div className="px-5 pb-5 flex items-center justify-between text-sm">
-                            <div className="flex items-center gap-4">
-                              <span className="flex items-center gap-2 text-slate-600">
-                                <Clock size={16} /> {new Date(alert.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                              </span>
-                              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${alert.source === 'camera' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-slate-100 text-slate-700 border border-slate-200'}`}>
-                                {alert.source === 'camera' ? 'AI Camera' : 'Citizen'}
+                          <div className="px-5 pb-5">
+                            <div className="flex items-center justify-between text-sm mb-3">
+                              <div className="flex items-center gap-4">
+                                <span className="flex items-center gap-2 text-slate-600">
+                                  <Clock size={16} /> {new Date(alert.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${alert.source === 'camera' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-slate-100 text-slate-700 border border-slate-200'}`}>
+                                  {alert.source === 'camera' ? 'AI Camera' : 'Citizen'}
+                                </span>
+                              </div>
+                              <span className={`px-3 py-1.5 rounded-full text-xs font-semibold ${alert.status === AlertStatus.PENDING ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
+                                {alert.status || 'PENDING'}
                               </span>
                             </div>
-                            <span className={`px-3 py-1.5 rounded-full text-xs font-semibold ${alert.status === AlertStatus.PENDING ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
-                              {alert.status || 'PENDING'}
-                            </span>
+
+                            {/* Share Buttons */}
+                            <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                              <span className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Share</span>
+                              <ShareButtons
+                                reportId={alert.id}
+                                title={`${alert.type} at ${alert.location}`}
+                                description={alert.description}
+                              />
+                            </div>
                           </div>
                         </div>
                       ))}

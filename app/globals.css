@@ -472,3 +472,7 @@ button {
   -webkit-text-fill-color: transparent;
   animation: blueGradient 3s ease-in-out infinite;
 }
+
+input {
+  border-radius: 1rem;
+}

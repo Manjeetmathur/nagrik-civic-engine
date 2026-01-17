@@ -23,6 +23,7 @@ import { CldUploadButton } from "next-cloudinary"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { toast } from "sonner"
+import { MapActionButtons } from "@/components/MapActionButtons"
 
 interface Report {
     id: string
@@ -168,6 +169,92 @@ const columns: ColumnDef<Report>[] = [
                     : "px-2 py-1 rounded text-xs font-semibold bg-green-50 text-green-600 border border-green-100"
 
             return <div className={confidenceClass}>{confidence}%</div>
+        },
+    },
+    {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => {
+            const report = row.original
+            const [isOpen, setIsOpen] = useState(false)
+
+            const openGoogleMaps = (mode: 'driving' | 'walking') => {
+                const url = `https://www.google.com/maps/dir/?api=1&destination=${report.latitude},${report.longitude}&travelmode=${mode}`;
+                window.open(url, '_blank');
+                setIsOpen(false);
+            };
+
+            const openSatelliteView = () => {
+                const url = `https://www.google.com/maps/@${report.latitude},${report.longitude},18z/data=!3m1!1e3`;
+                window.open(url, '_blank');
+                setIsOpen(false);
+            };
+
+            const dropPinAndShare = () => {
+                const url = `https://www.google.com/maps/place/${report.latitude},${report.longitude}/@${report.latitude},${report.longitude},17z`;
+                window.open(url, '_blank');
+                setIsOpen(false);
+            };
+
+            const findNearest = (query: string) => {
+                const url = `https://www.google.com/maps/search/${encodeURIComponent(query)}/@${report.latitude},${report.longitude},15z`;
+                window.open(url, '_blank');
+                setIsOpen(false);
+            };
+
+            return (
+                <div className="relative">
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-xs font-medium flex items-center gap-1"
+                    >
+                        <span>Map Actions</span>
+                        <svg className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    {isOpen && (
+                        <>
+                            <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
+                            <div className="absolute right-0 mt-1 w-56 bg-white rounded-lg shadow-xl border border-slate-200 py-1 z-20">
+                                <div className="px-3 py-2 border-b border-slate-100">
+                                    <p className="text-xs font-semibold text-slate-700">Navigation</p>
+                                </div>
+                                <button onClick={() => openGoogleMaps('driving')} className="w-full px-3 py-2 text-left text-sm hover:bg-blue-50 flex items-center gap-2 text-slate-700 hover:text-blue-600">
+                                    <span className="text-blue-600">🧭</span> Navigate (Driving)
+                                </button>
+                                <button onClick={() => openGoogleMaps('walking')} className="w-full px-3 py-2 text-left text-sm hover:bg-emerald-50 flex items-center gap-2 text-slate-700 hover:text-emerald-600">
+                                    <span className="text-emerald-600">🚶</span> Navigate (Walking)
+                                </button>
+
+                                <div className="px-3 py-2 border-b border-t border-slate-100 mt-1">
+                                    <p className="text-xs font-semibold text-slate-700">View Options</p>
+                                </div>
+                                <button onClick={openSatelliteView} className="w-full px-3 py-2 text-left text-sm hover:bg-purple-50 flex items-center gap-2 text-slate-700 hover:text-purple-600">
+                                    <span className="text-purple-600">🛰️</span> Satellite View
+                                </button>
+                                <button onClick={dropPinAndShare} className="w-full px-3 py-2 text-left text-sm hover:bg-cyan-50 flex items-center gap-2 text-slate-700 hover:text-cyan-600">
+                                    <span className="text-cyan-600">📍</span> Drop Pin & Share
+                                </button>
+
+                                <div className="px-3 py-2 border-b border-t border-slate-100 mt-1">
+                                    <p className="text-xs font-semibold text-slate-700">Emergency Services</p>
+                                </div>
+                                <button onClick={() => findNearest('hospital')} className="w-full px-3 py-2 text-left text-sm hover:bg-red-50 flex items-center gap-2 text-slate-700 hover:text-red-600">
+                                    <span className="text-red-600">🏥</span> Nearest Hospital
+                                </button>
+                                <button onClick={() => findNearest('fire station')} className="w-full px-3 py-2 text-left text-sm hover:bg-orange-50 flex items-center gap-2 text-slate-700 hover:text-orange-600">
+                                    <span className="text-orange-600">🚒</span> Nearest Fire Station
+                                </button>
+                                <button onClick={() => findNearest('police station')} className="w-full px-3 py-2 text-left text-sm hover:bg-indigo-50 flex items-center gap-2 text-slate-700 hover:text-indigo-600">
+                                    <span className="text-indigo-600">🚓</span> Nearest Police Station
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            )
         },
     },
 ]
