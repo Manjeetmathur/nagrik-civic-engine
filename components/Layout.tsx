@@ -69,7 +69,7 @@ const Layout: React.FC<LayoutProps> = ({
                                 <ShieldAlert size={20} />
                             </div>
                             <h1 className="font-bold text-zinc-900 tracking-tight">
-                                Nagar <span className="text-indigo-600">Admin</span>
+                                Nagrik <span className="text-indigo-600">Admin</span>
                             </h1>
                         </div>
                         <button

@@ -26,7 +26,7 @@ export default function AdminLogin() {
                         <ShieldAlert size={32} />
                     </div>
                     <h2 className="text-2xl font-bold text-zinc-900 mb-2">Admin Login</h2>
-                    <p className="text-sm text-zinc-500">Access the Nagar Safety Dashboard</p>
+                    <p className="text-sm text-zinc-900">Access the Nagrik Civic Dashboard</p>
                 </div>
 
                 <form onSubmit={handleLogin} className="space-y-4">
