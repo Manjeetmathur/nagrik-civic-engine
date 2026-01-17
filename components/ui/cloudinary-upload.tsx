@@ -12,7 +12,7 @@ interface CloudinaryUploadProps {
 export function CloudinaryUpload({ onUploadSuccess, currentImage }: CloudinaryUploadProps) {
     return (
         <CldUploadWidget
-            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""}
+            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
             onSuccess={(result: any) => {
                 if (result.info && result.info.secure_url) {
                     onUploadSuccess(result.info.secure_url);

@@ -4,6 +4,8 @@ import Spline from "@splinetool/react-spline";
 import { useEffect, useRef, useState } from "react";
 import words from "./words";
 import { SpeechStressAnalyzer, SpeechMetrics } from "@/utils/speech-stress-analyzer";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 type Status =
   | "locked"
@@ -14,6 +16,7 @@ type Status =
   | "error";
 
 export default function Counter() {
+  const router = useRouter();
   const [splineKey, setSplineKey] = useState(0);
   const recognitionRef = useRef<any>(null);
   const splineRef = useRef<any>(null);
@@ -76,7 +79,7 @@ export default function Counter() {
         else interimText += t;
       }
       setInterim(interimText);
-      
+
       // Real-time stress analysis on ALL speech (interim + final)
       const allText = interimText + final;
       if (allText.trim()) {
@@ -85,7 +88,7 @@ export default function Counter() {
           final.length > 0
         );
         setStressMetrics(metrics);
-        
+
         // Check for early warning trigger
         if (stressAnalyzerRef.current.shouldTriggerEarlyWarning(metrics)) {
           const warningKey = `early-${Date.now()}`;
@@ -96,7 +99,7 @@ export default function Counter() {
           }
         }
       }
-      
+
       if (final) {
         const detected: { word: string; desc: string }[] = [];
         Object.keys(words).forEach((key: any) => {
@@ -150,9 +153,9 @@ export default function Counter() {
   };
   const triggerAlert = async (alert: { word: string; desc: string }) => {
     if (!location || !stressMetrics) return;
-  
+
     try {
-      await fetch("/api/report", {
+      await fetch("/api/report2", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -160,13 +163,13 @@ export default function Counter() {
         body: JSON.stringify({
           keyword: alert.word,
           description: alert.desc,
-  
+
           category: "OTHER",
           severity: stressMetrics.confidence >= 60 ? "HIGH" : "MEDIUM",
-  
+
           latitude: (location as any).lat,
           longitude: (location as any).lng,
-  
+
           // ✅ THIS IS WHAT BACKEND WANTS
           speechStressData: {
             wordsPerSecond: stressMetrics.wordsPerSecond,
@@ -182,7 +185,7 @@ export default function Counter() {
       console.error("Failed to send report:", err);
     }
   };
-  
+
 
   const triggerEarlyWarning = async (metrics: SpeechMetrics) => {
     if (!location) return;
@@ -230,8 +233,6 @@ export default function Counter() {
       z-99
     "
       />
-
-
       <div
         className={`
       absolute 
@@ -262,8 +263,17 @@ export default function Counter() {
       transition-all
       animate-float
       ${alerts.length > 0 ? "bg-red-600/30" : "bg-blue-800/30"}
+        ${alerts.length > 0 ? "bg-red-600/30" : "bg-blue-800/30"}
     `}
       />
+
+      <button
+        onClick={() => router.back()}
+        className="absolute top-8 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2 px-5 py-2.5 bg-zinc-900/50 hover:bg-zinc-900/80 backdrop-blur-md rounded-full text-sm font-bold transition-all border border-white/10 hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
+      >
+        <ArrowLeft size={16} />
+        <span>Exit Voice Mode</span>
+      </button>
 
 
       <div className="text-xs text-gray-500 absolute right-0 p-5 bottom-0 z-50 bg-black space-y-1">
