@@ -64,13 +64,14 @@ const Layout: React.FC<LayoutProps> = ({
                 <div className="h-full flex flex-col">
                     {/* Logo */}
                     <div className="p-6 border-b border-zinc-100 flex items-center justify-between">
-                        <div className="flex items-center gap-2.5">
-                            <div className="bg-zinc-900 p-1.5 rounded-none text-white">
-                                <ShieldAlert size={20} />
+                        <div className="flex ">
+                            <div className="mt-1">
+                                <img
+                                    src="/logo.png"
+                                    alt="Nagrik Logo"
+                                    className="object-cover h-16"
+                                />
                             </div>
-                            <h1 className="font-bold text-zinc-900 tracking-tight">
-                                Nagar <span className="text-indigo-600">Admin</span>
-                            </h1>
                         </div>
                         <button
                             onClick={() => setSidebarOpen(false)}

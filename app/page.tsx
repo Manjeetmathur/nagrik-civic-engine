@@ -164,7 +164,7 @@ export default function CitizenPortal() {
                   <img
                     src="/logo.png"
                     alt="Nagrik Logo"
-                    className="object-cover h-25"
+                    className="object-cover h-16"
                   />
                 </div>
               </div>
@@ -181,12 +181,6 @@ export default function CitizenPortal() {
                   className={`px-4 py-1.5 text-xs font-bold rounded-none transition-all flex items-center gap-2 ${activeTab === 'live' ? 'bg-white text-indigo-600 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
                 >
                   <Radio size={14} className={activeTab === 'live' ? 'animate-pulse' : ''} /> Area Updates
-                </button>
-                <button
-                  onClick={() => router.push('/voice')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-2 text-zinc-500 hover:text-zinc-700 `}
-                >
-                  <Mic size={14} /> Voice Recognition
                 </button>
               </nav>
 
