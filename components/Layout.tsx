@@ -153,7 +153,7 @@ const Layout: React.FC<LayoutProps> = ({
 
 
                 {/* Page content */}
-                <main className="flex-1 p-4 sm:p-8  overflow-auto">
+                <main className="flex-1 p-4 sm:p-8 overflow-y-auto">
                     <AnimatePresence mode="wait">
                         <PageTransition key={currentView}>
                             {children}

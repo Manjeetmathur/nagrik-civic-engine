@@ -151,21 +151,47 @@ const CameraMonitorCard: React.FC<CameraMonitorCardProps> = ({
             });
 
             if (topPrediction.probability > 0.7 && issueType) {
+                // Check if we already have a threat of this type
                 setPersistentThreat(prev => {
                     const now = Date.now();
+
+                    // 1. New or different threat detected
                     if (!prev || prev.type !== issueType) {
+                        console.log(`[AI Monitor: ${camera.name}] Observation begun for ${issueType.toUpperCase()}. Threshold: 30s.`);
                         return { type: issueType, startTime: now, hasAlerted: false };
                     }
+
+                    // 2. Already alerted
                     if (prev.hasAlerted) return prev;
-                    if (now - prev.startTime >= 30000) {
-                        api.submitDetection(camera.id, imageData, issueType, topPrediction.probability);
-                        setLastDetection(d => d ? { ...d, alertCreated: true, message: `Persistent Alert Created: ${issueType}` } : d);
+
+                    // 3. Check if threshold reached
+                    const elapsed = now - prev.startTime;
+                    if (elapsed >= 30000) {
+                        console.log(`[AI Monitor: ${camera.name}] PERSISTENCE MET (${Math.round(elapsed / 1000)}s). Executing submission...`);
+
+                        // Execute side effects OUTSIDE of the return to be safe, 
+                        // though better to do it in a cleanup or useEffect. 
+                        // But since we are in an interval-driven function, we'll trigger it here.
+                        // We set hasAlerted: true to prevent double-firing.
+                        setTimeout(() => {
+                            api.submitDetection(camera.id, imageData, issueType, topPrediction.probability);
+                            setLastDetection(d => d ? { ...d, alertCreated: true, message: `Persistent Alert Created: ${issueType}` } : d);
+                        }, 0);
+
                         return { ...prev, hasAlerted: true };
                     }
+
                     return prev;
                 });
-            } else if (topPrediction.probability < 0.5 || isNeutral) {
-                setPersistentThreat(null);
+            } else {
+                // Tighten: If confidence drops below 0.7 OR is neutral, we reset immediately.
+                // This prevents "flicker persistence" where a low-conf detection keeps the timer alive.
+                setPersistentThreat(prev => {
+                    if (prev) {
+                        console.log(`[AI Monitor: ${camera.name}] Observation reset (Low Confidence / Neutral).`);
+                    }
+                    return null;
+                });
             }
         } catch (error: any) {
             setAiError(`Detection error: ${error.message || error}`);
@@ -173,6 +199,7 @@ const CameraMonitorCard: React.FC<CameraMonitorCardProps> = ({
     };
 
     const startMonitoring = async () => {
+        if (monitoringIntervalRef.current || isMonitoring) return;
         if (camera.sourceType === 'webcam') {
             const success = await startWebcam();
             if (!success) return;
