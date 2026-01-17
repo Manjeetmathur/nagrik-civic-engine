@@ -72,5 +72,5 @@ export interface User {
   role: 'admin' | 'viewer';
 }
 
-export type View = 'dashboard' | 'alerts' | 'citizen-reports' | 'analytics' | 'cameras' | 'settings' | 'track-issue' | 'live-feed' | 'map' | 'voice-reports' | 'voice-analytics' | 'citizen-map' | 'feedback-reports' | 'air-quality';
+export type View = 'dashboard' | 'alerts' | 'citizen-reports' | 'analytics' | 'cameras' | 'settings' | 'track-issue' | 'live-feed' | 'map' | 'voice-reports' | 'voice-analytics' | 'citizen-map' | 'feedback-reports' | 'air-quality' | 'authority-contact';
 export type AppMode = 'citizen' | 'admin';
