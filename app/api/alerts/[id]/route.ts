@@ -28,6 +28,7 @@ export async function PATCH(
         const { id } = await params;
         const body = await request.json();
         const { status } = body;
+        console.log(`[PATCH] Updating alert ${id} to status: ${status}`);
 
         if (!Object.values(AlertStatus).includes(status)) {
             return NextResponse.json({ error: 'Invalid status' }, { status: 400 });

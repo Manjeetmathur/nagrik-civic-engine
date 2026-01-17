@@ -3,11 +3,12 @@ import { db } from '../../../../lib/server/db';
 
 export async function PATCH(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         const data = await request.json();
-        const updatedCamera = await db.updateCamera(params.id, data);
+        const updatedCamera = await db.updateCamera(id, data);
 
         if (!updatedCamera) {
             return NextResponse.json({ error: 'Camera not found' }, { status: 404 });

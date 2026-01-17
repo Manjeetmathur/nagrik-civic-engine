@@ -5,9 +5,9 @@ import { prisma } from '@/lib/prisma';
 const mapAlert = (a: any): Alert => ({
     ...a,
     timestamp: a.timestamp.toISOString(),
-    detections: a.detections ? JSON.parse(JSON.stringify(a.detections)) : undefined,
-    reporter: a.reporter ? JSON.parse(JSON.stringify(a.reporter)) : undefined,
-    feedback: a.feedback ? JSON.parse(JSON.stringify(a.feedback)) : undefined,
+    detections: a.detections ?? undefined,
+    reporter: a.reporter ?? undefined,
+    feedback: a.feedback ?? undefined,
     type: a.type as any,
     status: a.status as AlertStatus,
     source: a.source as 'camera' | 'citizen'
@@ -74,6 +74,7 @@ export const db = {
             });
             return mapAlert(updated);
         } catch (e) {
+            console.error("db.updateAlert error:", e);
             return null;
         }
     },
@@ -143,25 +144,21 @@ export const db = {
 
     // Analytics
     async getAnalyticsSummary() {
-        const totalIncidents = await prisma.alert.count();
-        const activeAlerts = await prisma.alert.count({
-            where: { status: AlertStatus.PENDING }
-        });
-
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const resolvedToday = await prisma.alert.count({
-            where: {
-                status: AlertStatus.RESOLVED,
-                timestamp: { gte: today }
-            }
-        });
-
-        const onlineCameras = await prisma.camera.count({
-            where: { status: 'online' }
-        });
-        const totalCameras = await prisma.camera.count();
+        const [totalIncidents, activeAlerts, resolvedToday, onlineCameras, totalCameras] = await Promise.all([
+            prisma.alert.count(),
+            prisma.alert.count({ where: { status: AlertStatus.PENDING } }),
+            prisma.alert.count({
+                where: {
+                    status: AlertStatus.RESOLVED,
+                    timestamp: { gte: today }
+                }
+            }),
+            prisma.camera.count({ where: { status: 'online' } }),
+            prisma.camera.count()
+        ]);
 
         return {
             stats: {

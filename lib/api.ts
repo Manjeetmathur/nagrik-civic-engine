@@ -8,7 +8,7 @@ class ApiService {
 
     private async probe(): Promise<boolean> {
         try {
-            const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(1000) });
+            const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(5000) });
             this.isLive = res.ok;
         } catch {
             this.isLive = false;
@@ -39,89 +39,71 @@ class ApiService {
     }
 
     async getAlerts(): Promise<{ data: Alert[], isLive: boolean }> {
-        const isLive = await this.probe();
-        if (isLive) {
-            try {
-                const res = await fetch(`${API_BASE}/alerts`);
-                if (!res.ok) throw new Error('Backend error');
+        try {
+            const res = await fetch(`${API_BASE}/alerts`);
+            if (res.ok) {
+                this.isLive = true;
                 return { data: await res.json(), isLive: true };
-            } catch (e) {
-                console.error("API Fetch Error:", e);
-                this.isLive = false;
             }
+        } catch (e) {
+            console.error("API Fetch Error:", e);
         }
+        this.isLive = false;
         return { data: [], isLive: false };
     }
 
     async getAlertById(id: string): Promise<Alert | null> {
-        const isLive = await this.probe();
-        if (isLive) {
-            try {
-                const res = await fetch(`${API_BASE}/alerts/${id}`);
-                if (res.ok) return await res.json();
-            } catch { }
-        }
+        try {
+            const res = await fetch(`${API_BASE}/alerts/${id}`);
+            if (res.ok) return await res.json();
+        } catch { }
         return null;
     }
 
     async submitReport(report: any): Promise<Alert | null> {
-        const isLive = await this.probe();
-        if (isLive) {
-            try {
-                const res = await fetch(`${API_BASE}/report`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(report)
-                });
-                if (res.ok) return await res.json();
-            } catch (e) {
-                console.error("Submit Report Error:", e);
-            }
+        try {
+            const res = await fetch(`${API_BASE}/report`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(report)
+            });
+            if (res.ok) return await res.json();
+        } catch (e) {
+            console.error("Submit Report Error:", e);
         }
         return null;
     }
 
     async updateStatus(id: string, status: AlertStatus): Promise<Alert | null> {
-        const isLive = await this.probe();
-        if (isLive) {
-            try {
-                const res = await fetch(`${API_BASE}/alerts/${id}`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status })
-                });
-                if (res.ok) return await res.json();
-                console.error("Update Status Failed", res.status, await res.text());
-            } catch (e) {
-                console.error("Update Status Exception", e);
-            }
-        } else {
-            console.warn("Backend not live, skipping updateStatus");
+        try {
+            const res = await fetch(`${API_BASE}/alerts/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            if (res.ok) return await res.json();
+            console.error("Update Status Failed", res.status, await res.text());
+        } catch (e) {
+            console.error("Update Status Exception", e);
         }
         return null;
     }
 
     async submitFeedback(id: string, rating: number, comment: string) {
-        const isLive = await this.probe();
-        if (isLive) {
-            try {
-                await fetch(`${API_BASE}/alerts/${id}/feedback`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ rating, comment })
-                });
-            } catch { }
-        }
+        try {
+            await fetch(`${API_BASE}/alerts/${id}/feedback`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rating, comment })
+            });
+        } catch { }
     }
 
     async getCameras(): Promise<Camera[]> {
-        const isLive = await this.probe();
-        if (isLive) {
-            try {
-                const res = await fetch(`${API_BASE}/cameras`);
-                if (res.ok) return await res.json();
-            } catch { }
-        }
+        try {
+            const res = await fetch(`${API_BASE}/cameras`);
+            if (res.ok) return await res.json();
+        } catch { }
         return [];
     }
 
@@ -130,43 +112,34 @@ class ApiService {
     }
 
     async addCamera(camera: Partial<Camera>): Promise<Camera | null> {
-        const isLive = await this.probe();
-        if (isLive) {
-            try {
-                const res = await fetch(`${API_BASE}/cameras`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(camera)
-                });
-                if (res.ok) return await res.json();
-            } catch { }
-        }
+        try {
+            const res = await fetch(`${API_BASE}/cameras`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(camera)
+            });
+            if (res.ok) return await res.json();
+        } catch { }
         return null;
     }
 
     async updateCamera(id: string, updates: Partial<Camera>): Promise<Camera | null> {
-        const isLive = await this.probe();
-        if (isLive) {
-            try {
-                const res = await fetch(`${API_BASE}/cameras/${id}`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(updates)
-                });
-                if (res.ok) return await res.json();
-            } catch { }
-        }
+        try {
+            const res = await fetch(`${API_BASE}/cameras/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updates)
+            });
+            if (res.ok) return await res.json();
+        } catch { }
         return null;
     }
 
     async getAnalyticsSummary(): Promise<any> {
-        const isLive = await this.probe();
-        if (isLive) {
-            try {
-                const res = await fetch(`${API_BASE}/analytics/summary`);
-                if (res.ok) return await res.json();
-            } catch { }
-        }
+        try {
+            const res = await fetch(`${API_BASE}/analytics/summary`);
+            if (res.ok) return await res.json();
+        } catch { }
         return {
             stats: { activeAlerts: 0, resolvedToday: 0, totalIncidents: 0, onlineCameras: 0, totalCameras: 0 },
             distribution: [],
@@ -176,17 +149,14 @@ class ApiService {
     }
 
     async submitDetection(cameraId: string, imageData: string, type: IssueType, confidence: number): Promise<any> {
-        const isLive = await this.probe();
-        if (isLive) {
-            try {
-                const res = await fetch(`${API_BASE}/camera/detect`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ cameraId, imageData, type, confidence })
-                });
-                return await res.json();
-            } catch { }
-        }
+        try {
+            const res = await fetch(`${API_BASE}/camera/detect`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cameraId, imageData, type, confidence })
+            });
+            return await res.json();
+        } catch { }
         return { success: false };
     }
 }
