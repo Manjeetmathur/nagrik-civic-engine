@@ -7,6 +7,7 @@ import Layout from '@/components/Layout';
 import { AdminCitizenMap } from '@/components/admin-citizen-map';
 import { MapPin, ChevronRight, ChevronLeft } from 'lucide-react';
 import { GoogleMapsIcon } from '@/components/GoogleMapsIcon';
+import { MapActionButtons } from '@/components/MapActionButtons';
 
 export default function AdminCitizenMapPage() {
     const router = useRouter();
@@ -134,6 +135,20 @@ export default function AdminCitizenMapPage() {
                                                         {alert.status}
                                                     </span>
                                                 </div>
+                                                <p className="text-xs text-slate-500 mb-2">
+                                                    {coords ? `${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}` : 'No coordinates'}
+                                                </p>
+
+                                                {/* Navigation Actions */}
+                                                {coords && (
+                                                    <div className="mb-3">
+                                                        <MapActionButtons
+                                                            latitude={coords.lat}
+                                                            longitude={coords.lng}
+                                                            location={alert.type}
+                                                        />
+                                                    </div>
+                                                )}
                                                 <p className="text-sm font-semibold text-zinc-900 mb-0.5">{alert.type}</p>
                                                 <p className="text-xs text-zinc-500 line-clamp-2">{alert.description}</p>
                                                 {alert.reporter && (

@@ -7,6 +7,7 @@ import Layout from '@/components/Layout';
 import { AdminVoiceMap } from '@/components/admin-voice-map';
 import { MapPin, ChevronRight, ChevronLeft } from 'lucide-react';
 import { GoogleMapsIcon } from '@/components/GoogleMapsIcon';
+import { MapActionButtons } from '@/components/MapActionButtons';
 
 interface Report {
     id: string
@@ -152,16 +153,26 @@ export default function AdminMapPage() {
                                                 )}
                                             </div>
                                             <p className="text-sm font-semibold text-zinc-900 mb-0.5">{report.keyword}</p>
-                                            <p className="text-xs text-zinc-500 line-clamp-2">{report.description}</p>
+                                            <p className="text-xs text-zinc-500 line-clamp-2 mb-2">{report.description}</p>
                                         </button>
+
                                         <div className="px-3 pb-3">
+                                            {/* Navigation Actions */}
+                                            <div className="mb-3">
+                                                <MapActionButtons
+                                                    latitude={report.latitude}
+                                                    longitude={report.longitude}
+                                                    location={report.keyword}
+                                                />
+                                            </div>
+
                                             <a
                                                 href={`https://www.google.com/maps?q=${report.latitude},${report.longitude}`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center justify-center gap-2 w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors"
+                                                className="flex items-center gap-2 text-xs text-indigo-600 hover:text-indigo-700 font-medium"
                                             >
-                                                <GoogleMapsIcon size={14} />
+                                                <GoogleMapsIcon />
                                                 Open in Google Maps
                                             </a>
                                         </div>
