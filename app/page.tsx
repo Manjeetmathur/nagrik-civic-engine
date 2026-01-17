@@ -390,8 +390,8 @@ export default function CitizenPortal() {
           {activeTab === 'report' ? (
             <div className="animate-in  fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center mb-12 space-y-3">
-                <h2 className="text-4xl md:text-5xl blue-pulse font-bold text-transparent gradient-text tracking-tight">Report Safety Incident</h2>
-                <p className="text-slate-600 text-base max-w-2xl mx-auto leading-relaxed">Integrated computer vision processing for automated municipal response</p>
+                <h2 className="text-4xl md:text-5xl blue-pulse font-bold tracking-tight py-2">Report Safety Incident</h2>
+                <p className="text-slate-600 text-base max-w-2xl mx-auto leading-relaxed mt-10">Integrated computer vision processing for automated municipal response</p>
               </div>
 
               <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden max-w-3xl mx-auto">

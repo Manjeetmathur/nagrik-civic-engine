@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { User } from '@/types';
 import Layout from '@/components/Layout';
 import { AdminVoiceMap } from '@/components/admin-voice-map';
-import { MapPin } from 'lucide-react';
+import { MapPin, ChevronRight, ChevronLeft } from 'lucide-react';
 import { GoogleMapsIcon } from '@/components/GoogleMapsIcon';
 
 interface Report {
@@ -34,6 +34,7 @@ export default function AdminMapPage() {
     const [reports, setReports] = useState<Report[]>([]);
     const [loadingReports, setLoadingReports] = useState(true);
     const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('nagar_user');
@@ -106,57 +107,68 @@ export default function AdminMapPage() {
                     </div>
 
                     {/* Sidebar List */}
-                    <div className="w-80 hidden lg:flex flex-col bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
-                        <div className="p-4 border-b border-zinc-100 bg-zinc-50/50">
-                            <h3 className="font-bold text-zinc-900 flex items-center gap-2">
-                                <MapPin size={16} className="text-indigo-600" />
-                                Active Reports ({reports.length})
-                            </h3>
+                    <div className={`hidden lg:flex flex-col bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden transition-all duration-300 ${sidebarCollapsed ? 'w-12' : 'w-80'}`}>
+                        <div className="p-4 border-b border-zinc-100 bg-zinc-50/50 flex items-center justify-between">
+                            {!sidebarCollapsed && (
+                                <h3 className="font-bold text-zinc-900 flex items-center gap-2">
+                                    <MapPin size={16} className="text-indigo-600" />
+                                    Active Reports ({reports.length})
+                                </h3>
+                            )}
+                            <button
+                                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                                className="p-1.5 hover:bg-zinc-100 rounded-lg transition-colors text-zinc-600 hover:text-zinc-900"
+                                title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                            >
+                                {sidebarCollapsed ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
+                            </button>
                         </div>
-                        <div className="flex-1 overflow-y-auto p-2 space-y-2">
-                            {reports.map(report => (
-                                <div
-                                    key={report.id}
-                                    className={`rounded-lg border transition-all ${selectedReport?.id === report.id
-                                        ? 'bg-indigo-50 border-indigo-200 shadow-sm'
-                                        : 'bg-white border-transparent hover:bg-zinc-50 hover:border-zinc-200'
-                                        }`}
-                                >
-                                    <button
-                                        onClick={() => setSelectedReport(report)}
-                                        className="w-full text-left p-3"
+                        {!sidebarCollapsed && (
+                            <div className="flex-1 overflow-y-auto p-2 space-y-2">
+                                {reports.map(report => (
+                                    <div
+                                        key={report.id}
+                                        className={`rounded-lg border transition-all ${selectedReport?.id === report.id
+                                            ? 'bg-indigo-50 border-indigo-200 shadow-sm'
+                                            : 'bg-white border-transparent hover:bg-zinc-50 hover:border-zinc-200'
+                                            }`}
                                     >
-                                        <div className="flex justify-between mb-1">
-                                            <span className={`text-[10px] font-bold uppercase tracking-wider ${selectedReport?.id === report.id ? 'text-indigo-700' : 'text-zinc-500'
-                                                }`}>
-                                                {report.id.slice(0, 8)}
-                                            </span>
-                                            {report.speechStressData && (
-                                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${report.speechStressData.confidence >= 60 ? 'bg-red-100 text-red-700' :
-                                                    report.speechStressData.confidence >= 40 ? 'bg-yellow-100 text-yellow-700' :
-                                                        'bg-green-100 text-green-700'
-                                                    }`}>
-                                                    {report.speechStressData.confidence}%
-                                                </span>
-                                            )}
-                                        </div>
-                                        <p className="text-sm font-semibold text-zinc-900 mb-0.5">{report.keyword}</p>
-                                        <p className="text-xs text-zinc-500 line-clamp-2">{report.description}</p>
-                                    </button>
-                                    <div className="px-3 pb-3">
-                                        <a
-                                            href={`https://www.google.com/maps?q=${report.latitude},${report.longitude}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center justify-center gap-2 w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors"
+                                        <button
+                                            onClick={() => setSelectedReport(report)}
+                                            className="w-full text-left p-3"
                                         >
-                                            <GoogleMapsIcon size={14} />
-                                            Open in Google Maps
-                                        </a>
+                                            <div className="flex justify-between mb-1">
+                                                <span className={`text-[10px] font-bold uppercase tracking-wider ${selectedReport?.id === report.id ? 'text-indigo-700' : 'text-zinc-500'
+                                                    }`}>
+                                                    {report.id.slice(0, 8)}
+                                                </span>
+                                                {report.speechStressData && (
+                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${report.speechStressData.confidence >= 60 ? 'bg-red-100 text-red-700' :
+                                                        report.speechStressData.confidence >= 40 ? 'bg-yellow-100 text-yellow-700' :
+                                                            'bg-green-100 text-green-700'
+                                                        }`}>
+                                                        {report.speechStressData.confidence}%
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <p className="text-sm font-semibold text-zinc-900 mb-0.5">{report.keyword}</p>
+                                            <p className="text-xs text-zinc-500 line-clamp-2">{report.description}</p>
+                                        </button>
+                                        <div className="px-3 pb-3">
+                                            <a
+                                                href={`https://www.google.com/maps?q=${report.latitude},${report.longitude}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center justify-center gap-2 w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors"
+                                            >
+                                                <GoogleMapsIcon size={14} />
+                                                Open in Google Maps
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

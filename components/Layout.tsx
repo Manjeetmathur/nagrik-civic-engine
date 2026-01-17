@@ -79,9 +79,9 @@ const Layout: React.FC<LayoutProps> = ({
         transform transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-                <div className="h-full flex flex-col bg-gradient-to-b from-white to-slate-50/50">
+                <div className="h-full flex flex-col">
                     {/* Logo */}
-                    <div className="p-6 border-b border-slate-100 flex items-center justify-center">
+                    <div className="p-6 border-b border-slate-200 flex items-center justify-center">
                         <div className="flex items-center gap-3">
                             <div className="mt-1">
                                 <img
@@ -117,14 +117,10 @@ const Layout: React.FC<LayoutProps> = ({
                                         onNavigate(item.id);
                                         setSidebarOpen(false);
                                     }}
-                                    className={`
-                    w-full flex items-center gap-3 px-4 py-3 rounded-lg
-                    text-sm font-medium transition-all
-                    ${isActive
-                                            ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30'
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${currentView === item.id
+                                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                                             : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                                        }
-                  `}
+                                        }`}
                                 >
                                     <Icon size={18} />
                                     {item.label}
@@ -133,9 +129,10 @@ const Layout: React.FC<LayoutProps> = ({
                         })}
                     </nav>
 
-                    {/* User info */}
-                    <div className="p-4 border-t border-slate-100 bg-slate-50/50">
-                        <div className="flex items-center justify-between mb-3">
+                    {/* User Profile */}
+                    <div className="p-4 border-t border-slate-200">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold shadow-lg">{user.name.charAt(0)}</div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-semibold text-slate-900 truncate">{user.name}</p>
                                 <p className="text-xs text-slate-500 truncate">{user.email}</p>
@@ -157,7 +154,7 @@ const Layout: React.FC<LayoutProps> = ({
 
 
                 {/* Page content */}
-                <main className="flex-1 p-4 sm:p-8  overflow-auto">
+                <main className="flex-1 p-4 sm:p-8 overflow-y-auto">
                     <AnimatePresence mode="wait">
                         <PageTransition key={currentView}>
                             {children}
