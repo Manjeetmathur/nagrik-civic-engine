@@ -384,3 +384,45 @@ button {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
+
+
+@keyframes textBlueShift {
+  0% {
+    color: #7dd3fc;
+    /* light blue */
+  }
+
+  100% {
+    color: #1e3a8a;
+    /* dark blue */
+  }
+}
+
+.animate-blue {
+  animation: blueText 2s ease-in-out forwards;
+}
+
+@keyframes blueGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.blue-pulse {
+  background: linear-gradient(90deg,
+      #00aeff 0%,
+      /* light blue */
+      #003cff 100%
+      /* dark blue */
+    );
+  background-size: 200% 200%;
+  background-position: 0% 50%;
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: blueGradient 2s ease-in-out infinite;
+}

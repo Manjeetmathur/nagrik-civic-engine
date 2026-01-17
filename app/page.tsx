@@ -1,14 +1,21 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Alert, IssueType, AlertStatus } from '@/types';
 import { api } from '@/lib/api';
 import {
   ShieldAlert, Camera, MapPin, Send, RefreshCw,
   CheckCircle, Radio, Navigation, AlertTriangle, Search, X, Clock,
-  Mic
+  Mic, Upload
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+// Dynamically import Leaflet component to avoid SSR issues
+const LeafletHeatmap = dynamic(
+  () => import('@/components/LeafletHeatmap').then(mod => ({ default: mod.LeafletHeatmap })),
+  { ssr: false }
+);
 import { CloudinaryUpload } from '@/components/ui/cloudinary-upload';
 import { FeedbackForm } from '@/components/FeedbackForm';
 
@@ -26,6 +33,7 @@ export default function CitizenPortal() {
   const [isBackendLive, setIsBackendLive] = useState(false);
   const [toast, setToast] = useState<Alert | null>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [showFullscreenMap, setShowFullscreenMap] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -213,6 +221,68 @@ export default function CitizenPortal() {
         </div>
       )}
 
+      {/* Fullscreen Map Modal */}
+      {showFullscreenMap && (
+        <div className="fixed inset-0 z-50 bg-slate-900">
+          {/* Header with back button */}
+          <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-slate-900 to-transparent z-10 p-6">
+            <div className="flex items-center justify-between max-w-7xl mx-auto">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setShowFullscreenMap(false)}
+                  className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-lg text-white rounded-lg hover:bg-white/20 transition-all border border-white/20"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                  </svg>
+                  Back
+                </button>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">Interactive Alert Map</h2>
+                  <p className="text-sm text-slate-300">Showing {allAlerts.length} active alerts</p>
+                </div>
+              </div>
+
+              {/* Legend */}
+              <div className="hidden md:flex items-center gap-4 bg-white/10 backdrop-blur-lg px-4 py-2 rounded-lg border border-white/20">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-rose-500"></div>
+                  <span className="text-xs text-white">High</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                  <span className="text-xs text-white">Medium</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                  <span className="text-xs text-white">Low</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+                  <span className="text-xs text-white">You</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Map Container */}
+          <div className="w-full h-full pt-20">
+            <LeafletHeatmap
+              points={allAlerts
+                .filter(alert => alert.reporter?.coordinates)
+                .map((alert, idx) => ({
+                  lat: alert.reporter!.coordinates!.lat,
+                  lng: alert.reporter!.coordinates!.lng,
+                  intensity: alert.type === IssueType.ACCIDENT ? 1.0 : idx < 5 ? 0.7 : 0.4
+                }))
+              }
+              userLocation={userLocation}
+              className="h-full"
+            />
+          </div>
+        </div>
+      )}
+
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 font-sans">
         {/* Header */}
         <header className="bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-30 shadow-sm">
@@ -261,7 +331,7 @@ export default function CitizenPortal() {
           {activeTab === 'report' ? (
             <div className="animate-in  fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center mb-12 space-y-3">
-                <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">Report Safety Incident</h2>
+                <h2 className="text-4xl md:text-5xl blue-pulse font-bold text-transparent gradient-text tracking-tight">Report Safety Incident</h2>
                 <p className="text-slate-600 text-base max-w-2xl mx-auto leading-relaxed">Integrated computer vision processing for automated municipal response</p>
               </div>
 
@@ -520,55 +590,70 @@ export default function CitizenPortal() {
                 {/* Right Sidebar - Location Heat Map */}
                 <div className="lg:col-span-3 space-y-4">
                   <div className="shadcn-card p-5 sticky top-20">
-                    <h3 className="font-bold text-zinc-900 mb-4 flex items-center gap-2">
-                      <MapPin size={16} className="text-indigo-600" />
+                    <h3 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                      <MapPin size={18} className="text-blue-600" />
                       Location Heat Map
                     </h3>
 
-                    {/* Heat Map Visualization */}
-                    <div className="aspect-square bg-zinc-50 rounded-lg border border-zinc-200 mb-4 relative overflow-hidden">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="text-center">
-                          <MapPin size={32} className="mx-auto text-zinc-300 mb-2" />
-                          <p className="text-xs text-zinc-500">Interactive Map</p>
-                        </div>
+                    {/* Heat Map Visualization - Leaflet */}
+                    <div className="aspect-square rounded-xl border-2 border-slate-200 overflow-hidden shadow-inner relative group">
+                      <LeafletHeatmap
+                        points={allAlerts
+                          .filter(alert => alert.reporter?.coordinates)
+                          .map((alert, idx) => ({
+                            lat: alert.reporter!.coordinates!.lat,
+                            lng: alert.reporter!.coordinates!.lng,
+                            intensity: alert.type === IssueType.ACCIDENT ? 1.0 : idx < 3 ? 0.7 : 0.4
+                          }))
+                        }
+                        userLocation={userLocation}
+                        onMapClick={() => setShowFullscreenMap(true)}
+                        className="cursor-pointer"
+                      />
+
+                      {/* Click hint overlay */}
+                      <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-[1000] flex items-center gap-1 pointer-events-none">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                        </svg>
+                        Expand
                       </div>
-                      {/* Heat spots overlay */}
-                      <div className="absolute top-1/4 left-1/3 w-16 h-16 bg-red-500 rounded-full opacity-20 blur-xl"></div>
-                      <div className="absolute bottom-1/3 right-1/4 w-12 h-12 bg-amber-500 rounded-full opacity-20 blur-lg"></div>
-                      <div className="absolute top-1/2 left-1/2 w-10 h-10 bg-indigo-500 rounded-full opacity-20 blur-lg"></div>
                     </div>
 
                     {/* Top Locations */}
-                    <div className="space-y-3">
-                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Hotspot Areas</p>
-                      {allAlerts.slice(0, 5).map((alert, idx) => (
-                        <div key={idx} className="flex items-center gap-3 p-2 hover:bg-zinc-50 rounded-lg transition-colors">
-                          <div className={`w-2 h-2 rounded-full ${idx === 0 ? 'bg-red-500' : idx === 1 ? 'bg-amber-500' : 'bg-indigo-500'}`}></div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-bold text-zinc-900 truncate">{alert.location}</p>
-                            <p className="text-[10px] text-zinc-500">{alert.type}</p>
+                    <div className="space-y-2">
+                      <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Hotspot Areas</p>
+                      {allAlerts.length > 0 ? (
+                        allAlerts.slice(0, 5).map((alert, idx) => (
+                          <div key={idx} className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer group">
+                            <div className={`w-2.5 h-2.5 rounded-full ${idx === 0 ? 'bg-rose-500' : idx === 1 ? 'bg-amber-500' : 'bg-blue-500'} group-hover:scale-125 transition-transform`}></div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-semibold text-slate-900 truncate">{alert.location}</p>
+                              <p className="text-xs text-slate-500">{alert.type}</p>
+                            </div>
+                            <span className="text-xs font-semibold text-slate-400">#{idx + 1}</span>
                           </div>
-                          <span className="text-[10px] font-bold text-zinc-400">{idx + 1}</span>
-                        </div>
-                      ))}
+                        ))
+                      ) : (
+                        <p className="text-xs text-slate-400 text-center py-4">No hotspots detected</p>
+                      )}
                     </div>
 
                     {/* Legend */}
-                    <div className="mt-4 pt-4 border-t border-zinc-100">
-                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">Severity</p>
+                    <div className="mt-4 pt-4 border-t border-slate-200">
+                      <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-3">Severity</p>
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                          <span className="text-xs text-zinc-900">High Risk</span>
+                          <div className="w-3 h-3 rounded-full bg-rose-500"></div>
+                          <span className="text-sm text-slate-700">High Risk</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-                          <span className="text-xs text-zinc-900">Medium Risk</span>
+                          <span className="text-sm text-slate-700">Medium Risk</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full bg-indigo-500"></div>
-                          <span className="text-xs text-zinc-900">Low Risk</span>
+                          <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                          <span className="text-sm text-slate-700">Low Risk</span>
                         </div>
                       </div>
                     </div>
