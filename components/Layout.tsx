@@ -15,6 +15,7 @@ import {
     X,
     MapPin,
     MessageSquare,
+    Wind,
     Mail
 } from 'lucide-react';
 
@@ -47,6 +48,7 @@ const Layout: React.FC<LayoutProps> = ({
         { id: 'analytics' as View, label: 'Analytics', icon: BarChart3 },
         { id: 'cameras' as View, label: 'Cameras', icon: Video },
         { id: 'feedback-reports' as View, label: 'Feedback Reports', icon: MessageSquare },
+        { id: 'air-quality' as View, label: 'Air Quality', icon: Wind },
         { id: 'authority-contact' as View, label: 'Authority Contact', icon: Mail },
     ];
 
