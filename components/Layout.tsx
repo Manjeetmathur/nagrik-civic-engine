@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { View, User } from '@/types';
+import { AnimatePresence, motion } from 'framer-motion';
+import { PageTransition } from './PageTransition';
 import {
     LayoutDashboard,
     ShieldAlert,
@@ -51,12 +53,18 @@ const Layout: React.FC<LayoutProps> = ({
     return (
         <div className="h-screen bg-[#fafafa] flex overflow-hidden">
             {/* Mobile sidebar backdrop */}
-            {sidebarOpen && (
-                <div
-                    className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
-                    onClick={() => setSidebarOpen(false)}
-                />
-            )}
+            <AnimatePresence>
+                {sidebarOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
+                        onClick={() => setSidebarOpen(false)}
+                    />
+                )}
+            </AnimatePresence>
 
             {/* Sidebar */}
             <aside className={`
@@ -88,12 +96,21 @@ const Layout: React.FC<LayoutProps> = ({
 
                     {/* Navigation */}
                     <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-                        {navItems.map((item) => {
+                        {navItems.map((item, index) => {
                             const Icon = item.icon;
                             const isActive = currentView === item.id;
                             return (
-                                <button
+                                <motion.button
                                     key={item.id}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{
+                                        delay: index * 0.05,
+                                        duration: 0.3,
+                                        ease: [0.22, 1, 0.36, 1] as [number, number, number, number]
+                                    }}
+                                    whileHover={{ x: 4 }}
+                                    whileTap={{ scale: 0.98 }}
                                     onClick={() => {
                                         onNavigate(item.id);
                                         setSidebarOpen(false);
@@ -109,7 +126,7 @@ const Layout: React.FC<LayoutProps> = ({
                                 >
                                     <Icon size={18} />
                                     {item.label}
-                                </button>
+                                </motion.button>
                             );
                         })}
                     </nav>
@@ -139,7 +156,11 @@ const Layout: React.FC<LayoutProps> = ({
 
                 {/* Page content */}
                 <main className="flex-1 p-4 sm:p-8  overflow-auto">
-                    {children}
+                    <AnimatePresence mode="wait">
+                        <PageTransition key={currentView}>
+                            {children}
+                        </PageTransition>
+                    </AnimatePresence>
                 </main>
             </div>
         </div>

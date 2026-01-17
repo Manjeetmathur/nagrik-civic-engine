@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { User } from '@/types';
 import Layout from '@/components/Layout';
 import { Send, Mail, AlertCircle, CheckCircle2, MapPin } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { fadeInUp, staggerContainer } from '@/components/PageTransition';
 
 type AuthorityType = 'fire' | 'hospital' | 'police';
 type PriorityLevel = 'low' | 'medium' | 'high';
@@ -175,7 +177,12 @@ export default function AuthorityContactPage() {
         >
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
-                <div className="mb-8">
+                <motion.div
+                    className="mb-8"
+                    initial="initial"
+                    animate="animate"
+                    variants={fadeInUp}
+                >
                     <div className="flex items-center gap-3 mb-2">
                         <div className="bg-zinc-900 p-3 rounded-none">
                             <Mail className="text-white" size={24} />
@@ -185,24 +192,30 @@ export default function AuthorityContactPage() {
                     <p className="text-zinc-600">
                         Send official communications to emergency services and authorities
                     </p>
-                </div>
+                </motion.div>
 
                 {/* Notification */}
-                {notification && (
-                    <div
-                        className={`mb-6 p-4 rounded-none border-2 flex items-start gap-3 ${notification.type === 'success'
+                <AnimatePresence>
+                    {notification && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                            transition={{ duration: 0.3 }}
+                            className={`mb-6 p-4 rounded-none border-2 flex items-start gap-3 ${notification.type === 'success'
                                 ? 'bg-green-50 border-green-500 text-green-900'
                                 : 'bg-red-50 border-red-500 text-red-900'
-                            }`}
-                    >
-                        {notification.type === 'success' ? (
-                            <CheckCircle2 size={20} className="shrink-0 mt-0.5" />
-                        ) : (
-                            <AlertCircle size={20} className="shrink-0 mt-0.5" />
-                        )}
-                        <p className="font-medium">{notification.message}</p>
-                    </div>
-                )}
+                                }`}
+                        >
+                            {notification.type === 'success' ? (
+                                <CheckCircle2 size={20} className="shrink-0 mt-0.5" />
+                            ) : (
+                                <AlertCircle size={20} className="shrink-0 mt-0.5" />
+                            )}
+                            <p className="font-medium">{notification.message}</p>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="bg-white border border-zinc-200 rounded-none p-8 space-y-6">
@@ -221,8 +234,8 @@ export default function AuthorityContactPage() {
                                         type="button"
                                         onClick={() => handleAuthorityChange(type)}
                                         className={`p-4 border-2 rounded-none transition-all ${isSelected
-                                                ? `${authority.borderColor} bg-zinc-50`
-                                                : 'border-zinc-200 hover:border-zinc-400'
+                                            ? `${authority.borderColor} bg-zinc-50`
+                                            : 'border-zinc-200 hover:border-zinc-400'
                                             }`}
                                     >
                                         <div className="text-4xl mb-2">{authority.icon}</div>
@@ -268,8 +281,8 @@ export default function AuthorityContactPage() {
                                         type="button"
                                         onClick={() => setFormData({ ...formData, priority })}
                                         className={`px-4 py-2.5 border-2 rounded-none font-bold text-sm uppercase transition-all ${isSelected
-                                                ? colors[priority]
-                                                : 'border-zinc-200 hover:border-zinc-400'
+                                            ? colors[priority]
+                                            : 'border-zinc-200 hover:border-zinc-400'
                                             }`}
                                     >
                                         {priority}
