@@ -5,7 +5,8 @@ import { Alert, IssueType } from '@/types';
 import { api } from '@/lib/api';
 import {
   ShieldAlert, Camera, MapPin, Send, RefreshCw,
-  CheckCircle, Radio, Navigation, AlertTriangle, Search, X, Clock
+  CheckCircle, Radio, Navigation, AlertTriangle, Search, X, Clock,
+  Mic
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CloudinaryUpload } from '@/components/ui/cloudinary-upload';
@@ -158,31 +159,40 @@ export default function CitizenPortal() {
         <header className="bg-white border-b border-zinc-200 sticky top-0 z-30 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-8">
             <div className="flex justify-between items-center h-16">
-              <div className="flex items-center gap-2.5">
-                <div className="bg-zinc-900 p-1.5 rounded-md text-white">
-                  <ShieldAlert size={20} />
+              <div className="flex items-center    gap-2.5">
+                <div className="  mt-2">
+                  <img
+                    src="/logo.png"
+                    alt="Nagrik Logo"
+                    className="object-cover h-25"
+                  />
                 </div>
-                <h1 className="font-bold text-zinc-900 tracking-tight hidden sm:block">Nagar <span className="text-indigo-600">Portal</span></h1>
               </div>
 
               <nav className="flex items-center gap-1 bg-zinc-100 p-1 rounded-lg">
                 <button
                   onClick={() => setActiveTab('report')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${activeTab === 'report' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
+                  className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${activeTab === 'report' ? 'bg-white text-zinc-900 ' : 'text-zinc-500 hover:text-zinc-700'}`}
                 >
                   File Report
                 </button>
                 <button
                   onClick={() => setActiveTab('live')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-2 ${activeTab === 'live' ? 'bg-white text-indigo-600 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
+                  className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-2 ${activeTab === 'live' ? 'bg-white text-indigo-600 ' : 'text-zinc-500 hover:text-zinc-700'}`}
                 >
                   <Radio size={14} className={activeTab === 'live' ? 'animate-pulse' : ''} /> Area Updates
+                </button>
+                <button
+                  onClick={() => router.push('/voice')}
+                  className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-2 text-zinc-500 hover:text-zinc-700 `}
+                >
+                  <Mic size={14} /> Voice Recognition
                 </button>
               </nav>
 
               <div className="flex items-center gap-3">
                 <button onClick={() => setShowTrackModal(true)} className="hidden md:block text-xs font-bold text-zinc-500 hover:text-zinc-900">Track ID</button>
-                <button onClick={() => router.push('/admin')} className="px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold rounded uppercase tracking-wider shadow-sm">Admin Access</button>
+                <button onClick={() => router.push('/admin')} className="px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold rounded uppercase tracking-wider ">Admin Access</button>
               </div>
             </div>
           </div>
