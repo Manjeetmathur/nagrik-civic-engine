@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { User, Alert } from '@/types';
 import Layout from '@/components/Layout';
 import { AdminCitizenMap } from '@/components/admin-citizen-map';
-import { MapPin } from 'lucide-react';
+import { MapPin, ChevronRight, ChevronLeft } from 'lucide-react';
 import { GoogleMapsIcon } from '@/components/GoogleMapsIcon';
 
 export default function AdminCitizenMapPage() {
@@ -15,6 +15,7 @@ export default function AdminCitizenMapPage() {
     const [alerts, setAlerts] = useState<Alert[]>([]);
     const [loadingAlerts, setLoadingAlerts] = useState(true);
     const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('nagar_user');
@@ -89,63 +90,74 @@ export default function AdminCitizenMapPage() {
                     </div>
 
                     {/* Sidebar List */}
-                    <div className="w-80 hidden lg:flex flex-col bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
-                        <div className="p-4 border-b border-zinc-100 bg-zinc-50/50">
-                            <h3 className="font-bold text-zinc-900 flex items-center gap-2">
-                                <MapPin size={16} className="text-indigo-600" />
-                                Citizen Reports ({alerts.length})
-                            </h3>
+                    <div className={`hidden lg:flex flex-col bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden transition-all duration-300 ${sidebarCollapsed ? 'w-12' : 'w-80'}`}>
+                        <div className="p-4 border-b border-zinc-100 bg-zinc-50/50 flex items-center justify-between">
+                            {!sidebarCollapsed && (
+                                <h3 className="font-bold text-zinc-900 flex items-center gap-2">
+                                    <MapPin size={16} className="text-indigo-600" />
+                                    Citizen Reports ({alerts.length})
+                                </h3>
+                            )}
+                            <button
+                                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                                className="p-1.5 hover:bg-zinc-100 rounded-lg transition-colors text-zinc-600 hover:text-zinc-900"
+                                title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                            >
+                                {sidebarCollapsed ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
+                            </button>
                         </div>
-                        <div className="flex-1 overflow-y-auto p-2 space-y-2">
-                            {alerts.map(alert => {
-                                const coords = alert.reporter?.coordinates;
-                                return (
-                                    <div
-                                        key={alert.id}
-                                        className={`rounded-lg border transition-all ${selectedAlert?.id === alert.id
-                                            ? 'bg-indigo-50 border-indigo-200 shadow-sm'
-                                            : 'bg-white border-transparent hover:bg-zinc-50 hover:border-zinc-200'
-                                            }`}
-                                    >
-                                        <button
-                                            onClick={() => setSelectedAlert(alert)}
-                                            className="w-full text-left p-3"
+                        {!sidebarCollapsed && (
+                            <div className="flex-1 overflow-y-auto p-2 space-y-2">
+                                {alerts.map(alert => {
+                                    const coords = alert.reporter?.coordinates;
+                                    return (
+                                        <div
+                                            key={alert.id}
+                                            className={`rounded-lg border transition-all ${selectedAlert?.id === alert.id
+                                                ? 'bg-indigo-50 border-indigo-200 shadow-sm'
+                                                : 'bg-white border-transparent hover:bg-zinc-50 hover:border-zinc-200'
+                                                }`}
                                         >
-                                            <div className="flex justify-between mb-1">
-                                                <span className={`text-[10px] font-bold uppercase tracking-wider ${selectedAlert?.id === alert.id ? 'text-indigo-700' : 'text-zinc-500'
-                                                    }`}>
-                                                    {alert.id.slice(0, 8)}
-                                                </span>
-                                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${alert.status === 'Pending' ? 'bg-red-100 text-red-700' :
-                                                    alert.status === 'Resolved' ? 'bg-green-100 text-green-700' :
-                                                        'bg-gray-100 text-gray-700'
-                                                    }`}>
-                                                    {alert.status}
-                                                </span>
-                                            </div>
-                                            <p className="text-sm font-semibold text-zinc-900 mb-0.5">{alert.type}</p>
-                                            <p className="text-xs text-zinc-500 line-clamp-2">{alert.description}</p>
-                                            {alert.reporter && (
-                                                <p className="text-[10px] text-zinc-400 mt-1">By: {alert.reporter.name}</p>
+                                            <button
+                                                onClick={() => setSelectedAlert(alert)}
+                                                className="w-full text-left p-3"
+                                            >
+                                                <div className="flex justify-between mb-1">
+                                                    <span className={`text-[10px] font-bold uppercase tracking-wider ${selectedAlert?.id === alert.id ? 'text-indigo-700' : 'text-zinc-500'
+                                                        }`}>
+                                                        {alert.id.slice(0, 8)}
+                                                    </span>
+                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${alert.status === 'Pending' ? 'bg-red-100 text-red-700' :
+                                                        alert.status === 'Resolved' ? 'bg-green-100 text-green-700' :
+                                                            'bg-gray-100 text-gray-700'
+                                                        }`}>
+                                                        {alert.status}
+                                                    </span>
+                                                </div>
+                                                <p className="text-sm font-semibold text-zinc-900 mb-0.5">{alert.type}</p>
+                                                <p className="text-xs text-zinc-500 line-clamp-2">{alert.description}</p>
+                                                {alert.reporter && (
+                                                    <p className="text-[10px] text-zinc-400 mt-1">By: {alert.reporter.name}</p>
+                                                )}
+                                            </button>
+                                            {coords && (
+                                                <div className="px-3 pb-3">
+                                                    <a
+                                                        href={`https://www.google.com/maps?q=${coords.lat},${coords.lng}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center justify-center gap-2 w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors"
+                                                    >
+                                                        <GoogleMapsIcon size={14} />
+                                                        Open in Google Maps
+                                                    </a>
+                                                </div>
                                             )}
-                                        </button>
-                                        {coords && (
-                                            <div className="px-3 pb-3">
-                                                <a
-                                                    href={`https://www.google.com/maps?q=${coords.lat},${coords.lng}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="flex items-center justify-center gap-2 w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors"
-                                                >
-                                                    <GoogleMapsIcon size={14} />
-                                                    Open in Google Maps
-                                                </a>
-                                            </div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
