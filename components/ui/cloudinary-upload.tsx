@@ -28,15 +28,21 @@ export function CloudinaryUpload({ onUploadSuccess, currentImage }: CloudinaryUp
                 return (
                     <div
                         onClick={() => open()}
-                        className="w-full h-40 border-2 border-dashed border-zinc-300 rounded-none flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-zinc-900 hover:bg-zinc-50 transition-all text-zinc-500 hover:text-zinc-900"
+                        className={`w-full h-40 border-2 border-dashed rounded-lg flex flex-col items-center justify-center gap-2 cursor-pointer transition-all ${currentImage
+                            ? 'border-emerald-300 bg-emerald-50/50 hover:border-emerald-500 text-emerald-700 hover:text-emerald-900'
+                            : 'border-rose-300 bg-rose-50/30 hover:border-rose-500 text-rose-600 hover:text-rose-900'
+                            }`}
                     >
                         {isLoading ? (
                             <RefreshCw className="animate-spin" size={32} />
                         ) : (
                             <>
                                 <Camera size={32} />
-                                <span className="font-medium">
-                                    {currentImage ? 'Change Evidence Photo' : 'Click to Upload Evidence'}
+                                <span className="font-semibold text-sm">
+                                    {currentImage ? '✓ Evidence Photo Uploaded' : '⚠️ Evidence Photo Required *'}
+                                </span>
+                                <span className="text-xs opacity-75">
+                                    {currentImage ? 'Click to change' : 'Click to upload'}
                                 </span>
                             </>
                         )}

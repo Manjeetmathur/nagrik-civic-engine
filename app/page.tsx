@@ -23,7 +23,7 @@ import { db as firebaseDb } from "@/lib/firebase";
 
 export default function CitizenPortal() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'report' | 'live'>('report');
+  const [activeTab, setActiveTab] = useState<'report' | 'live'>('live');
   const [step, setStep] = useState<1 | 2>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -163,13 +163,20 @@ export default function CitizenPortal() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate that an image has been uploaded
+    if (!imagePreview) {
+      alert("⚠️ Evidence Photo Required\n\nPlease upload a photo of the incident before submitting your report. This helps our team verify and respond to the issue more effectively.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     const payload = {
       type: formData.type,
       location: formData.location,
       description: formData.description,
-      imageUrl: imagePreview || 'https://picsum.photos/800/600',
+      imageUrl: imagePreview,
       reporter: {
         name: formData.name,
         phone: formData.phone,
@@ -345,17 +352,18 @@ export default function CitizenPortal() {
 
               <nav className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-lg">
                 <button
-                  onClick={() => setActiveTab('report')}
-                  className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${activeTab === 'report' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
-                >
-                  File Report
-                </button>
-                <button
                   onClick={() => setActiveTab('live')}
                   className={`px-4 py-2 text-sm font-semibold rounded-md transition-all flex items-center gap-2 ${activeTab === 'live' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
                 >
                   <Radio size={14} className={activeTab === 'live' ? 'animate-pulse' : ''} /> Area Updates
                 </button>
+                <button
+                  onClick={() => setActiveTab('report')}
+                  className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${activeTab === 'report' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
+                >
+                  File Report
+                </button>
+
                 <button
                   onClick={() => router.push('/voice')}
                   className="px-4 py-2 text-sm font-semibold rounded-md transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50"
@@ -394,6 +402,7 @@ export default function CitizenPortal() {
                           <div className="absolute bottom-3 right-3">
                             <div className="scale-75 origin-bottom-right">
                               <CloudinaryUpload
+
                                 currentImage={imagePreview}
                                 onUploadSuccess={setImagePreview}
                               />
