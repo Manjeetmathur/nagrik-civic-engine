@@ -218,7 +218,7 @@ export default function AuthorityContactPage() {
                 </AnimatePresence>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="bg-white border border-zinc-200 rounded-none p-8 space-y-6">
+                <form onSubmit={handleSubmit} className="bg-white border border-slate-200 rounded-2xl shadow-xl shadow-slate-200/50 p-8 space-y-6">
                     {/* Authority Type Selection */}
                     <div>
                         <label className="text-xs font-bold text-zinc-500 uppercase tracking-tight block mb-3">
@@ -239,7 +239,7 @@ export default function AuthorityContactPage() {
                                             }`}
                                     >
                                         <div className="text-4xl mb-2">{authority.icon}</div>
-                                        <div className="text-sm font-bold text-zinc-900">
+                                        <div className="text-sm font-semibold text-slate-900">
                                             {authority.name}
                                         </div>
                                     </button>
@@ -322,7 +322,7 @@ export default function AuthorityContactPage() {
                     </div>
 
                     {/* Location (Optional) */}
-                    <div className="border-t border-zinc-200 pt-6">
+                    <div className="border-t border-slate-200 pt-6">
                         <div className="flex items-center gap-2 mb-4">
                             <input
                                 type="checkbox"
@@ -333,7 +333,7 @@ export default function AuthorityContactPage() {
                                 }
                                 className="w-4 h-4"
                             />
-                            <label htmlFor="includeLocation" className="text-sm font-bold text-zinc-900">
+                            <label htmlFor="includeLocation" className="text-sm font-semibold text-slate-900">
                                 Include Location Coordinates
                             </label>
                         </div>
@@ -379,7 +379,7 @@ export default function AuthorityContactPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-zinc-900 text-white font-bold rounded-none hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-lg shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isLoading ? (
                                 <>

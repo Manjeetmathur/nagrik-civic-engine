@@ -142,20 +142,20 @@ export default function CitizenPortal() {
   // Success Screen
   if (step === 2) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl border border-zinc-200 outline outline-1 outline-zinc-400 p-10 text-center animate-in zoom-in-95 duration-500">
-          <div className="w-16 h-16 bg-zinc-900 text-white rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle size={32} />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-slate-300/50 p-10 text-center animate-in zoom-in-95 duration-500">
+          <div className="w-20 h-20 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/30">
+            <CheckCircle size={40} />
           </div>
-          <h2 className="text-2xl font-bold text-zinc-900 mb-2 tracking-tight">Report Received</h2>
-          <p className="text-sm text-zinc-900 mb-8 leading-relaxed">Thank you for your vigilance. Our AI-driven maintenance department is now analyzing your submission.</p>
-          <div className="bg-zinc-50 p-6 rounded-xl mb-8 border border-zinc-100">
-            <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest mb-1">Live Tracking ID</p>
-            <p className="text-2xl font-mono font-bold text-zinc-900 tracking-wider">{submissionId}</p>
+          <h2 className="text-3xl font-bold text-slate-900 mb-3 tracking-tight">Report Received</h2>
+          <p className="text-base text-slate-600 mb-8 leading-relaxed">Thank you for your vigilance. Our AI-driven maintenance department is now analyzing your submission.</p>
+          <div className="bg-gradient-to-br from-slate-50 to-blue-50/50 p-6 rounded-xl mb-8 border border-slate-200">
+            <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2">Live Tracking ID</p>
+            <p className="text-2xl font-mono font-bold text-slate-900 tracking-wider">{submissionId}</p>
           </div>
           <button
             onClick={() => { setStep(1); setActiveTab('report'); setImagePreview(null); }}
-            className="w-full py-3 bg-zinc-900 text-white font-bold rounded-lg hover:opacity-90 outline outline-1 outline-zinc-400 transition-all"
+            className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-lg shadow-lg shadow-blue-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all"
           >
             Submit Another Report
           </button>
@@ -168,18 +168,18 @@ export default function CitizenPortal() {
     <>
       {/* Toast */}
       {toast && (
-        <div className="fixed top-20 right-6 z-[100] w-80 bg-zinc-900 text-white rounded-xl outline outline-1 outline-zinc-400 border border-white/10 p-4 animate-in slide-in-from-right duration-500">
+        <div className="fixed top-20 right-6 z-[100] w-80 bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-xl shadow-2xl shadow-black/20 border border-white/10 p-4 animate-in slide-in-from-right duration-500">
           <div className="flex items-start gap-3">
-            <div className="bg-red-500 p-2 rounded-lg shrink-0">
+            <div className="bg-gradient-to-r from-rose-600 to-rose-500 p-2.5 rounded-lg shrink-0 shadow-lg shadow-rose-500/30">
               <ShieldAlert size={20} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-start mb-1">
-                <p className="text-xs font-bold uppercase tracking-wider text-red-100">{toast.type}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-rose-100">{toast.type}</p>
                 <Clock size={12} className="text-white/40" />
               </div>
-              <p className="text-sm font-bold text-white mb-0.5">{toast.location}</p>
-              <p className="text-[10px] text-white/60 line-clamp-1">{toast.description}</p>
+              <p className="text-sm font-semibold text-white mb-0.5">{toast.location}</p>
+              <p className="text-xs text-white/70 line-clamp-1">{toast.description}</p>
             </div>
           </div>
         </div>
@@ -189,10 +189,10 @@ export default function CitizenPortal() {
       {showTrackModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowTrackModal(false)}></div>
-          <div className="relative bg-white rounded-2xl p-8 w-full max-w-sm shadow-2xl animate-in zoom-in-95 duration-300 border border-zinc-200">
-            <button onClick={() => setShowTrackModal(false)} className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-zinc-600"><X size={20} /></button>
-            <h3 className="text-xl font-bold text-zinc-900 mb-2">Track Status</h3>
-            <p className="text-sm text-zinc-900 mb-6">Enter your alphanumeric tracking ID.</p>
+          <div className="relative bg-white rounded-2xl p-8 w-full max-w-sm shadow-2xl shadow-slate-300/50 animate-in zoom-in-95 duration-300 border border-slate-200">
+            <button onClick={() => setShowTrackModal(false)} className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"><X size={20} /></button>
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">Track Status</h3>
+            <p className="text-base text-slate-600 mb-6">Enter your alphanumeric tracking ID.</p>
             <div className="space-y-4">
               <input
                 type="text"
@@ -204,7 +204,7 @@ export default function CitizenPortal() {
               <button
                 disabled={!trackInput}
                 onClick={() => router.push(`/track/${trackInput}`)}
-                className="w-full py-3 bg-zinc-900 text-white font-bold rounded-lg hover:opacity-90 disabled:opacity-50 shadow-lg transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-lg shadow-lg shadow-blue-500/30 hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
               >
                 <Search size={18} /> View Status
               </button>
@@ -213,9 +213,9 @@ export default function CitizenPortal() {
         </div>
       )}
 
-      <div className="min-h-screen bg-[#fafafa] font-sans">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 font-sans">
         {/* Header */}
-        <header className="bg-white border-b border-zinc-200 sticky top-0 z-30 outline outline-1 outline-zinc-400">
+        <header className="bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-30 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center    gap-2.5">
@@ -228,30 +228,30 @@ export default function CitizenPortal() {
                 </div>
               </div>
 
-              <nav className="flex items-center gap-1 bg-zinc-100 p-1 rounded rounded-none">
+              <nav className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-lg">
                 <button
                   onClick={() => setActiveTab('report')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded transition-all ${activeTab === 'report' ? 'bg-white text-zinc-900 rounded' : 'text-zinc-700 hover:text-zinc-900'}`}
+                  className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${activeTab === 'report' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
                 >
                   File Report
                 </button>
                 <button
                   onClick={() => setActiveTab('live')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded transition-all flex items-center gap-2 ${activeTab === 'live' ? 'bg-white text-indigo-600 rounded' : 'text-zinc-700 hover:text-zinc-900'}`}
+                  className={`px-4 py-2 text-sm font-semibold rounded-md transition-all flex items-center gap-2 ${activeTab === 'live' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
                 >
                   <Radio size={14} className={activeTab === 'live' ? 'animate-pulse' : ''} /> Area Updates
                 </button>
                 <button
                   onClick={() => router.push('/voice')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-2 text-zinc-700 hover:text-zinc-900 `}
+                  className="px-4 py-2 text-sm font-semibold rounded-md transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                 >
                   <Mic size={14} /> Voice Recognition
                 </button>
               </nav>
 
               <div className="flex items-center gap-3">
-                <button onClick={() => setShowTrackModal(true)} className="hidden md:block text-xs font-bold text-zinc-700 hover:text-zinc-900">Track ID</button>
-                <button onClick={() => router.push('/admin')} className="px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold rounded-none uppercase tracking-wider outline outline-1 outline-zinc-400">Admin Access</button>
+                <button onClick={() => setShowTrackModal(true)} className="hidden md:block text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Track ID</button>
+                <button onClick={() => router.push('/admin')} className="px-4 py-2 bg-gradient-to-r from-slate-900 to-slate-800 text-white text-sm font-semibold rounded-lg shadow-lg shadow-slate-900/30 hover:shadow-xl hover:-translate-y-0.5 transition-all">Admin Access</button>
               </div>
             </div>
           </div>
@@ -260,16 +260,16 @@ export default function CitizenPortal() {
         <main className="max-w-5xl mx-auto px-4 py-12">
           {activeTab === 'report' ? (
             <div className="animate-in  fade-in slide-in-from-bottom-4 duration-500">
-              <div className="text-center mb-12 space-y-2">
-                <h2 className="text-3xl font-extrabold text-zinc-900 tracking-tight">Report Safety Incident</h2>
-                <p className="text-zinc-900 text-sm max-w-lg mx-auto leading-relaxed">Integrated computer vision processing for automated municipal response.</p>
+              <div className="text-center mb-12 space-y-3">
+                <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">Report Safety Incident</h2>
+                <p className="text-slate-600 text-base max-w-2xl mx-auto leading-relaxed">Integrated computer vision processing for automated municipal response</p>
               </div>
 
-              <div className="bg-white rounded outline outline-1 outline-zinc-300 border border-zinc-200 overflow-hidden max-w-3xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden max-w-3xl mx-auto">
                 <form onSubmit={handleSubmit} className="p-8 md:p-10 space-y-10">
                   <section>
-                    <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                      <Camera size={14} /> 1. Upload Visual Evidence
+                    <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide mb-4 flex items-center gap-2">
+                      <Camera size={16} className="text-blue-600" /> 1. Upload Visual Evidence
                     </label>
                     <div className={`relative w-full rounded-none overflow-hidden ${imagePreview ? 'h-60 border-2 border-indigo-500' : ''}`}>
                       {imagePreview ? (
@@ -291,15 +291,15 @@ export default function CitizenPortal() {
                     </div>
                   </section>
 
-                  <section className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-zinc-100">
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-zinc-900 uppercase tracking-tight">Report Category</label>
+                  <section className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-100">
+                    <div className="space-y-2">
+                      <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Report Category</label>
                       <select value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value as IssueType })} className="shadcn-input w-full px-4 py-2.5 text-sm">
                         {Object.values(IssueType).map(t => <option key={t} value={t}>{t}</option>)}
                       </select>
                     </div>
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-zinc-900 uppercase tracking-tight">Detected Location</label>
+                    <div className="space-y-2">
+                      <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Detected Location</label>
                       <div className="relative">
                         <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
                         <input required type="text" placeholder="Street or Area" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} className="shadcn-input w-full pl-9 pr-24 py-2.5 text-sm" />
@@ -313,30 +313,30 @@ export default function CitizenPortal() {
                         </button>
                       </div>
                     </div>
-                    <div className="md:col-span-2 space-y-1.5">
-                      <label className="text-[10px] font-bold text-zinc-900 uppercase tracking-tight">Contextual Description</label>
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Contextual Description</label>
                       <textarea required rows={3} placeholder="Describe what requires attention..." value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} className="shadcn-input w-full px-4 py-2.5 text-sm resize-none"></textarea>
                     </div>
                   </section>
 
                   <section className="pt-6 border-t border-zinc-100">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-zinc-900 uppercase tracking-tight">Full Name</label>
+                      <div className="space-y-2">
+                        <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Full Name</label>
                         <input required type="text" placeholder="Your Full Name" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="shadcn-input w-full px-4 py-2 text-sm" />
                       </div>
-                      <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-zinc-900 uppercase tracking-tight">Phone Number</label>
+                      <div className="space-y-2">
+                        <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Phone Number</label>
                         <input required type="tel" placeholder="+91 XXXX XXXX" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className="shadcn-input w-full px-4 py-2 text-sm" />
                       </div>
-                      <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-zinc-900 uppercase tracking-tight">Email Address</label>
+                      <div className="space-y-2">
+                        <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Email Address</label>
                         <input required type="email" placeholder="email@example.com" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="shadcn-input w-full px-4 py-2 text-sm" />
                       </div>
                     </div>
                   </section>
 
-                  <button type="submit" disabled={isSubmitting} className="w-full py-4 bg-zinc-900 text-white font-bold rounded-none outline outline-1 outline-zinc-400 hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
+                  <button type="submit" disabled={isSubmitting} className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-lg shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                     {isSubmitting ? <><RefreshCw size={18} className="animate-spin" /> Analyzing Image...</> : <><Send size={18} /> Submit Official Report</>}
                   </button>
                 </form>
@@ -416,34 +416,34 @@ export default function CitizenPortal() {
                 <div className="lg:col-span-6 space-y-4">
                   {allAlerts.length === 0 ? (
                     <div className="py-20 text-center shadcn-card border-dashed">
-                      <ShieldAlert size={40} className="mx-auto text-zinc-200 mb-4" />
-                      <p className="text-zinc-900 font-medium">No live safety alerts detected in this zone.</p>
+                      <ShieldAlert size={48} className="mx-auto text-slate-300 mb-4" />
+                      <p className="text-slate-600 font-medium text-base">No live safety alerts detected in this zone.</p>
                     </div>
                   ) : (
                     <>
                       {allAlerts.slice(0, displayedAlertsCount).map((alert) => (
-                        <div key={alert.id} className="shadcn-card overflow-hidden hover:border-zinc-300 transition-all group">
+                        <div key={alert.id} className="shadcn-card overflow-hidden hover:border-slate-300 transition-all group">
                           {/* Alert Header */}
-                          <div className="p-4 flex items-center justify-between border-b border-zinc-100">
+                          <div className="p-5 flex items-center justify-between border-b border-slate-100">
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center">
-                                <MapPin size={18} className="text-zinc-600" />
+                              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-50 to-slate-50 flex items-center justify-center border border-slate-200">
+                                <MapPin size={20} className="text-blue-600" />
                               </div>
                               <div>
-                                <h4 className="font-bold text-zinc-900 text-sm">{alert.location}</h4>
-                                <p className="text-[10px] text-zinc-500">{new Date(alert.timestamp).toLocaleString()}</p>
+                                <h4 className="font-semibold text-slate-900 text-base">{alert.location}</h4>
+                                <p className="text-xs text-slate-500">{new Date(alert.timestamp).toLocaleString()}</p>
                               </div>
                             </div>
-                            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded ${alert.type === IssueType.ACCIDENT ? 'bg-red-50 text-red-600' : 'bg-indigo-50 text-indigo-600'}`}>
+                            <span className={`text-xs font-semibold uppercase tracking-wide px-3 py-1.5 rounded-full ${alert.type === IssueType.ACCIDENT ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-blue-50 text-blue-700 border border-blue-200'}`}>
                               {alert.type}
                             </span>
                           </div>
 
                           {/* Alert Content */}
-                          <div className="p-4">
-                            <p className="text-sm text-zinc-900 mb-3">{alert.description}</p>
-                            <div className="w-full h-64 rounded-lg bg-zinc-100 overflow-hidden border border-zinc-200">
-                              <img src={alert.thumbnailUrl} className="w-full h-full object-cover transition-transform group-hover:scale-105" alt={alert.type} />
+                          <div className="p-5">
+                            <p className="text-base text-slate-700 mb-4 leading-relaxed">{alert.description}</p>
+                            <div className="w-full h-64 rounded-xl bg-slate-100 overflow-hidden border border-slate-200 shadow-inner">
+                              <img src={alert.thumbnailUrl} className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-300" alt={alert.type} />
                             </div>
                           </div>
 
@@ -474,16 +474,16 @@ export default function CitizenPortal() {
                           </div>
 
                           {/* Alert Footer */}
-                          <div className="px-4 pb-4 flex items-center justify-between text-xs">
+                          <div className="px-5 pb-5 flex items-center justify-between text-sm">
                             <div className="flex items-center gap-4">
-                              <span className="flex items-center gap-1.5 text-zinc-600">
-                                <Clock size={14} /> {new Date(alert.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              <span className="flex items-center gap-2 text-slate-600">
+                                <Clock size={16} /> {new Date(alert.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </span>
-                              <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${alert.source === 'camera' ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' : 'bg-zinc-100 text-zinc-700'}`}>
+                              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${alert.source === 'camera' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-slate-100 text-slate-700 border border-slate-200'}`}>
                                 {alert.source === 'camera' ? 'AI Camera' : 'Citizen'}
                               </span>
                             </div>
-                            <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${alert.status === AlertStatus.PENDING ? 'bg-amber-50 text-amber-700' : 'bg-green-50 text-green-700'}`}>
+                            <span className={`px-3 py-1.5 rounded-full text-xs font-semibold ${alert.status === AlertStatus.PENDING ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
                               {alert.status || 'PENDING'}
                             </span>
                           </div>
@@ -495,7 +495,7 @@ export default function CitizenPortal() {
                         <div className="flex justify-center pt-4">
                           <button
                             onClick={() => setDisplayedAlertsCount(prev => prev + 10)}
-                            className="px-6 py-3 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2"
+                            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-semibold rounded-lg shadow-lg shadow-blue-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
                           >
                             Load More Issues
                             <RefreshCw size={16} />
@@ -506,11 +506,13 @@ export default function CitizenPortal() {
                   )}
 
                   {/* Safety Broadcast */}
-                  <div className="bg-amber-50 border border-amber-100 p-6 rounded-lg flex items-start gap-4">
-                    <AlertTriangle className="text-amber-600 shrink-0" size={20} />
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50/50 border-2 border-amber-200 p-6 rounded-xl flex items-start gap-4 shadow-sm">
+                    <div className="bg-amber-500 p-2 rounded-lg">
+                      <AlertTriangle className="text-white" size={20} />
+                    </div>
                     <div className="space-y-1">
-                      <h4 className="text-sm font-bold text-amber-900">Safety Broadcast</h4>
-                      <p className="text-xs text-amber-800 leading-relaxed">System syncing active. 24/7 AI monitoring is operational. Report any emergency via the standard municipal channels.</p>
+                      <h4 className="text-sm font-semibold text-amber-900">Safety Broadcast</h4>
+                      <p className="text-sm text-amber-800 leading-relaxed">System syncing active. 24/7 AI monitoring is operational. Report any emergency via the standard municipal channels.</p>
                     </div>
                   </div>
                 </div>
