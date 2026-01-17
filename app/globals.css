@@ -230,10 +230,6 @@ body {
   src: url("/nothing.woff2");
 }
 
-* {
-  scrollbar-width: none;
-}
-
 .emergency-marker {
   background: none !important;
   border: none !important;

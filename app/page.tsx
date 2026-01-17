@@ -187,8 +187,8 @@ export default function CitizenPortal() {
   // Success Screen
   if (step === 2) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-slate-300/50 p-10 text-center animate-in zoom-in-95 duration-500">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div className="max-w-md w-full bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-slate-300/50 p-10 text-center animate-in zoom-in-95 duration-500 my-8">
           <div className="w-20 h-20 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/30">
             <CheckCircle size={40} />
           </div>
@@ -232,9 +232,9 @@ export default function CitizenPortal() {
 
       {/* Tracking Modal */}
       {showTrackModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowTrackModal(false)}></div>
-          <div className="relative bg-white rounded-2xl p-8 w-full max-w-sm shadow-2xl shadow-slate-300/50 animate-in zoom-in-95 duration-300 border border-slate-200">
+          <div className="relative bg-white rounded-2xl p-8 w-full max-w-sm shadow-2xl shadow-slate-300/50 animate-in zoom-in-95 duration-300 border border-slate-200 my-auto">
             <button onClick={() => setShowTrackModal(false)} className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"><X size={20} /></button>
             <h3 className="text-2xl font-bold text-slate-900 mb-2">Track Status</h3>
             <p className="text-base text-slate-600 mb-6">Enter your alphanumeric tracking ID.</p>
