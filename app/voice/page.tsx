@@ -4,6 +4,8 @@ import Spline from "@splinetool/react-spline";
 import { useEffect, useRef, useState } from "react";
 import words from "./words";
 import { SpeechStressAnalyzer, SpeechMetrics } from "@/utils/speech-stress-analyzer";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 type Status =
   | "locked"
@@ -14,6 +16,7 @@ type Status =
   | "error";
 
 export default function Counter() {
+  const router = useRouter();
   const [splineKey, setSplineKey] = useState(0);
   const recognitionRef = useRef<any>(null);
   const splineRef = useRef<any>(null);
@@ -230,8 +233,6 @@ export default function Counter() {
       z-99
     "
       />
-
-
       <div
         className={`
       absolute 
@@ -262,8 +263,17 @@ export default function Counter() {
       transition-all
       animate-float
       ${alerts.length > 0 ? "bg-red-600/30" : "bg-blue-800/30"}
+        ${alerts.length > 0 ? "bg-red-600/30" : "bg-blue-800/30"}
     `}
       />
+
+      <button
+        onClick={() => router.back()}
+        className="absolute top-8 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2 px-5 py-2.5 bg-zinc-900/50 hover:bg-zinc-900/80 backdrop-blur-md rounded-full text-sm font-bold transition-all border border-white/10 hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
+      >
+        <ArrowLeft size={16} />
+        <span>Exit Voice Mode</span>
+      </button>
 
 
       <div className="text-xs text-gray-500 absolute right-0 p-5 bottom-0 z-50 bg-black space-y-1">
