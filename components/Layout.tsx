@@ -42,18 +42,15 @@ const Layout: React.FC<LayoutProps> = ({
     const navItems = [
         { id: 'dashboard' as View, label: 'Dashboard', icon: LayoutDashboard },
         { id: 'alerts' as View, label: 'All Alerts', icon: Bell },
-         { id: 'cameras' as View, label: 'Cameras', icon: Video },
+        { id: 'cameras' as View, label: 'Cameras', icon: Video },
         { id: 'air-quality' as View, label: 'Air Quality', icon: Wind },
         { id: 'citizen-reports' as View, label: 'Citizen Reports', icon: Users },
 
         { id: 'citizen-map' as View, label: 'Citizen Map', icon: MapPin },
-        { id: 'analytics' as View, label: 'Analytics', icon: BarChart3 },
         { id: 'feedback-reports' as View, label: 'Feedback Reports', icon: MessageSquare },
         { id: 'authority-contact' as View, label: 'Authority Contact', icon: Mail },
-        { id: 'voice-reports' as View, label: 'Voice Reports', icon: ShieldAlert },
-        { id: 'voice-analytics' as View, label: 'Voice Analytics', icon: BarChart3 },
-        { id: 'map' as View, label: 'Voice Map', icon: MapPin },
-       
+        { id: 'voice' as View, label: 'Voice Intelligence', icon: ShieldAlert },
+
     ];
 
     return (
@@ -118,8 +115,8 @@ const Layout: React.FC<LayoutProps> = ({
                                         setSidebarOpen(false);
                                     }}
                                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${currentView === item.id
-                                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
-                                            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                                         }`}
                                 >
                                     <Icon size={18} />
