@@ -77,25 +77,21 @@ const Layout: React.FC<LayoutProps> = ({
       `}>
                 <div className="h-full flex flex-col bg-gradient-to-b from-white to-slate-50/50">
                     {/* Logo */}
-                    <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-                        <div className="flex ">
+                    <div className="p-6 border-b border-slate-100 flex items-center justify-center">
+                        <div className="flex items-center gap-3">
                             <div className="mt-1">
                                 <img
                                     src="/logo.png"
                                     alt="Nagrik Logo"
-                                    className="object-cover h-16"
+                                    className="h-10 w-auto"
                                 />
                             </div>
-
+                            <div>
+                                <h1 className="text-xl font-bold text-slate-900 tracking-tight">Nagrik</h1>
+                                <p className="text-xs text-slate-500 font-medium">Civic Engine</p>
+                            </div>
                         </div>
-                        <button
-                            onClick={() => setSidebarOpen(false)}
-                            className="lg:hidden p-1 text-zinc-400 hover:text-zinc-600"
-                        >
-                            <X size={20} />
-                        </button>
                     </div>
-
                     {/* Navigation */}
                     <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
                         {navItems.map((item, index) => {
