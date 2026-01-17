@@ -25,7 +25,7 @@ export default function AdminCitizenReportsPage() {
                 return;
             }
             setUser(JSON.parse(storedUser));
-            const { data, isLive } = await api.getAlerts(1, 20);
+            const { data, isLive } = await api.getAlerts(1, 20, 'citizen');
             setAllAlerts(data);
             setHasMore(data.length === 20);
             setIsBackendLive(isLive);
@@ -38,7 +38,7 @@ export default function AdminCitizenReportsPage() {
         if (isFetchingMore || !hasMore) return;
         setIsFetchingMore(true);
         const nextPage = page + 1;
-        const { data } = await api.getAlerts(nextPage, 20);
+        const { data } = await api.getAlerts(nextPage, 20, 'citizen');
         if (data.length > 0) {
             setAllAlerts(prev => [...prev, ...data]);
             setPage(nextPage);
@@ -86,7 +86,7 @@ export default function AdminCitizenReportsPage() {
                 </div>
             ) : (
                 <AlertsPage
-                    alerts={allAlerts.filter(a => a.source === 'citizen')}
+                    alerts={allAlerts}
                     onUpdateAlert={updateAlertStatus}
                     forceSource="citizen"
                     onLoadMore={handleLoadMore}

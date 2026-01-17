@@ -40,7 +40,6 @@ const Layout: React.FC<LayoutProps> = ({
         { id: 'citizen-map' as View, label: 'Citizen Map', icon: MapPin },
         { id: 'voice-reports' as View, label: 'Voice Reports', icon: ShieldAlert },
         { id: 'voice-analytics' as View, label: 'Voice Analytics', icon: BarChart3 },
-        { id: 'alerts' as View, label: 'All Alerts', icon: ShieldAlert },
         { id: 'citizen-reports' as View, label: 'Citizen Reports', icon: Users },
         { id: 'analytics' as View, label: 'Analytics', icon: BarChart3 },
         { id: 'cameras' as View, label: 'Cameras', icon: Video },
@@ -67,13 +66,15 @@ const Layout: React.FC<LayoutProps> = ({
                 <div className="h-full flex flex-col">
                     {/* Logo */}
                     <div className="p-6 border-b border-zinc-100 flex items-center justify-between">
-                        <div className="flex items-center gap-2.5">
-                            <div className="bg-zinc-900 p-1.5 rounded-none text-white">
-                                <ShieldAlert size={20} />
+                        <div className="flex ">
+                            <div className="mt-1">
+                                <img
+                                    src="/logo.png"
+                                    alt="Nagrik Logo"
+                                    className="object-cover h-16"
+                                />
                             </div>
-                            <h1 className="font-bold text-zinc-900 tracking-tight">
-                                Nagrik <span className="text-indigo-600">Admin</span>
-                            </h1>
+
                         </div>
                         <button
                             onClick={() => setSidebarOpen(false)}
@@ -132,34 +133,10 @@ const Layout: React.FC<LayoutProps> = ({
 
             {/* Main content */}
             <div className="flex-1 flex flex-col min-w-0">
-                {/* Header */}
-                <header className="bg-white border-b border-zinc-200 sticky top-0 z-30">
-                    <div className="px-4 sm:px-8 h-16 flex items-center justify-between">
-                        <button
-                            onClick={() => setSidebarOpen(true)}
-                            className="lg:hidden p-2 text-zinc-600 hover:text-zinc-900"
-                        >
-                            <Menu size={24} />
-                        </button>
 
-                        <div className="flex-1" />
-
-                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-none border ${isBackendLive
-                            ? 'bg-indigo-50 border-indigo-100'
-                            : 'bg-zinc-100 border-zinc-200'
-                            }`}>
-                            <span className={`h-2 w-2 rounded-none ${isBackendLive ? 'bg-indigo-600 animate-pulse' : 'bg-zinc-400'
-                                }`} />
-                            <span className={`text-[10px] font-bold uppercase tracking-wider ${isBackendLive ? 'text-indigo-700' : 'text-zinc-500'
-                                }`}>
-                                {isBackendLive ? 'Live System' : 'Offline Mode'}
-                            </span>
-                        </div>
-                    </div>
-                </header>
 
                 {/* Page content */}
-                <main className="flex-1 p-4 sm:p-8 overflow-auto">
+                <main className="flex-1 p-4 sm:p-8  overflow-auto">
                     {children}
                 </main>
             </div>

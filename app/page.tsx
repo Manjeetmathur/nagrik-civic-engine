@@ -36,6 +36,38 @@ export default function CitizenPortal() {
     description: ''
   });
 
+  const [locationLoading, setLocationLoading] = useState(false);
+
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    setLocationLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        const locationStr = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+
+        setFormData(prev => ({ ...prev, location: locationStr }));
+        setLocationLoading(false);
+
+        // Optional: reverse geocoding if we had an API key/service, 
+        // but coordinates are a good reliable start for municipal response.
+      },
+      (error) => {
+        setLocationLoading(false);
+        let msg = "Check permissions or internal error.";
+        if (error.code === 1) msg = "Permission denied. Please allow location access.";
+        else if (error.code === 2) msg = "Position unavailable.";
+        else if (error.code === 3) msg = "Request timed out.";
+        alert(`Location Error: ${msg}`);
+      },
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const { data, isLive } = await api.getAlerts();
@@ -142,36 +174,37 @@ export default function CitizenPortal() {
               <ShieldAlert size={20} />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex justify-between items-start">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-red-400">Critical Alert</p>
-                <button onClick={() => setToast(null)}><X size={14} className="text-zinc-500" /></button>
+              <div className="flex justify-between items-start mb-1">
+                <p className="text-xs font-bold uppercase tracking-wider text-red-100">{toast.type}</p>
+                <Clock size={12} className="text-white/40" />
               </div>
-              <p className="text-sm font-bold truncate mt-1">{toast.type}</p>
-              <p className="text-[11px] text-zinc-400 line-clamp-1">{toast.location}</p>
+              <p className="text-sm font-bold text-white mb-0.5">{toast.location}</p>
+              <p className="text-[10px] text-white/60 line-clamp-1">{toast.description}</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Track Modal */}
+      {/* Tracking Modal */}
       {showTrackModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowTrackModal(false)}></div>
-          <div className="relative bg-white rounded-2xl p-8 w-full max-w-sm outline outline-1 outline-zinc-400 animate-in zoom-in-95 duration-300 border border-zinc-200">
+          <div className="relative bg-white rounded-2xl p-8 w-full max-w-sm shadow-2xl animate-in zoom-in-95 duration-300 border border-zinc-200">
             <button onClick={() => setShowTrackModal(false)} className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-zinc-600"><X size={20} /></button>
             <h3 className="text-xl font-bold text-zinc-900 mb-2">Track Status</h3>
             <p className="text-sm text-zinc-900 mb-6">Enter your alphanumeric tracking ID.</p>
             <div className="space-y-4">
               <input
                 type="text"
-                placeholder="E.g. cl0k..."
+                placeholder="TRK-XXXX-XXXX"
                 value={trackInput}
                 onChange={(e) => setTrackInput(e.target.value)}
-                className="shadcn-input w-full px-4 py-3 outline-none text-center font-mono font-bold tracking-tight"
+                className="shadcn-input w-full px-4 py-3 text-sm font-mono uppercase tracking-wider"
               />
               <button
+                disabled={!trackInput}
                 onClick={() => router.push(`/track/${trackInput}`)}
-                className="w-full py-3 bg-zinc-900 text-white font-bold rounded-none outline outline-1 outline-zinc-400 hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 bg-zinc-900 text-white font-bold rounded-none shadow hover:opacity-90 transition-all flex items-center justify-center gap-2"
               >
                 <Search size={18} /> View Status
               </button>
@@ -190,7 +223,7 @@ export default function CitizenPortal() {
                   <img
                     src="/logo.png"
                     alt="Nagrik Logo"
-                    className="object-cover h-25"
+                    className="object-cover h-16"
                   />
                 </div>
               </div>
@@ -243,7 +276,6 @@ export default function CitizenPortal() {
                         <div className="relative w-full h-full group">
                           <img src={imagePreview} className="w-full h-full object-cover" alt="Preview" />
                           <button type="button" onClick={() => setImagePreview(null)} className="absolute top-3 right-3 p-2 bg-black/50 text-white rounded-full backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity"><X size={16} /></button>
-                          {/* Optional: Allow re-upload directly */}
                           <div className="absolute bottom-3 right-3">
                             <div className="scale-75 origin-bottom-right">
                               <CloudinaryUpload
@@ -270,7 +302,15 @@ export default function CitizenPortal() {
                       <label className="text-[10px] font-bold text-zinc-900 uppercase tracking-tight">Detected Location</label>
                       <div className="relative">
                         <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
-                        <input required type="text" placeholder="Street or Area" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} className="shadcn-input w-full pl-9 pr-4 py-2.5 text-sm" />
+                        <input required type="text" placeholder="Street or Area" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} className="shadcn-input w-full pl-9 pr-24 py-2.5 text-sm" />
+                        <button
+                          type="button"
+                          onClick={handleGetLocation}
+                          disabled={locationLoading}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-[10px] font-bold text-indigo-600 hover:bg-indigo-50 rounded transition-all disabled:opacity-50"
+                        >
+                          {locationLoading ? 'Detecting...' : 'Detect'}
+                        </button>
                       </div>
                     </div>
                     <div className="md:col-span-2 space-y-1.5">
@@ -535,12 +575,12 @@ export default function CitizenPortal() {
               </div>
             </div>
           )}
-        </main>
+        </main >
 
         <footer className="py-12 border-t border-zinc-100 text-center">
           <p className="text-[10px] text-zinc-900 font-bold uppercase tracking-[0.3em]">Nagrik Civic Engine • 1.0.2 Stable Build</p>
         </footer>
-      </div>
+      </div >
     </>
   );
 }

@@ -38,12 +38,19 @@ class ApiService {
         return () => eventSource.close();
     }
 
-    async getAlerts(page: number = 1, limit: number = 20): Promise<{ data: Alert[], isLive: boolean }> {
+    async getAlerts(page: number = 1, limit: number = 20, source?: string): Promise<{ data: Alert[], isLive: boolean }> {
         try {
-            const res = await fetch(`${API_BASE}/alerts?page=${page}&limit=${limit}`);
+            const params = new URLSearchParams({
+                page: page.toString(),
+                limit: limit.toString()
+            });
+            if (source) params.append('source', source);
+
+            const res = await fetch(`${API_BASE}/alerts?${params.toString()}`);
             if (res.ok) {
                 this.isLive = true;
-                return { data: await res.json(), isLive: true };
+                const data = await res.json();
+                return { data: Array.isArray(data) ? data : [], isLive: true };
             }
         } catch (e) {
             console.error("API Fetch Error:", e);
