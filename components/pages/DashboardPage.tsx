@@ -20,8 +20,15 @@ import {
     Tooltip,
     ResponsiveContainer,
     AreaChart,
-    Area
+    Area,
+    PieChart,
+    Pie,
+    Cell,
+    BarChart,
+    Bar,
+    Legend
 } from 'recharts';
+import { Clock } from 'lucide-react';
 import { api } from '@/lib/api';
 
 interface DashboardPageProps {
@@ -114,7 +121,6 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
         return () => clearInterval(interval);
     }, [alerts]);
 
-    // Use stats from summary if available, otherwise look at dashboardStats
     const stats = [
         {
             label: 'Active Alerts',
@@ -144,9 +150,46 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
             color: 'text-zinc-600',
             bg: 'bg-zinc-50'
         },
+        {
+            label: 'Avg Resolution',
+            value: '4.2h',
+            icon: Clock,
+            color: 'text-amber-600',
+            bg: 'bg-amber-50'
+        },
+        {
+            label: 'Resolution Rate',
+            value: '87%',
+            icon: TrendingUp,
+            color: 'text-emerald-600',
+            bg: 'bg-emerald-50'
+        },
     ];
 
-    // Show all passed alerts since they are now paginated by the parent
+    // Analytics Mock Data
+    const issueTypeData = [
+        { name: 'Accidents', value: 12, color: '#ef4444' },
+        { name: 'Traffic', value: 28, color: '#f59e0b' },
+        { name: 'Potholes', value: 15, color: '#f97316' },
+        { name: 'Garbage', value: 22, color: '#6366f1' },
+    ];
+
+    const statusData = [
+        { name: 'Pending', value: 23, color: '#ef4444' },
+        { name: 'Resolved', value: 48, color: '#6366f1' },
+        { name: 'Dismissed', value: 6, color: '#71717a' },
+    ];
+
+    const timelineData = [
+        { day: 'Mon', incidents: 12 },
+        { day: 'Tue', incidents: 19 },
+        { day: 'Wed', incidents: 15 },
+        { day: 'Thu', incidents: 22 },
+        { day: 'Fri', incidents: 18 },
+        { day: 'Sat', incidents: 9 },
+        { day: 'Sun', incidents: 7 },
+    ];
+
     const recentAlerts = alerts;
 
     return (
@@ -165,7 +208,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {stats.map((stat, i) => (
                     <div key={i} className="shadcn-card p-6 flex flex-col justify-between group hover:border-zinc-300 transition-all">
                         <div className="flex items-center justify-between mb-2">
@@ -250,12 +293,88 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
                                 </div>
                             </div>
                         </div>
-                        <button
-                            onClick={() => setView('analytics')}
-                            className="mt-8 w-full py-2.5 text-xs font-semibold text-zinc-900 bg-white border border-zinc-200 rounded-none hover:bg-zinc-50 flex items-center justify-center gap-2 transition-all"
-                        >
-                            Full Analysis <ArrowRight size={14} />
-                        </button>
+                    </div>
+                </div>
+
+                {/* Analytical Charts */}
+                <div className="lg:col-span-1 shadcn-card p-6">
+                    <h3 className="font-bold text-zinc-900 mb-6">Issue Distribution</h3>
+                    <div className="h-64">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={issueTypeData}
+                                    cx="50%"
+                                    cy="50%"
+                                    innerRadius={60}
+                                    outerRadius={80}
+                                    paddingAngle={5}
+                                    dataKey="value"
+                                >
+                                    {issueTypeData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.color} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-4">
+                        {issueTypeData.map((item) => (
+                            <div key={item.name} className="flex items-center gap-2">
+                                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }}></div>
+                                <span className="text-[10px] text-zinc-600 font-medium">{item.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="lg:col-span-1 shadcn-card p-6">
+                    <h3 className="font-bold text-zinc-900 mb-6">Status Health</h3>
+                    <div className="h-64">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={statusData}
+                                    cx="50%"
+                                    cy="50%"
+                                    innerRadius={60}
+                                    outerRadius={80}
+                                    paddingAngle={5}
+                                    dataKey="value"
+                                >
+                                    {statusData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.color} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 mt-4">
+                        {statusData.map((item) => (
+                            <div key={item.name} className="flex items-center gap-2 text-center flex-col">
+                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }}></div>
+                                <span className="text-[10px] text-zinc-600 font-medium">{item.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="lg:col-span-3 shadcn-card p-6">
+                    <h3 className="font-bold text-zinc-900 mb-6">Weekly Incident Timeline</h3>
+                    <div className="h-64">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={timelineData}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f4f4f5" />
+                                <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#a1a1aa', fontSize: 12 }} />
+                                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#a1a1aa', fontSize: 12 }} />
+                                <Tooltip
+                                    contentStyle={{ borderRadius: '8px', border: '1px solid #e4e4e7', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                />
+                                <Bar dataKey="incidents" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
             </div>
