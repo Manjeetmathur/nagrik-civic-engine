@@ -23,6 +23,7 @@ export default function CitizenPortal() {
   const [allAlerts, setAllAlerts] = useState<Alert[]>([]);
   const [isBackendLive, setIsBackendLive] = useState(false);
   const [toast, setToast] = useState<Alert | null>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -40,6 +41,26 @@ export default function CitizenPortal() {
       setIsBackendLive(isLive);
     };
     fetchData();
+
+    // Capture user's geolocation
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error("Error getting location:", error.message);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        }
+      );
+    }
   }, []);
 
   // Subscribe to Live Updates
@@ -66,7 +87,11 @@ export default function CitizenPortal() {
       reporter: {
         name: formData.name,
         phone: formData.phone,
-        email: formData.email
+        email: formData.email,
+        coordinates: userLocation ? {
+          lat: userLocation.lat,
+          lng: userLocation.lng
+        } : null
       }
     };
 

@@ -25,7 +25,6 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             );
         }
-        console.log("speechStressData", speechStressData)
         const report = await prisma.report.create({
             data: {
                 keyword,
@@ -56,6 +55,12 @@ export async function POST(req: NextRequest) {
 
         if (repeatedReports) {
             try {
+                console.log("Checker input:", {
+                    keyword: report.keyword,
+                    lat: report.latitude,
+                    lng: report.longitude,
+                    time: report.createdAt
+                });
                 // Include current report in the cluster for email and summary
                 const allReportsInCluster = [report, ...repeatedReports]
                 const summary = await generateIncidentSummary(allReportsInCluster)
@@ -71,7 +76,6 @@ export async function POST(req: NextRequest) {
                         isResolved: true
                     }
                 })
-                console.log(`Marked ${reportIds.length} reports as resolved`)
             } catch (emailError) {
                 // Log but don't fail the request if email/AI summary fails
                 console.error("Failed to process alert notification:", emailError)

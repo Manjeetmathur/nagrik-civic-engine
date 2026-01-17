@@ -35,7 +35,8 @@ const Layout: React.FC<LayoutProps> = ({
 
     const navItems = [
         { id: 'dashboard' as View, label: 'Dashboard', icon: LayoutDashboard },
-        { id: 'map' as View, label: 'Live Map', icon: MapPin },
+        { id: 'map' as View, label: 'Voice Map', icon: MapPin },
+        { id: 'citizen-map' as View, label: 'Citizen Map', icon: MapPin },
         { id: 'voice-reports' as View, label: 'Voice Reports', icon: ShieldAlert },
         { id: 'voice-analytics' as View, label: 'Voice Analytics', icon: BarChart3 },
         { id: 'alerts' as View, label: 'All Alerts', icon: ShieldAlert },
