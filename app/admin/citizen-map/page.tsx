@@ -6,6 +6,7 @@ import { User, Alert } from '@/types';
 import Layout from '@/components/Layout';
 import { AdminCitizenMap } from '@/components/admin-citizen-map';
 import { MapPin } from 'lucide-react';
+import { GoogleMapsIcon } from '@/components/GoogleMapsIcon';
 
 export default function AdminCitizenMapPage() {
     const router = useRouter();
@@ -102,8 +103,8 @@ export default function AdminCitizenMapPage() {
                                     <div
                                         key={alert.id}
                                         className={`rounded-lg border transition-all ${selectedAlert?.id === alert.id
-                                                ? 'bg-indigo-50 border-indigo-200 shadow-sm'
-                                                : 'bg-white border-transparent hover:bg-zinc-50 hover:border-zinc-200'
+                                            ? 'bg-indigo-50 border-indigo-200 shadow-sm'
+                                            : 'bg-white border-transparent hover:bg-zinc-50 hover:border-zinc-200'
                                             }`}
                                     >
                                         <button
@@ -116,8 +117,8 @@ export default function AdminCitizenMapPage() {
                                                     {alert.id.slice(0, 8)}
                                                 </span>
                                                 <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${alert.status === 'Pending' ? 'bg-red-100 text-red-700' :
-                                                        alert.status === 'Resolved' ? 'bg-green-100 text-green-700' :
-                                                            'bg-gray-100 text-gray-700'
+                                                    alert.status === 'Resolved' ? 'bg-green-100 text-green-700' :
+                                                        'bg-gray-100 text-gray-700'
                                                     }`}>
                                                     {alert.status}
                                                 </span>
@@ -136,7 +137,7 @@ export default function AdminCitizenMapPage() {
                                                     rel="noopener noreferrer"
                                                     className="flex items-center justify-center gap-2 w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors"
                                                 >
-                                                    <MapPin size={14} />
+                                                    <GoogleMapsIcon size={14} />
                                                     Open in Google Maps
                                                 </a>
                                             </div>

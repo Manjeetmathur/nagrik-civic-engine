@@ -6,6 +6,7 @@ import { User } from '@/types';
 import Layout from '@/components/Layout';
 import { AdminVoiceMap } from '@/components/admin-voice-map';
 import { MapPin } from 'lucide-react';
+import { GoogleMapsIcon } from '@/components/GoogleMapsIcon';
 
 interface Report {
     id: string
@@ -117,8 +118,8 @@ export default function AdminMapPage() {
                                 <div
                                     key={report.id}
                                     className={`rounded-lg border transition-all ${selectedReport?.id === report.id
-                                            ? 'bg-indigo-50 border-indigo-200 shadow-sm'
-                                            : 'bg-white border-transparent hover:bg-zinc-50 hover:border-zinc-200'
+                                        ? 'bg-indigo-50 border-indigo-200 shadow-sm'
+                                        : 'bg-white border-transparent hover:bg-zinc-50 hover:border-zinc-200'
                                         }`}
                                 >
                                     <button
@@ -132,8 +133,8 @@ export default function AdminMapPage() {
                                             </span>
                                             {report.speechStressData && (
                                                 <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${report.speechStressData.confidence >= 60 ? 'bg-red-100 text-red-700' :
-                                                        report.speechStressData.confidence >= 40 ? 'bg-yellow-100 text-yellow-700' :
-                                                            'bg-green-100 text-green-700'
+                                                    report.speechStressData.confidence >= 40 ? 'bg-yellow-100 text-yellow-700' :
+                                                        'bg-green-100 text-green-700'
                                                     }`}>
                                                     {report.speechStressData.confidence}%
                                                 </span>
@@ -149,7 +150,7 @@ export default function AdminMapPage() {
                                             rel="noopener noreferrer"
                                             className="flex items-center justify-center gap-2 w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors"
                                         >
-                                            <MapPin size={14} />
+                                            <GoogleMapsIcon size={14} />
                                             Open in Google Maps
                                         </a>
                                     </div>
