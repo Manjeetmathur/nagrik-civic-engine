@@ -1,0 +1,99 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { User, Alert, AlertStatus } from '@/types';
+import Layout from '@/components/Layout';
+import AlertsPage from '@/components/pages/AlertsPage';
+import { api } from '@/lib/api';
+import { ShieldAlert, X } from 'lucide-react';
+
+export default function AdminAlertsPage() {
+    const router = useRouter();
+    const [user, setUser] = useState<User | null>(null);
+    const [allAlerts, setAllAlerts] = useState<Alert[]>([]);
+    const [isBackendLive, setIsBackendLive] = useState(false);
+    const [toast, setToast] = useState<Alert | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const initialize = async () => {
+            const storedUser = localStorage.getItem('nagar_user');
+            if (!storedUser) {
+                router.push('/admin');
+                return;
+            }
+            setUser(JSON.parse(storedUser));
+            const { data, isLive } = await api.getAlerts();
+            setAllAlerts(data);
+            setIsBackendLive(isLive);
+            setIsLoading(false);
+        };
+        initialize();
+    }, [router]);
+
+    useEffect(() => {
+        if (isBackendLive) {
+            const unsubscribe = api.subscribeToAlerts((newAlert) => {
+                setAllAlerts(prev => [newAlert, ...prev]);
+                setToast(newAlert);
+                setTimeout(() => setToast(null), 5000);
+            });
+            return unsubscribe;
+        }
+    }, [isBackendLive]);
+
+    const updateAlertStatus = async (id: string, status: AlertStatus) => {
+        const updated = await api.updateStatus(id, status);
+        if (updated) {
+            setAllAlerts(prev => prev.map(a => a.id === id ? updated : a));
+        }
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('nagar_user');
+        router.push('/');
+    };
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-[#fafafa] gap-4">
+                <div className="w-12 h-12 border-2 border-zinc-200 border-t-zinc-900 rounded-full animate-spin"></div>
+            </div>
+        );
+    }
+
+    if (!user) return null;
+
+    return (
+        <>
+            {toast && (
+                <div className="fixed top-20 right-6 z-[100] w-80 bg-zinc-900 text-white rounded-xl shadow-2xl border border-white/10 p-4 animate-in slide-in-from-right duration-500">
+                    <div className="flex items-start gap-3">
+                        <div className="bg-red-500 p-2 rounded-lg shrink-0">
+                            <ShieldAlert size={20} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-start">
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-red-400">Critical Alert</p>
+                                <button onClick={() => setToast(null)}><X size={14} className="text-zinc-500" /></button>
+                            </div>
+                            <p className="text-sm font-bold truncate mt-1">{toast.type}</p>
+                            <p className="text-[11px] text-zinc-400 line-clamp-1">{toast.location}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <Layout
+                currentView="alerts"
+                onNavigate={(view) => router.push(`/admin/${view}`)}
+                onLogout={handleLogout}
+                user={user}
+                isBackendLive={isBackendLive}
+            >
+                <AlertsPage alerts={allAlerts} onUpdateAlert={updateAlertStatus} />
+            </Layout>
+        </>
+    );
+}
