@@ -144,7 +144,7 @@ export default function CitizenPortal() {
               />
               <button
                 onClick={() => router.push(`/track/${trackInput}`)}
-                className="w-full py-3 bg-zinc-900 text-white font-bold rounded-lg shadow hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 bg-zinc-900 text-white font-bold rounded-none shadow hover:opacity-90 transition-all flex items-center justify-center gap-2"
               >
                 <Search size={18} /> View Status
               </button>
@@ -159,22 +159,22 @@ export default function CitizenPortal() {
           <div className="max-w-7xl mx-auto px-4 sm:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center gap-2.5">
-                <div className="bg-zinc-900 p-1.5 rounded-md text-white">
+                <div className="bg-zinc-900 p-1.5 rounded-none text-white">
                   <ShieldAlert size={20} />
                 </div>
                 <h1 className="font-bold text-zinc-900 tracking-tight hidden sm:block">Nagar <span className="text-indigo-600">Portal</span></h1>
               </div>
 
-              <nav className="flex items-center gap-1 bg-zinc-100 p-1 rounded-lg">
+              <nav className="flex items-center gap-1 bg-zinc-100 p-1 rounded-none">
                 <button
                   onClick={() => setActiveTab('report')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${activeTab === 'report' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
+                  className={`px-4 py-1.5 text-xs font-bold rounded-none transition-all ${activeTab === 'report' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
                 >
                   File Report
                 </button>
                 <button
                   onClick={() => setActiveTab('live')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-2 ${activeTab === 'live' ? 'bg-white text-indigo-600 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
+                  className={`px-4 py-1.5 text-xs font-bold rounded-none transition-all flex items-center gap-2 ${activeTab === 'live' ? 'bg-white text-indigo-600 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
                 >
                   <Radio size={14} className={activeTab === 'live' ? 'animate-pulse' : ''} /> Area Updates
                 </button>
@@ -182,7 +182,7 @@ export default function CitizenPortal() {
 
               <div className="flex items-center gap-3">
                 <button onClick={() => setShowTrackModal(true)} className="hidden md:block text-xs font-bold text-zinc-500 hover:text-zinc-900">Track ID</button>
-                <button onClick={() => router.push('/admin')} className="px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold rounded uppercase tracking-wider shadow-sm">Admin Access</button>
+                <button onClick={() => router.push('/admin')} className="px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold rounded-none uppercase tracking-wider shadow-sm">Admin Access</button>
               </div>
             </div>
           </div>
@@ -196,13 +196,13 @@ export default function CitizenPortal() {
                 <p className="text-zinc-500 text-sm max-w-lg mx-auto leading-relaxed">Integrated computer vision processing for automated municipal response.</p>
               </div>
 
-              <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden max-w-3xl mx-auto">
+              <div className="bg-white rounded-none shadow-sm border border-zinc-200 overflow-hidden max-w-3xl mx-auto">
                 <form onSubmit={handleSubmit} className="p-8 md:p-10 space-y-10">
                   <section>
                     <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-4 flex items-center gap-2">
                       <Camera size={14} /> 1. Upload Visual Evidence
                     </label>
-                    <div className={`relative w-full rounded-xl overflow-hidden ${imagePreview ? 'h-60 border-2 border-indigo-500' : ''}`}>
+                    <div className={`relative w-full rounded-none overflow-hidden ${imagePreview ? 'h-60 border-2 border-indigo-500' : ''}`}>
                       {imagePreview ? (
                         <div className="relative w-full h-full group">
                           <img src={imagePreview} className="w-full h-full object-cover" alt="Preview" />
@@ -260,7 +260,7 @@ export default function CitizenPortal() {
                     </div>
                   </section>
 
-                  <button type="submit" disabled={isSubmitting} className="w-full py-4 bg-zinc-900 text-white font-bold rounded-xl shadow-lg hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
+                  <button type="submit" disabled={isSubmitting} className="w-full py-4 bg-zinc-900 text-white font-bold rounded-none shadow-lg hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
                     {isSubmitting ? <><RefreshCw size={18} className="animate-spin" /> Analyzing Image...</> : <><Send size={18} /> Submit Official Report</>}
                   </button>
                 </form>
@@ -292,7 +292,7 @@ export default function CitizenPortal() {
                 ) : (
                   allAlerts.map((alert) => (
                     <div key={alert.id} className="shadcn-card p-5 flex flex-col md:flex-row gap-6 hover:border-zinc-300 transition-colors group">
-                      <div className="w-full md:w-32 h-24 rounded-lg bg-zinc-100 overflow-hidden border border-zinc-100 shrink-0">
+                      <div className="w-full md:w-32 h-24 rounded-none bg-zinc-100 overflow-hidden border border-zinc-100 shrink-0">
                         <img src={alert.thumbnailUrl} className="w-full h-full object-cover transition-transform group-hover:scale-105" alt={alert.type} />
                       </div>
                       <div className="flex-1 flex flex-col justify-between">

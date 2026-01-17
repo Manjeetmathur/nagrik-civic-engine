@@ -20,9 +20,9 @@ export default function AdminLogin() {
 
     return (
         <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-md bg-white rounded-2xl border border-zinc-200 shadow-sm p-8">
+            <div className="w-full max-w-md bg-white rounded-none border border-zinc-200 shadow-sm p-8">
                 <div className="text-center mb-8">
-                    <div className="bg-zinc-900 p-3 rounded-xl text-white inline-flex mb-4">
+                    <div className="bg-zinc-900 p-3 rounded-none text-white inline-flex mb-4">
                         <ShieldAlert size={32} />
                     </div>
                     <h2 className="text-2xl font-bold text-zinc-900 mb-2">Admin Login</h2>
@@ -52,7 +52,7 @@ export default function AdminLogin() {
                             required
                         />
                     </div>
-                    <button type="submit" className="w-full py-3 bg-zinc-900 text-white font-bold rounded-lg hover:opacity-90 transition-all">
+                    <button type="submit" className="w-full py-3 bg-zinc-900 text-white font-bold rounded-none hover:opacity-90 transition-all">
                         Sign In
                     </button>
                 </form>

@@ -74,7 +74,7 @@ export default function ReportIssuePage() {
                     Back to Portal
                 </button>
 
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-zinc-200">
+                <div className="bg-white rounded-none shadow-xl overflow-hidden border border-zinc-200">
                     <div className="bg-zinc-900 p-6 text-white">
                         <h1 className="text-2xl font-bold">Report an Issue</h1>
                         <p className="text-zinc-400 mt-1">Help us keep the city clean and safe</p>
@@ -90,7 +90,7 @@ export default function ReportIssuePage() {
                                         key={type}
                                         type="button"
                                         onClick={() => setFormData({ ...formData, type })}
-                                        className={`p-3 text-sm font-medium rounded-xl border transition-all ${formData.type === type
+                                        className={`p-3 text-sm font-medium rounded-none border transition-all ${formData.type === type
                                             ? 'bg-zinc-900 text-white border-zinc-900 shadow-lg scale-105'
                                             : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300'
                                             }`}
@@ -110,7 +110,7 @@ export default function ReportIssuePage() {
                                     type="text"
                                     required
                                     placeholder="Enter address or landmark"
-                                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-zinc-200 focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 outline-none transition-all"
+                                    className="w-full pl-10 pr-4 py-2.5 rounded-none border border-zinc-200 focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 outline-none transition-all"
                                     value={formData.location}
                                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                                 />
@@ -122,7 +122,7 @@ export default function ReportIssuePage() {
                             <label className="block text-sm font-bold text-zinc-700 mb-2">Evidence Photo</label>
 
                             {preview ? (
-                                <div className="relative w-full h-64 bg-zinc-100 rounded-xl overflow-hidden group">
+                                <div className="relative w-full h-64 bg-zinc-100 rounded-none overflow-hidden group">
                                     <img src={preview} alt="Preview" className="w-full h-full object-cover" />
                                     <button
                                         type="button"
@@ -130,7 +130,7 @@ export default function ReportIssuePage() {
                                             setPreview(null);
                                             setFormData({ ...formData, imageUrl: '' }); // Clear URL
                                         }}
-                                        className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                                        className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-none shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
                                     >
                                         <X size={16} />
                                     </button>
@@ -163,7 +163,7 @@ export default function ReportIssuePage() {
                                 required
                                 rows={4}
                                 placeholder="Describe the issue in detail..."
-                                className="w-full px-4 py-3 rounded-xl border border-zinc-200 focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 outline-none transition-all resize-none"
+                                className="w-full px-4 py-3 rounded-none border border-zinc-200 focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 outline-none transition-all resize-none"
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                             />
@@ -176,7 +176,7 @@ export default function ReportIssuePage() {
                                 <input
                                     type="text"
                                     placeholder="Name"
-                                    className="px-4 py-2.5 rounded-xl border border-zinc-200 outline-none focus:border-zinc-900"
+                                    className="px-4 py-2.5 rounded-none border border-zinc-200 outline-none focus:border-zinc-900"
                                     value={formData.reporter.name}
                                     onChange={(e) => setFormData({
                                         ...formData,
@@ -186,7 +186,7 @@ export default function ReportIssuePage() {
                                 <input
                                     type="tel"
                                     placeholder="Phone Number"
-                                    className="px-4 py-2.5 rounded-xl border border-zinc-200 outline-none focus:border-zinc-900"
+                                    className="px-4 py-2.5 rounded-none border border-zinc-200 outline-none focus:border-zinc-900"
                                     value={formData.reporter.phone}
                                     onChange={(e) => setFormData({
                                         ...formData,
@@ -199,7 +199,7 @@ export default function ReportIssuePage() {
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="w-full py-4 bg-zinc-900 text-white font-bold text-lg rounded-xl hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-zinc-900/20"
+                            className="w-full py-4 bg-zinc-900 text-white font-bold text-lg rounded-none hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-zinc-900/20"
                         >
                             {submitting ? 'Submitting Report...' : 'Submit Report'}
                         </button>

@@ -65,7 +65,7 @@ const Layout: React.FC<LayoutProps> = ({
                     {/* Logo */}
                     <div className="p-6 border-b border-zinc-100 flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
-                            <div className="bg-zinc-900 p-1.5 rounded-md text-white">
+                            <div className="bg-zinc-900 p-1.5 rounded-none text-white">
                                 <ShieldAlert size={20} />
                             </div>
                             <h1 className="font-bold text-zinc-900 tracking-tight">
@@ -93,7 +93,7 @@ const Layout: React.FC<LayoutProps> = ({
                                         setSidebarOpen(false);
                                     }}
                                     className={`
-                    w-full flex items-center gap-3 px-4 py-2.5 rounded-lg
+                    w-full flex items-center gap-3 px-4 py-2.5 rounded-none
                     text-sm font-medium transition-all
                     ${isActive
                                             ? 'bg-zinc-900 text-white shadow-sm'
@@ -118,7 +118,7 @@ const Layout: React.FC<LayoutProps> = ({
                         </div>
                         <button
                             onClick={onLogout}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-zinc-100 text-zinc-700 rounded-lg text-sm font-medium hover:bg-zinc-200 transition-colors"
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-zinc-100 text-zinc-700 rounded-none text-sm font-medium hover:bg-zinc-200 transition-colors"
                         >
                             <LogOut size={16} />
                             Logout
@@ -141,11 +141,11 @@ const Layout: React.FC<LayoutProps> = ({
 
                         <div className="flex-1" />
 
-                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${isBackendLive
+                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-none border ${isBackendLive
                             ? 'bg-indigo-50 border-indigo-100'
                             : 'bg-zinc-100 border-zinc-200'
                             }`}>
-                            <span className={`h-2 w-2 rounded-full ${isBackendLive ? 'bg-indigo-600 animate-pulse' : 'bg-zinc-400'
+                            <span className={`h-2 w-2 rounded-none ${isBackendLive ? 'bg-indigo-600 animate-pulse' : 'bg-zinc-400'
                                 }`} />
                             <span className={`text-[10px] font-bold uppercase tracking-wider ${isBackendLive ? 'text-indigo-700' : 'text-zinc-500'
                                 }`}>

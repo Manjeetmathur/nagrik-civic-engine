@@ -9,9 +9,19 @@ interface AlertsPageProps {
     alerts: Alert[];
     onUpdateAlert: (id: string, status: AlertStatus) => void;
     forceSource?: 'camera' | 'citizen';
+    onLoadMore?: () => void;
+    hasMore?: boolean;
+    isFetchingMore?: boolean;
 }
 
-const AlertsPage: React.FC<AlertsPageProps> = ({ alerts, onUpdateAlert, forceSource }) => {
+const AlertsPage: React.FC<AlertsPageProps> = ({
+    alerts,
+    onUpdateAlert,
+    forceSource,
+    onLoadMore,
+    hasMore,
+    isFetchingMore
+}) => {
     const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
     const [statusFilter, setStatusFilter] = useState<AlertStatus | 'all'>('all');
     const [sourceFilter, setSourceFilter] = useState<'all' | 'camera' | 'citizen'>(forceSource || 'all');
@@ -127,7 +137,7 @@ const AlertsPage: React.FC<AlertsPageProps> = ({ alerts, onUpdateAlert, forceSou
                                 className="shadcn-card p-5 flex flex-col md:flex-row gap-6 hover:border-zinc-300 transition-colors group cursor-pointer"
                                 onClick={() => setSelectedAlert(alert)}
                             >
-                                <div className="w-full md:w-40 h-32 rounded-lg bg-zinc-100 overflow-hidden border border-zinc-100 shrink-0">
+                                <div className="w-full md:w-40 h-32 rounded-none bg-zinc-100 overflow-hidden border border-zinc-100 shrink-0">
                                     <img src={alert.thumbnailUrl} className="w-full h-full object-cover transition-transform group-hover:scale-105" alt={alert.type} />
                                 </div>
 
@@ -135,15 +145,15 @@ const AlertsPage: React.FC<AlertsPageProps> = ({ alerts, onUpdateAlert, forceSou
                                     <div>
                                         <div className="flex items-center justify-between mb-2">
                                             <span className={`text-xs font-bold uppercase tracking-wider ${alert.type === IssueType.ACCIDENT ? 'text-red-600' :
-                                                    alert.type === IssueType.TRAFFIC ? 'text-amber-600' :
-                                                        alert.type === IssueType.POTHOLE ? 'text-orange-600' :
-                                                            'text-indigo-600'
+                                                alert.type === IssueType.TRAFFIC ? 'text-amber-600' :
+                                                    alert.type === IssueType.POTHOLE ? 'text-orange-600' :
+                                                        'text-indigo-600'
                                                 }`}>
                                                 {alert.type}
                                             </span>
-                                            <span className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase ${alert.status === AlertStatus.PENDING ? 'bg-red-50 text-red-600' :
-                                                    alert.status === AlertStatus.RESOLVED ? 'bg-indigo-50 text-indigo-600' :
-                                                        'bg-zinc-100 text-zinc-600'
+                                            <span className={`px-3 py-1 rounded-none text-[9px] font-bold uppercase ${alert.status === AlertStatus.PENDING ? 'bg-red-50 text-red-600' :
+                                                alert.status === AlertStatus.RESOLVED ? 'bg-indigo-50 text-indigo-600' :
+                                                    'bg-zinc-100 text-zinc-600'
                                                 }`}>
                                                 {alert.status}
                                             </span>
@@ -180,6 +190,21 @@ const AlertsPage: React.FC<AlertsPageProps> = ({ alerts, onUpdateAlert, forceSou
                         ))
                     )}
                 </div>
+
+                {hasMore && (
+                    <div className="mt-8 flex justify-center pb-8">
+                        <button
+                            onClick={onLoadMore}
+                            disabled={isFetchingMore}
+                            className="px-6 py-2 bg-white border border-zinc-200 rounded-none text-sm font-bold text-zinc-500 hover:text-zinc-900 transition-all shadow-sm hover:shadow active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                        >
+                            {isFetchingMore ? (
+                                <div className="h-4 w-4 border-2 border-zinc-200 border-t-zinc-900 rounded-none animate-spin"></div>
+                            ) : null}
+                            {isFetchingMore ? 'Loading reports...' : 'Load More Reports'}
+                        </button>
+                    </div>
+                )}
             </div>
         </>
     );

@@ -27,6 +27,9 @@ import { api } from '@/lib/api';
 interface DashboardPageProps {
     setView: (view: View) => void;
     alerts: Alert[];
+    onLoadMore?: () => void;
+    hasMore?: boolean;
+    isFetchingMore?: boolean;
 }
 
 // Add these types to match what was in /app/dashboard/page.tsx
@@ -50,7 +53,13 @@ type SpeechStressStats = {
     commonIndicators: Array<{ indicator: string; count: number }>;
 };
 
-const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
+const DashboardPage: React.FC<DashboardPageProps> = ({
+    setView,
+    alerts,
+    onLoadMore,
+    hasMore,
+    isFetchingMore
+}) => {
     const [summary, setSummary] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
@@ -137,7 +146,8 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
         },
     ];
 
-    const recentAlerts = alerts.slice(0, 5);
+    // Show all passed alerts since they are now paginated by the parent
+    const recentAlerts = alerts;
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
@@ -160,7 +170,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
                     <div key={i} className="shadcn-card p-6 flex flex-col justify-between group hover:border-zinc-300 transition-all">
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">{stat.label}</span>
-                            <div className={`${stat.bg} p-1.5 rounded-lg`}>
+                            <div className={`${stat.bg} p-1.5 rounded-none`}>
                                 <stat.icon size={16} className={stat.color} />
                             </div>
                         </div>
@@ -180,7 +190,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
                             <p className="text-xs text-zinc-500">Visualized distribution of safety reports over time.</p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                            <span className="h-2 w-2 rounded-none bg-indigo-500 animate-pulse"></span>
                             <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Live Activity</span>
                         </div>
                     </div>
@@ -226,8 +236,8 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
                                     <span className="text-zinc-500 flex items-center gap-1.5"><Video size={12} /> AI Cameras</span>
                                     <span className="text-zinc-900">{summary?.stats ? Math.round((summary.stats.onlineCameras / summary.stats.totalCameras) * 100) : 72}%</span>
                                 </div>
-                                <div className="w-full h-2 bg-zinc-100 rounded-full overflow-hidden">
-                                    <div className="h-full bg-indigo-600 rounded-full transition-all duration-1000" style={{ width: summary?.stats ? `${(summary.stats.onlineCameras / summary.stats.totalCameras) * 100}%` : '72%' }}></div>
+                                <div className="w-full h-2 bg-zinc-100 rounded-none overflow-hidden">
+                                    <div className="h-full bg-indigo-600 rounded-none transition-all duration-1000" style={{ width: summary?.stats ? `${(summary.stats.onlineCameras / summary.stats.totalCameras) * 100}%` : '72%' }}></div>
                                 </div>
                             </div>
                             <div className="space-y-2">
@@ -235,14 +245,14 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
                                     <span className="text-zinc-500 flex items-center gap-1.5"><UserIcon size={12} /> Citizen Reports</span>
                                     <span className="text-zinc-900">28%</span>
                                 </div>
-                                <div className="w-full h-2 bg-zinc-100 rounded-full overflow-hidden">
-                                    <div className="h-full bg-zinc-400 rounded-full" style={{ width: '28%' }}></div>
+                                <div className="w-full h-2 bg-zinc-100 rounded-none overflow-hidden">
+                                    <div className="h-full bg-zinc-400 rounded-none" style={{ width: '28%' }}></div>
                                 </div>
                             </div>
                         </div>
                         <button
                             onClick={() => setView('analytics')}
-                            className="mt-8 w-full py-2.5 text-xs font-semibold text-zinc-900 bg-white border border-zinc-200 rounded-md hover:bg-zinc-50 flex items-center justify-center gap-2 transition-all"
+                            className="mt-8 w-full py-2.5 text-xs font-semibold text-zinc-900 bg-white border border-zinc-200 rounded-none hover:bg-zinc-50 flex items-center justify-center gap-2 transition-all"
                         >
                             Full Analysis <ArrowRight size={14} />
                         </button>
@@ -281,25 +291,25 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
                     <div className="lg:col-span-2 shadcn-card p-6">
                         <h2 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-cyan-500 bg-clip-text text-transparent mb-4">Speech Stress Analysis</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                            <div className="p-3 bg-zinc-50 rounded-lg">
+                            <div className="p-3 bg-zinc-50 rounded-none">
                                 <p className="text-xs text-zinc-500 mb-1">Average Confidence</p>
                                 <p className="text-2xl font-semibold text-indigo-600">
                                     {speechStressStats.averageConfidence}%
                                 </p>
                             </div>
-                            <div className="p-3 bg-zinc-50 rounded-lg">
+                            <div className="p-3 bg-zinc-50 rounded-none">
                                 <p className="text-xs text-zinc-500 mb-1">High Stress Reports</p>
                                 <p className="text-2xl font-semibold text-red-500">
                                     {speechStressStats.highStressReports}
                                 </p>
                             </div>
-                            <div className="p-3 bg-zinc-50 rounded-lg">
+                            <div className="p-3 bg-zinc-50 rounded-none">
                                 <p className="text-xs text-zinc-500 mb-1">Avg Words/Second</p>
                                 <p className="text-2xl font-semibold text-cyan-500">
                                     {speechStressStats.averageWordsPerSecond}
                                 </p>
                             </div>
-                            <div className="p-3 bg-zinc-50 rounded-lg">
+                            <div className="p-3 bg-zinc-50 rounded-none">
                                 <p className="text-xs text-zinc-500 mb-1">Total Analyzed</p>
                                 <p className="text-2xl font-semibold text-lime-600">
                                     {speechStressStats.totalAnalyzed}
@@ -348,14 +358,14 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
                                 <tr key={alert.id} className="hover:bg-zinc-50/50 transition-colors">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="h-8 w-8 rounded bg-zinc-100 overflow-hidden border border-zinc-200">
+                                            <div className="h-8 w-8 rounded-none bg-zinc-100 overflow-hidden border border-zinc-200">
                                                 <img src={alert.thumbnailUrl} alt="Alert" className="h-full w-full object-cover" />
                                             </div>
                                             <span className="text-sm font-medium text-zinc-900">{alert.type}</span>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border ${alert.source === 'camera' ? 'bg-indigo-50 text-indigo-700 border-indigo-100' : 'bg-zinc-100 text-zinc-700 border-zinc-200'
+                                        <span className={`px-2 py-0.5 rounded-none text-[9px] font-bold uppercase tracking-wider border ${alert.source === 'camera' ? 'bg-indigo-50 text-indigo-700 border-indigo-100' : 'bg-zinc-100 text-zinc-700 border-zinc-200'
                                             }`}>
                                             {alert.source === 'camera' ? 'AI CAM' : 'CITIZEN'}
                                         </span>
@@ -366,7 +376,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${alert.status === AlertStatus.PENDING ? 'bg-red-50 text-red-600' : 'bg-indigo-50 text-indigo-600'
+                                        <span className={`px-2 py-0.5 rounded-none text-[9px] font-bold uppercase ${alert.status === AlertStatus.PENDING ? 'bg-red-50 text-red-600' : 'bg-indigo-50 text-indigo-600'
                                             }`}>
                                             {alert.status}
                                         </span>
@@ -376,6 +386,23 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
                         </tbody>
                     </table>
                 </div>
+
+                {hasMore && (
+                    <div className="px-6 py-4 border-t border-zinc-100 flex justify-center">
+                        <button
+                            onClick={onLoadMore}
+                            disabled={isFetchingMore}
+                            className="text-xs font-bold text-zinc-500 hover:text-zinc-900 flex items-center gap-2 transition-all disabled:opacity-50"
+                        >
+                            {isFetchingMore ? (
+                                <RefreshCw size={14} className="animate-spin" />
+                            ) : (
+                                <ChevronRight size={14} className="rotate-90" />
+                            )}
+                            {isFetchingMore ? 'Loading reports...' : 'Load More Reports'}
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

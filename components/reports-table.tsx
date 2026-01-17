@@ -105,10 +105,10 @@ const columns: ColumnDef<Report>[] = [
     cell: ({ row }) => {
       const severity = row.getValue("severity") as string
       const severityClass = {
-        high: "px-3 py-1 rounded-full text-xs font-semibold bg-red-500/20 text-red-300 border border-red-500/30 shadow-lg shadow-red-500/20",
+        high: "px-3 py-1 rounded-none text-xs font-semibold bg-red-500/20 text-red-300 border border-red-500/30 shadow-lg shadow-red-500/20",
         medium:
-          "px-3 py-1 rounded-full text-xs font-semibold bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 shadow-lg shadow-yellow-500/20",
-        low: "px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-300 border border-green-500/30 shadow-lg shadow-green-500/20",
+          "px-3 py-1 rounded-none text-xs font-semibold bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 shadow-lg shadow-yellow-500/20",
+        low: "px-3 py-1 rounded-none text-xs font-semibold bg-green-500/20 text-green-300 border border-green-500/30 shadow-lg shadow-green-500/20",
       }[severity]
 
       return <div className={severityClass}>{severity.charAt(0).toUpperCase() + severity.slice(1)}</div>
@@ -128,7 +128,7 @@ const columns: ColumnDef<Report>[] = [
         : confidence >= 40
           ? "px-2 py-1 rounded text-xs font-semibold bg-yellow-500/20 text-yellow-300 border border-yellow-500/30"
           : "px-2 py-1 rounded text-xs font-semibold bg-green-500/20 text-green-300 border border-green-500/30"
-      
+
       return <div className={confidenceClass}>{confidence}%</div>
     },
   },
@@ -160,12 +160,12 @@ export function ReportsTable({ data, onRowClick }: ReportsTableProps) {
   const table = useReactTable({
     data: filteredData,
     columns,
-      state: {
-    sorting,
-    columnVisibility: {
-      category: false, // 👈 hides category column
+    state: {
+      sorting,
+      columnVisibility: {
+        category: false, // 👈 hides category column
+      },
     },
-  },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -179,17 +179,17 @@ export function ReportsTable({ data, onRowClick }: ReportsTableProps) {
     <div className="space-y-1 w-full">
       <div className="flex items-center justify-between gap-4  ">
         <div className="flex items-center gap-2">
-         
+
         </div>
         <div className="text-xs text-muted-foreground">
           Showing {table.getRowModel().rows.length} of {data.length} reports
         </div>
       </div>
 
-      <div className="rounded-lg border border-white/10 overflow-hidden bg-black/30 backdrop-blur-md ring mb-5 ring-indigo-500/20">
+      <div className="rounded-none border border-white/10 overflow-hidden bg-black/30 backdrop-blur-md ring mb-5 ring-indigo-500/20">
         <Table>
           <TableHeader>
-            <TableRow className="border-white/5 hover:bg-white/5 "> 
+            <TableRow className="border-white/5 hover:bg-white/5 ">
               {table.getHeaderGroups().map((headerGroup) =>
                 headerGroup.headers.map((header) => (
                   <TableHead key={header.id} className="text-indigo-300 p-2">

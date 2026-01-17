@@ -24,7 +24,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ alert, onClose, onUpdateStatus 
                 onClick={onClose}
             />
 
-            <div className="relative bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
+            <div className="relative bg-white rounded-none w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
                 {/* Header */}
                 <div className="sticky top-0 bg-white border-b border-zinc-200 px-6 py-4 flex items-center justify-between z-10">
                     <div>
@@ -33,7 +33,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ alert, onClose, onUpdateStatus 
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 rounded-lg transition-colors"
+                        className="p-2 text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 rounded-none transition-colors"
                     >
                         <X size={20} />
                     </button>
@@ -43,7 +43,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ alert, onClose, onUpdateStatus 
                 <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
                     <div className="p-6 space-y-6">
                         {/* Image */}
-                        <div className="relative w-full h-96 bg-zinc-100 rounded-xl overflow-hidden border border-zinc-200">
+                        <div className="relative w-full h-96 bg-zinc-100 rounded-none overflow-hidden border border-zinc-200">
                             <img
                                 src={alert.fullImageUrl}
                                 alt="Alert"
@@ -62,7 +62,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ alert, onClose, onUpdateStatus 
                                         height: `${(detection.height / 600) * 100}%`,
                                     }}
                                 >
-                                    <div className="absolute -top-6 left-0 bg-red-500 text-white text-xs px-2 py-0.5 rounded font-bold">
+                                    <div className="absolute -top-6 left-0 bg-red-500 text-white text-xs px-2 py-0.5 rounded-none font-bold">
                                         {detection.label} {Math.round(detection.confidence * 100)}%
                                     </div>
                                 </div>
@@ -101,9 +101,9 @@ const AlertModal: React.FC<AlertModalProps> = ({ alert, onClose, onUpdateStatus 
                                             <span className="text-zinc-600">Detection Accuracy</span>
                                             <span className="font-bold text-zinc-900">{Math.round(alert.confidence * 100)}%</span>
                                         </div>
-                                        <div className="w-full h-2 bg-zinc-100 rounded-full overflow-hidden">
+                                        <div className="w-full h-2 bg-zinc-100 rounded-none overflow-hidden">
                                             <div
-                                                className="h-full bg-indigo-600 rounded-full transition-all"
+                                                className="h-full bg-indigo-600 rounded-none transition-all"
                                                 style={{ width: `${alert.confidence * 100}%` }}
                                             />
                                         </div>
@@ -131,7 +131,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ alert, onClose, onUpdateStatus 
                                 </div>
 
                                 {alert.reporter && (
-                                    <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-100">
+                                    <div className="bg-zinc-50 p-4 rounded-none border border-zinc-100">
                                         <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Reporter Info</label>
                                         <div className="mt-2 space-y-1 text-sm text-zinc-700">
                                             <p><strong>Name:</strong> {alert.reporter.name}</p>
@@ -154,7 +154,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ alert, onClose, onUpdateStatus 
                                 )}
 
                                 {alert.feedback && (
-                                    <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                                    <div className="bg-indigo-50 p-4 rounded-none border border-indigo-100">
                                         <label className="text-xs font-bold text-indigo-600 uppercase tracking-wider">Citizen Feedback</label>
                                         <div className="mt-2 space-y-1 text-sm text-zinc-700">
                                             <p><strong>Rating:</strong> {alert.feedback.rating}/5 ⭐</p>
@@ -176,7 +176,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ alert, onClose, onUpdateStatus 
                                     <button
                                         onClick={() => handleStatusUpdate(AlertStatus.RESOLVED)}
                                         disabled={alert.status === AlertStatus.RESOLVED}
-                                        className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white rounded-none font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                     >
                                         <CheckCircle size={18} />
                                         Mark Resolved
@@ -184,7 +184,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ alert, onClose, onUpdateStatus 
                                     <button
                                         onClick={() => handleStatusUpdate(AlertStatus.PENDING)}
                                         disabled={alert.status === AlertStatus.PENDING}
-                                        className="flex items-center gap-2 px-4 py-2.5 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        className="flex items-center gap-2 px-4 py-2.5 bg-amber-500 text-white rounded-none font-medium hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                     >
                                         <Clock size={18} />
                                         Mark Pending
@@ -192,7 +192,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ alert, onClose, onUpdateStatus 
                                     <button
                                         onClick={() => handleStatusUpdate(AlertStatus.DISMISSED)}
                                         disabled={alert.status === AlertStatus.DISMISSED}
-                                        className="flex items-center gap-2 px-4 py-2.5 bg-zinc-500 text-white rounded-lg font-medium hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        className="flex items-center gap-2 px-4 py-2.5 bg-zinc-500 text-white rounded-none font-medium hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                     >
                                         <Ban size={18} />
                                         Dismiss

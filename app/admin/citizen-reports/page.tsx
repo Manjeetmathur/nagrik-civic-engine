@@ -11,8 +11,11 @@ export default function AdminCitizenReportsPage() {
     const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
     const [allAlerts, setAllAlerts] = useState<Alert[]>([]);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
     const [isBackendLive, setIsBackendLive] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [isFetchingMore, setIsFetchingMore] = useState(false);
 
     useEffect(() => {
         const initialize = async () => {
@@ -22,13 +25,29 @@ export default function AdminCitizenReportsPage() {
                 return;
             }
             setUser(JSON.parse(storedUser));
-            const { data, isLive } = await api.getAlerts();
+            const { data, isLive } = await api.getAlerts(1, 20);
             setAllAlerts(data);
+            setHasMore(data.length === 20);
             setIsBackendLive(isLive);
             setIsLoading(false);
         };
         initialize();
     }, [router]);
+
+    const handleLoadMore = async () => {
+        if (isFetchingMore || !hasMore) return;
+        setIsFetchingMore(true);
+        const nextPage = page + 1;
+        const { data } = await api.getAlerts(nextPage, 20);
+        if (data.length > 0) {
+            setAllAlerts(prev => [...prev, ...data]);
+            setPage(nextPage);
+            setHasMore(data.length === 20);
+        } else {
+            setHasMore(false);
+        }
+        setIsFetchingMore(false);
+    };
 
     const updateAlertStatus = async (id: string, status: AlertStatus) => {
         const updated = await api.updateStatus(id, status);
@@ -64,6 +83,9 @@ export default function AdminCitizenReportsPage() {
                 alerts={allAlerts.filter(a => a.source === 'citizen')}
                 onUpdateAlert={updateAlertStatus}
                 forceSource="citizen"
+                onLoadMore={handleLoadMore}
+                hasMore={hasMore}
+                isFetchingMore={isFetchingMore}
             />
         </Layout>
     );

@@ -38,9 +38,9 @@ class ApiService {
         return () => eventSource.close();
     }
 
-    async getAlerts(): Promise<{ data: Alert[], isLive: boolean }> {
+    async getAlerts(page: number = 1, limit: number = 20): Promise<{ data: Alert[], isLive: boolean }> {
         try {
-            const res = await fetch(`${API_BASE}/alerts`);
+            const res = await fetch(`${API_BASE}/alerts?page=${page}&limit=${limit}`);
             if (res.ok) {
                 this.isLive = true;
                 return { data: await res.json(), isLive: true };
