@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/server/db';
 import { alertEvents } from '@/lib/server/eventEmitter';
 import { Alert, AlertStatus } from '@/types';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export async function POST(request: NextRequest) {
     try {
@@ -23,6 +24,21 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // Upload to Cloudinary
+        let imageUrl = '';
+        try {
+            const uploadResult = await uploadToCloudinary(imageData, 'alerts');
+            imageUrl = uploadResult.secure_url;
+        } catch (uploadError) {
+            console.error('Failed to upload image to Cloudinary:', uploadError);
+            // Fallback: Use placeholder or fail? 
+            // We will fail for now as per requirement "images must be pushed as cloudaniry"
+            return NextResponse.json(
+                { error: 'Failed to upload image' },
+                { status: 500 }
+            );
+        }
+
         const newAlert: Alert = {
             id: `tm${Date.now()}${Math.random().toString(36).substr(2, 9)}`,
             type: type,
@@ -30,8 +46,8 @@ export async function POST(request: NextRequest) {
             location: camera.location,
             timestamp: new Date().toISOString(),
             status: AlertStatus.PENDING,
-            thumbnailUrl: imageData,
-            fullImageUrl: imageData,
+            thumbnailUrl: imageUrl,
+            fullImageUrl: imageUrl,
             cameraId: camera.id,
             description: `Teachable Machine detected ${type.toLowerCase()} with ${Math.round((confidence || 1) * 100)}% confidence`,
             source: 'camera'
