@@ -4,17 +4,18 @@ import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import { IssueType, Alert } from '@/types';
-import { Camera, MapPin, Upload, X, ArrowLeft } from 'lucide-react';
+import { MapPin, X, ArrowLeft } from 'lucide-react';
+import { CloudinaryUpload } from '@/components/ui/cloudinary-upload';
 
 export default function ReportIssuePage() {
     const router = useRouter();
-    const fileInputRef = useRef<HTMLInputElement>(null);
     const [submitting, setSubmitting] = useState(false);
     const [preview, setPreview] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         type: IssueType.POTHOLE,
         location: '',
         description: '',
+        imageUrl: '',
         reporter: {
             name: '',
             phone: '',
@@ -44,7 +45,7 @@ export default function ReportIssuePage() {
         try {
             const report = {
                 ...formData,
-                imageUrl: preview || '/placeholder-issue.jpg', // Fallback or handle backend
+                imageUrl: formData.imageUrl || '/placeholder-issue.jpg',
                 timestamp: new Date().toISOString() // Let backend handle real time, but useful for preview
             };
 
@@ -90,8 +91,8 @@ export default function ReportIssuePage() {
                                         type="button"
                                         onClick={() => setFormData({ ...formData, type })}
                                         className={`p-3 text-sm font-medium rounded-xl border transition-all ${formData.type === type
-                                                ? 'bg-zinc-900 text-white border-zinc-900 shadow-lg scale-105'
-                                                : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300'
+                                            ? 'bg-zinc-900 text-white border-zinc-900 shadow-lg scale-105'
+                                            : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300'
                                             }`}
                                     >
                                         {type}
@@ -119,13 +120,6 @@ export default function ReportIssuePage() {
                         {/* Image Upload */}
                         <div>
                             <label className="block text-sm font-bold text-zinc-700 mb-2">Evidence Photo</label>
-                            <input
-                                type="file"
-                                ref={fileInputRef}
-                                className="hidden"
-                                accept="image/*"
-                                onChange={handleImageUpload}
-                            />
 
                             {preview ? (
                                 <div className="relative w-full h-64 bg-zinc-100 rounded-xl overflow-hidden group">
@@ -134,21 +128,31 @@ export default function ReportIssuePage() {
                                         type="button"
                                         onClick={() => {
                                             setPreview(null);
-                                            if (fileInputRef.current) fileInputRef.current.value = '';
+                                            setFormData({ ...formData, imageUrl: '' }); // Clear URL
                                         }}
                                         className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
                                     >
                                         <X size={16} />
                                     </button>
+                                    <div className="absolute bottom-2 right-2">
+                                        <CloudinaryUpload
+                                            currentImage={preview}
+                                            onUploadSuccess={(url) => {
+                                                setPreview(url);
+                                                // @ts-ignore
+                                                setFormData(prev => ({ ...prev, imageUrl: url }));
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             ) : (
-                                <div
-                                    onClick={() => fileInputRef.current?.click()}
-                                    className="w-full h-40 border-2 border-dashed border-zinc-300 rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-zinc-900 hover:bg-zinc-50 transition-all text-zinc-500 hover:text-zinc-900"
-                                >
-                                    <Camera size={32} />
-                                    <span className="font-medium">Click to upload photo</span>
-                                </div>
+                                <CloudinaryUpload
+                                    onUploadSuccess={(url) => {
+                                        setPreview(url);
+                                        // @ts-ignore
+                                        setFormData(prev => ({ ...prev, imageUrl: url }));
+                                    }}
+                                />
                             )}
                         </div>
 

@@ -4,10 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { Alert, IssueType } from '@/types';
 import { api } from '@/lib/api';
 import {
-  ShieldAlert, Camera, MapPin, Send, UploadCloud, RefreshCw,
+  ShieldAlert, Camera, MapPin, Send, RefreshCw,
   CheckCircle, Radio, Navigation, AlertTriangle, Search, X, Clock
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { CloudinaryUpload } from '@/components/ui/cloudinary-upload';
 
 export default function CitizenPortal() {
   const router = useRouter();
@@ -51,15 +52,6 @@ export default function CitizenPortal() {
       return unsubscribe;
     }
   }, [isBackendLive]);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -210,18 +202,23 @@ export default function CitizenPortal() {
                     <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-4 flex items-center gap-2">
                       <Camera size={14} /> 1. Upload Visual Evidence
                     </label>
-                    <div className={`relative h-60 w-full rounded-xl border-2 border-dashed transition-all flex flex-col items-center justify-center overflow-hidden bg-zinc-50/50 ${imagePreview ? 'border-indigo-500' : 'border-zinc-200'}`}>
+                    <div className={`relative w-full rounded-xl overflow-hidden ${imagePreview ? 'h-60 border-2 border-indigo-500' : ''}`}>
                       {imagePreview ? (
                         <div className="relative w-full h-full group">
                           <img src={imagePreview} className="w-full h-full object-cover" alt="Preview" />
                           <button type="button" onClick={() => setImagePreview(null)} className="absolute top-3 right-3 p-2 bg-black/50 text-white rounded-full backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity"><X size={16} /></button>
+                          {/* Optional: Allow re-upload directly */}
+                          <div className="absolute bottom-3 right-3">
+                            <div className="scale-75 origin-bottom-right">
+                              <CloudinaryUpload
+                                currentImage={imagePreview}
+                                onUploadSuccess={setImagePreview}
+                              />
+                            </div>
+                          </div>
                         </div>
                       ) : (
-                        <div className="text-center p-6">
-                          <UploadCloud size={32} className="mx-auto text-zinc-300 mb-2" />
-                          <p className="text-xs font-bold text-zinc-900">Click to upload photo</p>
-                          <input type="file" accept="image/*" required onChange={handleImageChange} className="absolute inset-0 opacity-0 cursor-pointer" />
-                        </div>
+                        <CloudinaryUpload onUploadSuccess={setImagePreview} />
                       )}
                     </div>
                   </section>
