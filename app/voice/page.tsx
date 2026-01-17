@@ -76,7 +76,7 @@ export default function Counter() {
         else interimText += t;
       }
       setInterim(interimText);
-      
+
       // Real-time stress analysis on ALL speech (interim + final)
       const allText = interimText + final;
       if (allText.trim()) {
@@ -85,7 +85,7 @@ export default function Counter() {
           final.length > 0
         );
         setStressMetrics(metrics);
-        
+
         // Check for early warning trigger
         if (stressAnalyzerRef.current.shouldTriggerEarlyWarning(metrics)) {
           const warningKey = `early-${Date.now()}`;
@@ -96,7 +96,7 @@ export default function Counter() {
           }
         }
       }
-      
+
       if (final) {
         const detected: { word: string; desc: string }[] = [];
         Object.keys(words).forEach((key: any) => {
@@ -150,9 +150,9 @@ export default function Counter() {
   };
   const triggerAlert = async (alert: { word: string; desc: string }) => {
     if (!location || !stressMetrics) return;
-  
+
     try {
-      await fetch("/api/report", {
+      await fetch("/api/report2", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -160,13 +160,13 @@ export default function Counter() {
         body: JSON.stringify({
           keyword: alert.word,
           description: alert.desc,
-  
+
           category: "OTHER",
           severity: stressMetrics.confidence >= 60 ? "HIGH" : "MEDIUM",
-  
+
           latitude: (location as any).lat,
           longitude: (location as any).lng,
-  
+
           // ✅ THIS IS WHAT BACKEND WANTS
           speechStressData: {
             wordsPerSecond: stressMetrics.wordsPerSecond,
@@ -182,7 +182,7 @@ export default function Counter() {
       console.error("Failed to send report:", err);
     }
   };
-  
+
 
   const triggerEarlyWarning = async (metrics: SpeechMetrics) => {
     if (!location) return;
