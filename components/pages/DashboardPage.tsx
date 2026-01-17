@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { View, IssueType, AlertStatus, Alert } from '@/types';
+import { View, Alert, AlertStatus } from '@/types';
 import {
     ShieldAlert,
     CheckCircle,
@@ -11,7 +11,7 @@ import {
     ArrowRight,
     User as UserIcon,
     ChevronRight,
-    RefreshCw
+    RefreshCw,
 } from 'lucide-react';
 import {
     XAxis,
@@ -29,25 +29,87 @@ interface DashboardPageProps {
     alerts: Alert[];
 }
 
+// Add these types to match what was in /app/dashboard/page.tsx
+type RecentReport = {
+    id: string;
+    keyword: string;
+    description: string;
+    createdAt: string;
+    speechStressData?: {
+        confidence: number;
+        wordsPerSecond: number;
+        stressIndicators: string;
+    } | null;
+};
+
+type SpeechStressStats = {
+    averageConfidence: number;
+    highStressReports: number;
+    averageWordsPerSecond: number;
+    totalAnalyzed: number;
+    commonIndicators: Array<{ indicator: string; count: number }>;
+};
+
 const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
     const [summary, setSummary] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
-    const fetchSummary = async () => {
+    // New state for additional data from /api/dashboard
+    const [dashboardStats, setDashboardStats] = useState({
+        totalReports: 0,
+        criticalAlerts: 0,
+        inProgress: 0,
+    });
+    const [speechStressStats, setSpeechStressStats] = useState<SpeechStressStats>({
+        averageConfidence: 0,
+        highStressReports: 0,
+        averageWordsPerSecond: 0,
+        totalAnalyzed: 0,
+        commonIndicators: [],
+    });
+
+    const fetchData = async () => {
         setLoading(true);
-        const data = await api.getAnalyticsSummary();
-        setSummary(data);
+        try {
+            // Fetch existing analytics summary
+            const summaryData = await api.getAnalyticsSummary();
+            setSummary(summaryData);
+
+            // Fetch additional dashboard data
+            const res = await fetch("/api/dashboard");
+            if (res.ok) {
+                const data = await res.json();
+                setDashboardStats({
+                    totalReports: data.totalReports || 0,
+                    criticalAlerts: data.criticalAlerts || 0,
+                    inProgress: data.inProgress || 0,
+                });
+                setSpeechStressStats(data.speechStressStats || {
+                    averageConfidence: 0,
+                    highStressReports: 0,
+                    averageWordsPerSecond: 0,
+                    totalAnalyzed: 0,
+                    commonIndicators: [],
+                });
+            }
+        } catch (e) {
+            console.error("Failed to fetch dashboard data", e);
+        }
         setLoading(false);
     };
 
     useEffect(() => {
-        fetchSummary();
+        fetchData();
+        // Set up real-time refresh every 5 seconds
+        const interval = setInterval(fetchData, 5000);
+        return () => clearInterval(interval);
     }, [alerts]);
 
+    // Use stats from summary if available, otherwise look at dashboardStats
     const stats = [
         {
             label: 'Active Alerts',
-            value: summary?.stats?.activeAlerts ?? '...',
+            value: summary?.stats?.activeAlerts ?? dashboardStats.criticalAlerts,
             icon: ShieldAlert,
             color: 'text-red-600',
             bg: 'bg-red-50'
@@ -61,7 +123,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
         },
         {
             label: 'Total Incidents',
-            value: summary?.stats?.totalIncidents ?? '...',
+            value: summary?.stats?.totalIncidents ?? dashboardStats.totalReports,
             icon: TrendingUp,
             color: 'text-zinc-600',
             bg: 'bg-zinc-50'
@@ -85,7 +147,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
                     <p className="text-zinc-500">Real-time smart city safety monitoring overview.</p>
                 </div>
                 <button
-                    onClick={fetchSummary}
+                    onClick={fetchData}
                     className="p-2 text-zinc-400 hover:text-zinc-900 transition-colors"
                 >
                     <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
@@ -154,36 +216,113 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ setView, alerts }) => {
                     </div>
                 </div>
 
-                {/* Source Distribution */}
-                <div className="shadcn-card p-6 flex flex-col">
-                    <h3 className="font-bold text-zinc-900 mb-6">Alert Sources</h3>
-                    <div className="flex-1 flex flex-col justify-center space-y-4">
-                        <div className="space-y-2">
-                            <div className="flex justify-between text-xs font-medium">
-                                <span className="text-zinc-500 flex items-center gap-1.5"><Video size={12} /> AI Cameras</span>
-                                <span className="text-zinc-900">{summary?.stats ? Math.round((summary.stats.onlineCameras / summary.stats.totalCameras) * 100) : 72}%</span>
+                <div className="flex flex-col gap-6">
+                    {/* Source Distribution */}
+                    <div className="shadcn-card p-6 flex flex-col h-full">
+                        <h3 className="font-bold text-zinc-900 mb-6">Alert Sources</h3>
+                        <div className="flex-1 flex flex-col justify-center space-y-4">
+                            <div className="space-y-2">
+                                <div className="flex justify-between text-xs font-medium">
+                                    <span className="text-zinc-500 flex items-center gap-1.5"><Video size={12} /> AI Cameras</span>
+                                    <span className="text-zinc-900">{summary?.stats ? Math.round((summary.stats.onlineCameras / summary.stats.totalCameras) * 100) : 72}%</span>
+                                </div>
+                                <div className="w-full h-2 bg-zinc-100 rounded-full overflow-hidden">
+                                    <div className="h-full bg-indigo-600 rounded-full transition-all duration-1000" style={{ width: summary?.stats ? `${(summary.stats.onlineCameras / summary.stats.totalCameras) * 100}%` : '72%' }}></div>
+                                </div>
                             </div>
-                            <div className="w-full h-2 bg-zinc-100 rounded-full overflow-hidden">
-                                <div className="h-full bg-indigo-600 rounded-full transition-all duration-1000" style={{ width: summary?.stats ? `${(summary.stats.onlineCameras / summary.stats.totalCameras) * 100}%` : '72%' }}></div>
+                            <div className="space-y-2">
+                                <div className="flex justify-between text-xs font-medium">
+                                    <span className="text-zinc-500 flex items-center gap-1.5"><UserIcon size={12} /> Citizen Reports</span>
+                                    <span className="text-zinc-900">28%</span>
+                                </div>
+                                <div className="w-full h-2 bg-zinc-100 rounded-full overflow-hidden">
+                                    <div className="h-full bg-zinc-400 rounded-full" style={{ width: '28%' }}></div>
+                                </div>
                             </div>
                         </div>
-                        <div className="space-y-2">
-                            <div className="flex justify-between text-xs font-medium">
-                                <span className="text-zinc-500 flex items-center gap-1.5"><UserIcon size={12} /> Citizen Reports</span>
-                                <span className="text-zinc-900">28%</span>
+                        <button
+                            onClick={() => setView('analytics')}
+                            className="mt-8 w-full py-2.5 text-xs font-semibold text-zinc-900 bg-white border border-zinc-200 rounded-md hover:bg-zinc-50 flex items-center justify-center gap-2 transition-all"
+                        >
+                            Full Analysis <ArrowRight size={14} />
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Merged Section: System Status */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="shadcn-card p-6">
+                    <h2 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-cyan-500 bg-clip-text text-transparent mb-4">System Status</h2>
+                    <div className="space-y-3 text-sm">
+                        <div className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg">
+                            <span className="text-zinc-600">Voice Detection Engine</span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-green-600">Active</span>
                             </div>
-                            <div className="w-full h-2 bg-zinc-100 rounded-full overflow-hidden">
-                                <div className="h-full bg-zinc-400 rounded-full" style={{ width: '28%' }}></div>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg">
+                            <span className="text-zinc-600">Geolocation Service</span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-green-600">Operational</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg">
+                            <span className="text-zinc-600">Database Connection</span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-green-600">Connected</span>
                             </div>
                         </div>
                     </div>
-                    <button
-                        onClick={() => setView('analytics')}
-                        className="mt-8 w-full py-2.5 text-xs font-semibold text-zinc-900 bg-white border border-zinc-200 rounded-md hover:bg-zinc-50 flex items-center justify-center gap-2 transition-all"
-                    >
-                        Full Analysis <ArrowRight size={14} />
-                    </button>
                 </div>
+
+                {/* Merged Section: Speech Stress Analysis */}
+                {speechStressStats.totalAnalyzed > 0 && (
+                    <div className="lg:col-span-2 shadcn-card p-6">
+                        <h2 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-cyan-500 bg-clip-text text-transparent mb-4">Speech Stress Analysis</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                            <div className="p-3 bg-zinc-50 rounded-lg">
+                                <p className="text-xs text-zinc-500 mb-1">Average Confidence</p>
+                                <p className="text-2xl font-semibold text-indigo-600">
+                                    {speechStressStats.averageConfidence}%
+                                </p>
+                            </div>
+                            <div className="p-3 bg-zinc-50 rounded-lg">
+                                <p className="text-xs text-zinc-500 mb-1">High Stress Reports</p>
+                                <p className="text-2xl font-semibold text-red-500">
+                                    {speechStressStats.highStressReports}
+                                </p>
+                            </div>
+                            <div className="p-3 bg-zinc-50 rounded-lg">
+                                <p className="text-xs text-zinc-500 mb-1">Avg Words/Second</p>
+                                <p className="text-2xl font-semibold text-cyan-500">
+                                    {speechStressStats.averageWordsPerSecond}
+                                </p>
+                            </div>
+                            <div className="p-3 bg-zinc-50 rounded-lg">
+                                <p className="text-xs text-zinc-500 mb-1">Total Analyzed</p>
+                                <p className="text-2xl font-semibold text-lime-600">
+                                    {speechStressStats.totalAnalyzed}
+                                </p>
+                            </div>
+                        </div>
+                        {speechStressStats.commonIndicators.length > 0 && (
+                            <div className="mt-4">
+                                <p className="text-xs text-zinc-500 mb-2">Common Stress Indicators</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {speechStressStats.commonIndicators.map((item, idx) => (
+                                        <span
+                                            key={idx}
+                                            className="px-2 py-1 bg-red-50 border border-red-100 rounded text-xs text-red-600"
+                                        >
+                                            {item.indicator} ({item.count})
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* Recent Alerts Table Preview */}
