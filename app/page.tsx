@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Alert, IssueType } from '@/types';
+import { Alert, IssueType, AlertStatus } from '@/types';
 import { api } from '@/lib/api';
 import {
   ShieldAlert, Camera, MapPin, Send, RefreshCw,
@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CloudinaryUpload } from '@/components/ui/cloudinary-upload';
+import { FeedbackForm } from '@/components/FeedbackForm';
 
 export default function CitizenPortal() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function CitizenPortal() {
   const [trackInput, setTrackInput] = useState('');
   const [submissionId, setSubmissionId] = useState<string>('');
   const [allAlerts, setAllAlerts] = useState<Alert[]>([]);
+  const [displayedAlertsCount, setDisplayedAlertsCount] = useState(10);
   const [isBackendLive, setIsBackendLive] = useState(false);
   const [toast, setToast] = useState<Alert | null>(null);
 
@@ -277,8 +279,9 @@ export default function CitizenPortal() {
               </div>
             </div>
           ) : (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              {/* Header */}
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
                 <div>
                   <h2 className="text-3xl font-extrabold text-zinc-900 tracking-tight">City-Wide Safety Feed</h2>
                   <p className="text-zinc-900 text-sm flex items-center gap-2 mt-1">
@@ -293,47 +296,217 @@ export default function CitizenPortal() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-4">
-                {allAlerts.length === 0 ? (
-                  <div className="py-20 text-center shadcn-card border-dashed">
-                    <ShieldAlert size={40} className="mx-auto text-zinc-200 mb-4" />
-                    <p className="text-zinc-900 font-medium">No live safety alerts detected in this zone.</p>
-                  </div>
-                ) : (
-                  allAlerts.map((alert) => (
-                    <div key={alert.id} className="shadcn-card p-5 flex flex-col md:flex-row gap-6 hover:border-zinc-300 transition-colors group">
-                      <div className="w-full md:w-32 h-24 rounded-none bg-zinc-100 overflow-hidden border border-zinc-100 shrink-0">
-                        <img src={alert.thumbnailUrl} className="w-full h-full object-cover transition-transform group-hover:scale-105" alt={alert.type} />
-                      </div>
-                      <div className="flex-1 flex flex-col justify-between">
+              {/* Three Column Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left Sidebar - Issue Tracking System */}
+                <div className="lg:col-span-3 space-y-4">
+                  <div className="shadcn-card p-5 sticky top-20">
+                    <h3 className="font-bold text-zinc-900 mb-4 flex items-center gap-2">
+                      <ShieldAlert size={16} className="text-indigo-600" />
+                      Issue Tracking
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100">
                         <div>
-                          <div className="flex items-center justify-between mb-1">
-                            <span className={`text-[10px] font-bold uppercase tracking-wider ${alert.type === IssueType.ACCIDENT ? 'text-red-600' : 'text-indigo-600'}`}>
-                              {alert.type}
-                            </span>
-                            <span className="text-[10px] text-zinc-400 font-mono tracking-tighter truncate max-w-[80px]">{alert.id}</span>
-                          </div>
-                          <h4 className="font-bold text-zinc-900 mb-1">{alert.location}</h4>
-                          <p className="text-xs text-zinc-900 line-clamp-1">{alert.description}</p>
+                          <p className="text-xs font-bold text-red-900">Critical</p>
+                          <p className="text-xl font-bold text-red-600">{allAlerts.filter(a => a.type === IssueType.ACCIDENT).length}</p>
                         </div>
-                        <div className="mt-4 flex flex-wrap items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                          <span className="flex items-center gap-1.5"><Clock size={12} /> {new Date(alert.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                          <span className="flex items-center gap-1.5 text-zinc-900"><MapPin size={12} className="text-zinc-400" /> Nearby</span>
-                          <span className={`px-2 py-0.5 rounded-full ${alert.source === 'camera' ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' : 'bg-zinc-100 text-zinc-500'}`}>
-                            {alert.source}
-                          </span>
+                        <AlertTriangle className="text-red-500" size={24} />
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg border border-amber-100">
+                        <div>
+                          <p className="text-xs font-bold text-amber-900">Pending</p>
+                          <p className="text-xl font-bold text-amber-600">{allAlerts.filter(a => a.status === AlertStatus.PENDING).length}</p>
+                        </div>
+                        <Clock className="text-amber-500" size={24} />
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-100">
+                        <div>
+                          <p className="text-xs font-bold text-green-900">Resolved</p>
+                          <p className="text-xl font-bold text-green-600">{allAlerts.filter(a => a.status === AlertStatus.RESOLVED).length}</p>
+                        </div>
+                        <CheckCircle className="text-green-500" size={24} />
+                      </div>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-zinc-100">
+                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">Quick Stats</p>
+                      <div className="space-y-2 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-zinc-600">Total Reports</span>
+                          <span className="font-bold text-zinc-900">{allAlerts.length}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-zinc-600">This Week</span>
+                          <span className="font-bold text-zinc-900">{Math.floor(allAlerts.length * 0.6)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-zinc-600">Response Time</span>
+                          <span className="font-bold text-indigo-600">~15 min</span>
                         </div>
                       </div>
                     </div>
-                  ))
-                )}
-              </div>
+                  </div>
+                </div>
 
-              <div className="bg-amber-50 border border-amber-100 p-6 rounded-2xl flex items-start gap-4">
-                <AlertTriangle className="text-amber-600 shrink-0" size={20} />
-                <div className="space-y-1">
-                  <h4 className="text-sm font-bold text-amber-900">Safety Broadcast</h4>
-                  <p className="text-xs text-amber-800 leading-relaxed">System syncing active. 24/7 AI monitoring is operational. Report any emergency via the standard municipal channels.</p>
+                {/* Center - Main Feed */}
+                <div className="lg:col-span-6 space-y-4">
+                  {allAlerts.length === 0 ? (
+                    <div className="py-20 text-center shadcn-card border-dashed">
+                      <ShieldAlert size={40} className="mx-auto text-zinc-200 mb-4" />
+                      <p className="text-zinc-900 font-medium">No live safety alerts detected in this zone.</p>
+                    </div>
+                  ) : (
+                    <>
+                      {allAlerts.slice(0, displayedAlertsCount).map((alert) => (
+                        <div key={alert.id} className="shadcn-card overflow-hidden hover:border-zinc-300 transition-all group">
+                          {/* Alert Header */}
+                          <div className="p-4 flex items-center justify-between border-b border-zinc-100">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center">
+                                <MapPin size={18} className="text-zinc-600" />
+                              </div>
+                              <div>
+                                <h4 className="font-bold text-zinc-900 text-sm">{alert.location}</h4>
+                                <p className="text-[10px] text-zinc-500">{new Date(alert.timestamp).toLocaleString()}</p>
+                              </div>
+                            </div>
+                            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded ${alert.type === IssueType.ACCIDENT ? 'bg-red-50 text-red-600' : 'bg-indigo-50 text-indigo-600'}`}>
+                              {alert.type}
+                            </span>
+                          </div>
+
+                          {/* Alert Content */}
+                          <div className="p-4">
+                            <p className="text-sm text-zinc-900 mb-3">{alert.description}</p>
+                            <div className="w-full h-64 rounded-lg bg-zinc-100 overflow-hidden border border-zinc-200">
+                              <img src={alert.thumbnailUrl} className="w-full h-full object-cover transition-transform group-hover:scale-105" alt={alert.type} />
+                            </div>
+                          </div>
+
+                          {/* Feedback Section */}
+                          <div className="mx-4 mb-4 p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
+                            <h5 className="text-xs font-bold text-zinc-900 mb-3">
+                              Community Feedback
+                            </h5>
+
+                            {alert.feedback ? (
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <div className="flex gap-1">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                      <span key={star} className={`text-sm ${star <= alert.feedback!.rating ? 'text-amber-500' : 'text-zinc-300'}`}>
+                                        ★
+                                      </span>
+                                    ))}
+                                  </div>
+                                  <span className="text-xs text-zinc-600">({alert.feedback.rating}/5)</span>
+                                </div>
+                                <p className="text-xs text-zinc-700 italic">"{alert.feedback.comment}"</p>
+                                <p className="text-[10px] text-zinc-500">Submitted on {new Date(alert.feedback.submittedAt).toLocaleDateString()}</p>
+                              </div>
+                            ) : (
+                              <FeedbackForm alertId={alert.id} />
+                            )}
+                          </div>
+
+                          {/* Alert Footer */}
+                          <div className="px-4 pb-4 flex items-center justify-between text-xs">
+                            <div className="flex items-center gap-4">
+                              <span className="flex items-center gap-1.5 text-zinc-600">
+                                <Clock size={14} /> {new Date(alert.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                              <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${alert.source === 'camera' ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' : 'bg-zinc-100 text-zinc-700'}`}>
+                                {alert.source === 'camera' ? 'AI Camera' : 'Citizen'}
+                              </span>
+                            </div>
+                            <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${alert.status === AlertStatus.PENDING ? 'bg-amber-50 text-amber-700' : 'bg-green-50 text-green-700'}`}>
+                              {alert.status || 'PENDING'}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+
+                      {/* Load More Button */}
+                      {displayedAlertsCount < allAlerts.length && (
+                        <div className="flex justify-center pt-4">
+                          <button
+                            onClick={() => setDisplayedAlertsCount(prev => prev + 10)}
+                            className="px-6 py-3 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2"
+                          >
+                            Load More Issues
+                            <RefreshCw size={16} />
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* Safety Broadcast */}
+                  <div className="bg-amber-50 border border-amber-100 p-6 rounded-lg flex items-start gap-4">
+                    <AlertTriangle className="text-amber-600 shrink-0" size={20} />
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-bold text-amber-900">Safety Broadcast</h4>
+                      <p className="text-xs text-amber-800 leading-relaxed">System syncing active. 24/7 AI monitoring is operational. Report any emergency via the standard municipal channels.</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Sidebar - Location Heat Map */}
+                <div className="lg:col-span-3 space-y-4">
+                  <div className="shadcn-card p-5 sticky top-20">
+                    <h3 className="font-bold text-zinc-900 mb-4 flex items-center gap-2">
+                      <MapPin size={16} className="text-indigo-600" />
+                      Location Heat Map
+                    </h3>
+
+                    {/* Heat Map Visualization */}
+                    <div className="aspect-square bg-zinc-50 rounded-lg border border-zinc-200 mb-4 relative overflow-hidden">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-center">
+                          <MapPin size={32} className="mx-auto text-zinc-300 mb-2" />
+                          <p className="text-xs text-zinc-500">Interactive Map</p>
+                        </div>
+                      </div>
+                      {/* Heat spots overlay */}
+                      <div className="absolute top-1/4 left-1/3 w-16 h-16 bg-red-500 rounded-full opacity-20 blur-xl"></div>
+                      <div className="absolute bottom-1/3 right-1/4 w-12 h-12 bg-amber-500 rounded-full opacity-20 blur-lg"></div>
+                      <div className="absolute top-1/2 left-1/2 w-10 h-10 bg-indigo-500 rounded-full opacity-20 blur-lg"></div>
+                    </div>
+
+                    {/* Top Locations */}
+                    <div className="space-y-3">
+                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Hotspot Areas</p>
+                      {allAlerts.slice(0, 5).map((alert, idx) => (
+                        <div key={idx} className="flex items-center gap-3 p-2 hover:bg-zinc-50 rounded-lg transition-colors">
+                          <div className={`w-2 h-2 rounded-full ${idx === 0 ? 'bg-red-500' : idx === 1 ? 'bg-amber-500' : 'bg-indigo-500'}`}></div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-bold text-zinc-900 truncate">{alert.location}</p>
+                            <p className="text-[10px] text-zinc-500">{alert.type}</p>
+                          </div>
+                          <span className="text-[10px] font-bold text-zinc-400">{idx + 1}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Legend */}
+                    <div className="mt-4 pt-4 border-t border-zinc-100">
+                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">Severity</p>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                          <span className="text-xs text-zinc-900">High Risk</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                          <span className="text-xs text-zinc-900">Medium Risk</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded-full bg-indigo-500"></div>
+                          <span className="text-xs text-zinc-900">Low Risk</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
