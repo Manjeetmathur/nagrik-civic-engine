@@ -23,9 +23,10 @@ const mapCamera = (c: any): Camera => ({
 
 export const db = {
     // Alert operations
-    async getAllAlerts(page: number = 1, limit: number = 20): Promise<Alert[]> {
+    async getAllAlerts(page: number = 1, limit: number = 20, source?: 'camera' | 'citizen'): Promise<Alert[]> {
         const skip = (page - 1) * limit;
         const alerts = await prisma.alert.findMany({
+            where: source ? { source } : undefined,
             orderBy: { timestamp: 'desc' },
             skip,
             take: limit
