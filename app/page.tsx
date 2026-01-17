@@ -65,7 +65,6 @@ export default function CitizenPortal() {
     }
   }, []);
 
-  // Subscribe to Live Updates
   useEffect(() => {
     if (isBackendLive) {
       const unsubscribe = api.subscribeToAlerts((newAlert) => {
@@ -112,7 +111,7 @@ export default function CitizenPortal() {
   if (step === 2) {
     return (
       <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl border border-zinc-200 shadow-sm p-10 text-center animate-in zoom-in-95 duration-500">
+        <div className="max-w-md w-full bg-white rounded-2xl border border-zinc-200 outline outline-1 outline-zinc-400 p-10 text-center animate-in zoom-in-95 duration-500">
           <div className="w-16 h-16 bg-zinc-900 text-white rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle size={32} />
           </div>
@@ -124,7 +123,7 @@ export default function CitizenPortal() {
           </div>
           <button
             onClick={() => { setStep(1); setActiveTab('report'); setImagePreview(null); }}
-            className="w-full py-3 bg-zinc-900 text-white font-bold rounded-lg hover:opacity-90 shadow transition-all"
+            className="w-full py-3 bg-zinc-900 text-white font-bold rounded-lg hover:opacity-90 outline outline-1 outline-zinc-400 transition-all"
           >
             Submit Another Report
           </button>
@@ -137,7 +136,7 @@ export default function CitizenPortal() {
     <>
       {/* Toast */}
       {toast && (
-        <div className="fixed top-20 right-6 z-[100] w-80 bg-zinc-900 text-white rounded-xl shadow-2xl border border-white/10 p-4 animate-in slide-in-from-right duration-500">
+        <div className="fixed top-20 right-6 z-[100] w-80 bg-zinc-900 text-white rounded-xl outline outline-1 outline-zinc-400 border border-white/10 p-4 animate-in slide-in-from-right duration-500">
           <div className="flex items-start gap-3">
             <div className="bg-red-500 p-2 rounded-lg shrink-0">
               <ShieldAlert size={20} />
@@ -158,7 +157,7 @@ export default function CitizenPortal() {
       {showTrackModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowTrackModal(false)}></div>
-          <div className="relative bg-white rounded-2xl p-8 w-full max-w-sm shadow-2xl animate-in zoom-in-95 duration-300 border border-zinc-200">
+          <div className="relative bg-white rounded-2xl p-8 w-full max-w-sm outline outline-1 outline-zinc-400 animate-in zoom-in-95 duration-300 border border-zinc-200">
             <button onClick={() => setShowTrackModal(false)} className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-zinc-600"><X size={20} /></button>
             <h3 className="text-xl font-bold text-zinc-900 mb-2">Track Status</h3>
             <p className="text-sm text-zinc-900 mb-6">Enter your alphanumeric tracking ID.</p>
@@ -172,7 +171,7 @@ export default function CitizenPortal() {
               />
               <button
                 onClick={() => router.push(`/track/${trackInput}`)}
-                className="w-full py-3 bg-zinc-900 text-white font-bold rounded-none shadow hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 bg-zinc-900 text-white font-bold rounded-none outline outline-1 outline-zinc-400 hover:opacity-90 transition-all flex items-center justify-center gap-2"
               >
                 <Search size={18} /> View Status
               </button>
@@ -183,7 +182,7 @@ export default function CitizenPortal() {
 
       <div className="min-h-screen bg-[#fafafa] font-sans">
         {/* Header */}
-        <header className="bg-white border-b border-zinc-200 sticky top-0 z-30 shadow-sm">
+        <header className="bg-white border-b border-zinc-200 sticky top-0 z-30 outline outline-1 outline-zinc-400">
           <div className="max-w-7xl mx-auto px-4 sm:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center    gap-2.5">
@@ -196,16 +195,16 @@ export default function CitizenPortal() {
                 </div>
               </div>
 
-              <nav className="flex items-center gap-1 bg-zinc-100 p-1 rounded-none">
+              <nav className="flex items-center gap-1 bg-zinc-100 p-1 rounded rounded-none">
                 <button
                   onClick={() => setActiveTab('report')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded-none transition-all ${activeTab === 'report' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-700 hover:text-zinc-900'}`}
+                  className={`px-4 py-1.5 text-xs font-bold rounded transition-all ${activeTab === 'report' ? 'bg-white text-zinc-900 rounded' : 'text-zinc-700 hover:text-zinc-900'}`}
                 >
                   File Report
                 </button>
                 <button
                   onClick={() => setActiveTab('live')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded-none transition-all flex items-center gap-2 ${activeTab === 'live' ? 'bg-white text-indigo-600 shadow-sm' : 'text-zinc-700 hover:text-zinc-900'}`}
+                  className={`px-4 py-1.5 text-xs font-bold rounded transition-all flex items-center gap-2 ${activeTab === 'live' ? 'bg-white text-indigo-600 rounded' : 'text-zinc-700 hover:text-zinc-900'}`}
                 >
                   <Radio size={14} className={activeTab === 'live' ? 'animate-pulse' : ''} /> Area Updates
                 </button>
@@ -219,7 +218,7 @@ export default function CitizenPortal() {
 
               <div className="flex items-center gap-3">
                 <button onClick={() => setShowTrackModal(true)} className="hidden md:block text-xs font-bold text-zinc-700 hover:text-zinc-900">Track ID</button>
-                <button onClick={() => router.push('/admin')} className="px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold rounded-none uppercase tracking-wider shadow-sm">Admin Access</button>
+                <button onClick={() => router.push('/admin')} className="px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold rounded-none uppercase tracking-wider outline outline-1 outline-zinc-400">Admin Access</button>
               </div>
             </div>
           </div>
@@ -227,13 +226,13 @@ export default function CitizenPortal() {
 
         <main className="max-w-5xl mx-auto px-4 py-12">
           {activeTab === 'report' ? (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="animate-in  fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center mb-12 space-y-2">
                 <h2 className="text-3xl font-extrabold text-zinc-900 tracking-tight">Report Safety Incident</h2>
                 <p className="text-zinc-900 text-sm max-w-lg mx-auto leading-relaxed">Integrated computer vision processing for automated municipal response.</p>
               </div>
 
-              <div className="bg-white rounded-none shadow-sm border border-zinc-200 overflow-hidden max-w-3xl mx-auto">
+              <div className="bg-white rounded outline outline-1 outline-zinc-300 border border-zinc-200 overflow-hidden max-w-3xl mx-auto">
                 <form onSubmit={handleSubmit} className="p-8 md:p-10 space-y-10">
                   <section>
                     <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-4 flex items-center gap-2">
@@ -297,7 +296,7 @@ export default function CitizenPortal() {
                     </div>
                   </section>
 
-                  <button type="submit" disabled={isSubmitting} className="w-full py-4 bg-zinc-900 text-white font-bold rounded-none shadow-lg hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
+                  <button type="submit" disabled={isSubmitting} className="w-full py-4 bg-zinc-900 text-white font-bold rounded-none outline outline-1 outline-zinc-400 hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
                     {isSubmitting ? <><RefreshCw size={18} className="animate-spin" /> Analyzing Image...</> : <><Send size={18} /> Submit Official Report</>}
                   </button>
                 </form>
