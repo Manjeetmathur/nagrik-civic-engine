@@ -136,3 +136,95 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #a1a1aa;
 }
+
+
+/* 
+---break--- */
+/* 
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+} */
+/* 
+---break--- */
+/* 
+---break--- */
+
+@font-face {
+  font-family: noth;
+  src: url("/nothing.woff2");
+}
+*{
+    scrollbar-width: none;
+}
+.noth{
+  font-family: noth;
+
+}
+
+.emergency-marker {
+  background: none !important;
+  border: none !important;
+}
+
+.marker-wrapper {
+  position: relative;
+  width: 28px;
+  height: 28px;
+}
+
+.marker-core {
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: var(--color);
+  box-shadow: 0 0 6px var(--color);
+  z-index: 2;
+}
+
+.marker-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--color);
+  opacity: 0.25;
+  animation: pulse 2s infinite;
+}
+
+.marker-high { --color: #ef4444; }
+.marker-medium { --color: #ca9700; }
+.marker-low { --color: #009436; }
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.5;
+  }
+  70% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
