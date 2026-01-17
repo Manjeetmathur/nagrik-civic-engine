@@ -187,8 +187,8 @@ export default function CitizenPortal() {
 
       {/* Tracking Modal */}
       {showTrackModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowTrackModal(false)}></div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowTrackModal(false)}></div>
           <div className="relative bg-white rounded-2xl p-8 w-full max-w-sm shadow-2xl animate-in zoom-in-95 duration-300 border border-zinc-200">
             <button onClick={() => setShowTrackModal(false)} className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-zinc-600"><X size={20} /></button>
             <h3 className="text-xl font-bold text-zinc-900 mb-2">Track Status</h3>
@@ -204,7 +204,7 @@ export default function CitizenPortal() {
               <button
                 disabled={!trackInput}
                 onClick={() => router.push(`/track/${trackInput}`)}
-                className="w-full py-3 bg-zinc-900 text-white font-bold rounded-none shadow hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 bg-zinc-900 text-white font-bold rounded-lg hover:opacity-90 disabled:opacity-50 shadow-lg transition-all flex items-center justify-center gap-2"
               >
                 <Search size={18} /> View Status
               </button>
