@@ -225,14 +225,23 @@ const CameraMonitorCard: React.FC<CameraMonitorCardProps> = ({
                 {isMonitoring ? (
                     camera.sourceType === 'webcam' ? (
                         <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
-                    ) : (
+                    ) : camera.streamUrl ? (
                         <img
                             ref={remoteImageRef}
                             src={camera.streamUrl}
-                            crossOrigin="anonymous"
+                            crossOrigin={useAi ? "anonymous" : undefined}
                             className="w-full h-full object-cover"
-                            onError={() => setAiError("Stream connection failed. Check URL/CORS.")}
+                            onError={(e) => {
+                                const msg = `ERROR: Failed to load stream image. URL: ${e.currentTarget.src}`;
+                                console.log(msg);
+                                setAiError("Stream Load Failed. Check URL or try disabling 'AI Loop' if using DroidCam.");
+                            }}
                         />
+                    ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center text-zinc-500 gap-2">
+                            <Cloud size={24} className="opacity-20" />
+                            <p className="text-[10px] font-bold uppercase tracking-widest">No Stream URL</p>
+                        </div>
                     )
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-zinc-500 gap-2">
@@ -243,15 +252,32 @@ const CameraMonitorCard: React.FC<CameraMonitorCardProps> = ({
                 <canvas ref={canvasRef} className="hidden" />
 
                 {isMonitoring && !aiError && (
-                    <div className="absolute top-2 left-2 bg-red-600 text-white px-2 py-0.5 rounded-full text-[8px] font-bold flex items-center gap-1">
+                    <div className="absolute top-2 left-2 bg-red-600 text-white px-2 py-0.5 rounded-full text-[8px] font-bold flex items-center gap-1 shadow-lg ring-1 ring-white/20">
                         <Circle size={6} className="fill-white animate-pulse" /> AI MONITORING
                     </div>
                 )}
 
                 {aiError && (
-                    <div className="absolute inset-0 bg-red-900/80 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center">
-                        <AlertCircle size={20} className="text-white mb-2" />
-                        <p className="text-[10px] text-white font-bold">{aiError}</p>
+                    <div className="absolute inset-0 bg-red-900/90 backdrop-blur-md flex flex-col items-center justify-center p-4 text-center overflow-y-auto">
+                        <AlertCircle size={24} className="text-white mb-2" />
+                        <p className="text-[12px] text-white font-bold mb-3">{aiError}</p>
+
+                        <div className="w-full space-y-2 text-left bg-black/40 p-3 rounded-lg border border-white/10">
+                            <p className="text-[9px] uppercase font-bold text-red-300 tracking-wider">Troubleshooting:</p>
+                            <ul className="text-[9px] space-y-1 list-disc pl-4 text-zinc-300">
+                                <li>Ensure phone and PC are on <strong>same Wi-Fi</strong></li>
+                                <li>Verify DroidCam <strong>"IP Cam Access"</strong> is ON</li>
+                                <li>Disable <strong>"AI Loop"</strong> below to fix CORS</li>
+                                <li>URL must end in <strong>/mjpegfeed</strong></li>
+                            </ul>
+                            <a
+                                href={camera.streamUrl}
+                                target="_blank"
+                                className="block mt-2 text-center py-1.5 bg-white/10 hover:bg-white/20 text-white text-[9px] font-bold rounded border border-white/20 transition-all uppercase"
+                            >
+                                Test URL in New Tab
+                            </a>
+                        </div>
                     </div>
                 )}
             </div>
@@ -276,29 +302,46 @@ const CameraMonitorCard: React.FC<CameraMonitorCardProps> = ({
                     </button>
                 </div>
 
-                {isMonitoring && lastDetection && (
-                    <div className="p-2 bg-zinc-50 border border-zinc-100 rounded-lg">
-                        <div className="flex justify-between items-center mb-1">
-                            <span className="text-[9px] font-bold text-zinc-400 uppercase">AI Status</span>
-                            <span className={`text-[9px] font-bold ${lastDetection.alertCreated ? 'text-red-600' : 'text-indigo-600'}`}>
-                                {lastDetection.alertCreated ? 'INCIDENT REPORTED' : 'ANALYZING...'}
+                {isMonitoring && (
+                    <div className="p-3 bg-zinc-50 border border-zinc-100 rounded-xl space-y-2">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setUseAi(!useAi)}
+                                    className={`relative inline-flex h-4 w-7 items-center rounded-full transition-colors ${useAi ? 'bg-indigo-600' : 'bg-zinc-300'}`}
+                                >
+                                    <span className={`inline-block h-2.5 w-2.5 transform rounded-full bg-white transition-transform ${useAi ? 'translate-x-3.5' : 'translate-x-1'}`} />
+                                </button>
+                                <span className="text-[10px] font-bold text-zinc-600 uppercase">AI Loop</span>
+                            </div>
+                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${lastDetection?.alertCreated ? 'bg-red-100 text-red-600' : 'bg-indigo-100 text-indigo-600'}`}>
+                                {lastDetection?.alertCreated ? 'INCIDENT' : 'HEALTHY'}
                             </span>
                         </div>
-                        <p className="text-[10px] font-medium text-zinc-700 truncate">{lastDetection.message}</p>
 
-                        {persistentThreat && !persistentThreat.hasAlerted && (
-                            <div className="mt-1.5 space-y-1">
-                                <div className="flex justify-between text-[8px] font-bold text-amber-600">
-                                    <span>Persistence: {persistentThreat.type}</span>
-                                    <span>{remainingPersistence}s</span>
-                                </div>
-                                <div className="w-full h-1 bg-zinc-200 rounded-full overflow-hidden">
-                                    <div
-                                        className="h-full bg-amber-500 transition-all duration-300"
-                                        style={{ width: `${((30000 - remainingPersistence * 1000) / 30000) * 100}%` }}
-                                    />
-                                </div>
+                        {lastDetection && (
+                            <div className="pt-2 border-t border-zinc-200/50">
+                                <p className="text-[11px] font-semibold text-zinc-900 leading-tight">{lastDetection.message}</p>
+
+                                {persistentThreat && !persistentThreat.hasAlerted && (
+                                    <div className="mt-2 space-y-1.5">
+                                        <div className="flex justify-between text-[9px] font-bold text-amber-600 uppercase tracking-tighter">
+                                            <span>Analyzing: {persistentThreat.type}</span>
+                                            <span>{remainingPersistence}s left</span>
+                                        </div>
+                                        <div className="w-full h-1 bg-zinc-200 rounded-full overflow-hidden">
+                                            <div
+                                                className="h-full bg-amber-500 transition-all duration-300"
+                                                style={{ width: `${((30000 - remainingPersistence * 1000) / 30000) * 100}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
+                        )}
+
+                        {!lastDetection && useAi && (
+                            <p className="text-[10px] text-zinc-400 italic">Initializing vision engine...</p>
                         )}
                     </div>
                 )}
