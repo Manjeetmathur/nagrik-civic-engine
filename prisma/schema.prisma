@@ -33,33 +33,22 @@ model Camera {
   lastPing   DateTime @default(now())
   ip         String
   streamUrl  String?
-  sourceType String   @default("webcam") // 'webcam' or 'remote'
+  sourceType String   @default("webcam")
 }
 
 model Report {
-  id String @id @default(cuid())
-
-  // Voice detection
-  keyword     String
-  description String
-  imageUrl    String?
-
-  // Categorization
-  category ReportCategory
-  severity SeverityLevel
-
-  // Geolocation
-  latitude  Float
-  longitude Float
-
-  // Metadata
-  source     ReportSource @default(VOICE)
-  isResolved Boolean      @default(false)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
+  id               String            @id @default(cuid())
+  keyword          String
+  description      String
+  category         ReportCategory
+  severity         SeverityLevel
+  latitude         Float
+  longitude        Float
+  source           ReportSource      @default(VOICE)
+  isResolved       Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  imageUrl         String?
   speechStressData SpeechStressData?
 
   @@index([category])
@@ -69,24 +58,16 @@ model Report {
 }
 
 model SpeechStressData {
-  id String @id @default(cuid())
-
-  // Speech metrics
+  id                   String   @id @default(cuid())
   wordsPerSecond       Float
   repeatedWords        Int
   pauseCount           Int
-  averagePauseDuration Float // in milliseconds
-  confidence           Int // 0-100
-
-  // Stress indicators stored as JSON array
-  stressIndicators String // JSON array of strings
-
-  // Optional relation to Report
-  reportId String? @unique
-  report   Report? @relation(fields: [reportId], references: [id], onDelete: Cascade)
-
-  // Metadata
-  createdAt DateTime @default(now())
+  averagePauseDuration Float
+  confidence           Int
+  stressIndicators     String
+  reportId             String?  @unique
+  createdAt            DateTime @default(now())
+  report               Report?  @relation(fields: [reportId], references: [id], onDelete: Cascade)
 
   @@index([reportId])
   @@index([confidence])

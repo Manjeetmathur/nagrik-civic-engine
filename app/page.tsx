@@ -6,7 +6,7 @@ import { api } from '@/lib/api';
 import {
   ShieldAlert, Camera, MapPin, Send, RefreshCw,
   CheckCircle, Radio, Navigation, AlertTriangle, Search, X, Clock,
-  Mic, Upload
+  Mic, Upload, Wind
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
@@ -18,6 +18,8 @@ const LeafletHeatmap = dynamic(
 );
 import { CloudinaryUpload } from '@/components/ui/cloudinary-upload';
 import { FeedbackForm } from '@/components/FeedbackForm';
+import { ref, onValue } from "firebase/database";
+import { db as firebaseDb } from "@/lib/firebase";
 
 export default function CitizenPortal() {
   const router = useRouter();
@@ -34,6 +36,7 @@ export default function CitizenPortal() {
   const [toast, setToast] = useState<Alert | null>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [showFullscreenMap, setShowFullscreenMap] = useState(false);
+  const [aqi, setAqi] = useState<number | null>(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -104,6 +107,48 @@ export default function CitizenPortal() {
       );
     }
   }, []);
+
+  useEffect(() => {
+    const sensorsRef = ref(firebaseDb, 'devices');
+    const unsubscribe = onValue(sensorsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        // Just take the first device's AQI for the general display
+        const firstDeviceId = Object.keys(data)[0];
+        if (firstDeviceId) {
+          setAqi(data[firstDeviceId].gas_value || 0);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const getAqiLabel = (val: number) => {
+    if (val <= 50) return 'Good';
+    if (val <= 100) return 'Satisfactory';
+    if (val <= 200) return 'Moderate';
+    if (val <= 300) return 'Poor';
+    if (val <= 400) return 'Very Poor';
+    return 'Severe';
+  };
+
+  const getAqiColor = (val: number) => {
+    if (val <= 50) return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+    if (val <= 100) return 'bg-lime-100 text-lime-700 border-lime-200';
+    if (val <= 200) return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+    if (val <= 300) return 'bg-orange-100 text-orange-700 border-orange-200';
+    if (val <= 400) return 'bg-red-100 text-red-700 border-red-200';
+    return 'bg-rose-100 text-rose-900 border-rose-300';
+  };
+
+  const getAqiProgressColor = (val: number) => {
+    if (val <= 50) return 'bg-emerald-500';
+    if (val <= 100) return 'bg-lime-500';
+    if (val <= 200) return 'bg-yellow-500';
+    if (val <= 300) return 'bg-orange-500';
+    if (val <= 400) return 'bg-red-500';
+    return 'bg-rose-900';
+  };
 
   useEffect(() => {
     if (isBackendLive) {
@@ -432,51 +477,88 @@ export default function CitizenPortal() {
 
               {/* Three Column Layout */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* Left Sidebar - Issue Tracking System */}
-                <div className="lg:col-span-3 space-y-4">
-                  <div className="shadcn-card p-5 sticky top-20">
-                    <h3 className="font-bold text-zinc-900 mb-4 flex items-center gap-2">
-                      <ShieldAlert size={16} className="text-indigo-600" />
-                      Issue Tracking
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100">
-                        <div>
-                          <p className="text-xs font-bold text-red-900">Critical</p>
-                          <p className="text-xl font-bold text-red-600">{allAlerts.filter(a => a.type === IssueType.ACCIDENT).length}</p>
+                {/* Left Sidebar - Issue Tracking System & AQI */}
+                <div className="lg:col-span-3">
+                  <div className="sticky top-24 space-y-4">
+                    {/* Issue Tracking Card */}
+                    <div className="shadcn-card p-5">
+                      <h3 className="font-bold text-zinc-900 mb-4 flex items-center gap-2">
+                        <ShieldAlert size={16} className="text-indigo-600" />
+                        Issue Tracking
+                      </h3>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100">
+                          <div>
+                            <p className="text-xs font-bold text-red-900">Critical</p>
+                            <p className="text-xl font-bold text-red-600">{allAlerts.filter(a => a.type === IssueType.ACCIDENT).length}</p>
+                          </div>
+                          <AlertTriangle className="text-red-500" size={24} />
                         </div>
-                        <AlertTriangle className="text-red-500" size={24} />
+                        <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg border border-amber-100">
+                          <div>
+                            <p className="text-xs font-bold text-amber-900">Pending</p>
+                            <p className="text-xl font-bold text-amber-600">{allAlerts.filter(a => a.status === AlertStatus.PENDING).length}</p>
+                          </div>
+                          <Clock className="text-amber-500" size={24} />
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-100">
+                          <div>
+                            <p className="text-xs font-bold text-green-900">Resolved</p>
+                            <p className="text-xl font-bold text-green-600">{allAlerts.filter(a => a.status === AlertStatus.RESOLVED).length}</p>
+                          </div>
+                          <CheckCircle className="text-green-500" size={24} />
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg border border-amber-100">
-                        <div>
-                          <p className="text-xs font-bold text-amber-900">Pending</p>
-                          <p className="text-xl font-bold text-amber-600">{allAlerts.filter(a => a.status === AlertStatus.PENDING).length}</p>
+                      <div className="mt-4 pt-4 border-t border-zinc-100">
+                        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">Quick Stats</p>
+                        <div className="space-y-2 text-xs">
+                          <div className="flex justify-between">
+                            <span className="text-zinc-600">Total Reports</span>
+                            <span className="font-bold text-zinc-900">{allAlerts.length}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-zinc-600">This Week</span>
+                            <span className="font-bold text-zinc-900">{Math.floor(allAlerts.length * 0.6)}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-zinc-600">Response Time</span>
+                            <span className="font-bold text-indigo-600">~15 min</span>
+                          </div>
                         </div>
-                        <Clock className="text-amber-500" size={24} />
-                      </div>
-                      <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-100">
-                        <div>
-                          <p className="text-xs font-bold text-green-900">Resolved</p>
-                          <p className="text-xl font-bold text-green-600">{allAlerts.filter(a => a.status === AlertStatus.RESOLVED).length}</p>
-                        </div>
-                        <CheckCircle className="text-green-500" size={24} />
                       </div>
                     </div>
-                    <div className="mt-4 pt-4 border-t border-zinc-100">
-                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">Quick Stats</p>
-                      <div className="space-y-2 text-xs">
-                        <div className="flex justify-between">
-                          <span className="text-zinc-600">Total Reports</span>
-                          <span className="font-bold text-zinc-900">{allAlerts.length}</span>
+
+                    {/* AQI Status Card */}
+                    <div className="shadcn-card p-5 bg-gradient-to-br from-white to-slate-50">
+                      <h3 className="font-bold text-slate-900 mb-4 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Wind size={16} className="text-blue-600" />
+                          Air Quality Index
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-zinc-600">This Week</span>
-                          <span className="font-bold text-zinc-900">{Math.floor(allAlerts.length * 0.6)}</span>
+                        <span className={`px-2 py-0.5 text-[10px] rounded-full uppercase font-bold tracking-wider border ${getAqiColor(aqi || 0)}`}>
+                          {getAqiLabel(aqi || 0)}
+                        </span>
+                      </h3>
+                      <div className="flex items-end justify-between mb-4">
+                        <div>
+                          <p className="text-4xl font-bold text-slate-900 tracking-tight">{aqi !== null ? Math.round(aqi) : '--'}</p>
+                          <p className="text-[10px] text-slate-500 font-semibold uppercase mt-1">PM2.5 Concentration</p>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-zinc-600">Response Time</span>
-                          <span className="font-bold text-indigo-600">~15 min</span>
+                        <div className={`w-16 h-16 rounded-full border-4 border-slate-100 flex items-center justify-center -rotate-45 transition-all duration-1000`} style={{ borderTopColor: aqi !== null ? (aqi <= 50 ? '#10b981' : aqi <= 100 ? '#84cc16' : aqi <= 200 ? '#eab308' : aqi <= 300 ? '#f97316' : '#ef4444') : '#f1f5f9' }}>
+                          <span className="rotate-45 text-xs font-bold text-slate-600">{(aqi || 0) > 100 ? '100+' : Math.round((aqi || 0) * 0.2)}%</span>
                         </div>
+                      </div>
+                      <div className="space-y-3">
+                        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                          <div className={`h-full transition-all duration-1000 ${getAqiProgressColor(aqi || 0)}`} style={{ width: `${Math.min(100, (aqi || 0) / 5)}%` }} />
+                        </div>
+                        <p className="text-xs text-slate-600 leading-relaxed italic">
+                          {aqi === null ? 'Loading live environment telemetry...' :
+                            aqi <= 50 ? 'Air quality is satisfactory, and air pollution poses little or no risk.' :
+                              aqi <= 100 ? 'Air quality is acceptable; however, for some pollutants there may be a moderate health concern.' :
+                                aqi <= 200 ? 'Members of sensitive groups may experience health effects.' :
+                                  'Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects.'}
+                        </p>
                       </div>
                     </div>
                   </div>
