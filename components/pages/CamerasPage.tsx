@@ -35,6 +35,11 @@ const CamerasPage: React.FC = () => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [newCameraData, setNewCameraData] = useState({ name: '', location: '', streamUrl: '' });
     const [useAi, setUseAi] = useState(true);
+    const [persistentThreat, setPersistentThreat] = useState<{
+        type: IssueType;
+        startTime: number;
+        hasAlerted: boolean;
+    } | null>(null);
 
     const addLog = (msg: string) => {
         console.log(`[CameraSystem] ${msg}`);
@@ -256,22 +261,72 @@ const CamerasPage: React.FC = () => {
                 if (issueType) {
                     addLog(`HIGH CONFIDENCE: ${issueType} (${Math.round(topPrediction.probability * 100)}%)`);
 
-                    const result = await api.submitDetection(
-                        selectedCamera.id,
-                        imageData,
-                        issueType,
-                        topPrediction.probability
-                    );
+                    // Logic for 2-minute persistence
+                    setPersistentThreat(prev => {
+                        const now = Date.now();
 
-                    setLastDetection({
-                        alertCreated: true,
-                        detections: [{
-                            label: topPrediction.className,
-                            confidence: topPrediction.probability,
-                            top: 0, left: 0, width: canvas.width, height: canvas.height
-                        }],
-                        message: `Alert created: ${issueType}`
+                        // If it's a new threat or a different type, start a new timer
+                        if (!prev || prev.type !== issueType) {
+                            addLog(`Starting persistence timer for: ${issueType}`);
+                            return { type: issueType, startTime: now, hasAlerted: false };
+                        }
+
+                        // If already alerted for this persistent threat, do nothing
+                        if (prev.hasAlerted) return prev;
+
+                        // Check if 2 minutes (120000ms) have passed
+                        const elapsed = now - prev.startTime;
+                        if (elapsed >= 30000) {
+                            addLog(`PERSISTENCE REACHED (2m): Creating server alert for ${issueType}`);
+
+                            // IIFE to handle async alert creation without blocking state update
+                            (async () => {
+                                try {
+                                    await api.submitDetection(
+                                        selectedCamera.id,
+                                        imageData,
+                                        issueType,
+                                        topPrediction.probability
+                                    );
+                                    setLastDetection({
+                                        alertCreated: true,
+                                        detections: [{
+                                            label: topPrediction.className,
+                                            confidence: topPrediction.probability,
+                                            top: 0, left: 0, width: canvas.width, height: canvas.height
+                                        }],
+                                        message: `Persistent Alert Created: ${issueType}`
+                                    });
+                                } catch (e) {
+                                    addLog(`Error submitting persistent alert: ${e}`);
+                                }
+                            })();
+
+                            return { ...prev, hasAlerted: true };
+                        }
+
+                        // Still waiting for 2 minutes
+                        const remaining = Math.ceil((120000 - elapsed) / 1000);
+                        addLog(`Waiting for ${issueType} persistence: ${remaining}s left`);
+
+                        setLastDetection({
+                            alertCreated: false,
+                            detections: [{
+                                label: topPrediction.className,
+                                confidence: topPrediction.probability,
+                                top: 0, left: 0, width: canvas.width, height: canvas.height
+                            }],
+                            message: `Threat detected. Persistence waiting: ${remaining}s`
+                        });
+
+                        return prev;
                     });
+                }
+            } else {
+                // Confidence dropped or no threat, reset persistence
+                if (persistentThreat) {
+                    addLog("Threat cleared or confidence dropped. Resetting persistence timer.");
+                    setPersistentThreat(null);
                 }
             }
         } catch (error: any) {
@@ -317,6 +372,8 @@ const CamerasPage: React.FC = () => {
             clearInterval(monitoringIntervalRef.current);
             monitoringIntervalRef.current = null;
         }
+
+        setPersistentThreat(null);
     };
 
     useEffect(() => {
@@ -639,9 +696,24 @@ const CamerasPage: React.FC = () => {
                                             }`}>
                                             <p className="text-xs font-bold text-zinc-500 uppercase">Status</p>
                                             <p className={`text-sm font-bold ${lastDetection.alertCreated ? 'text-red-600' : 'text-zinc-600'}`}>
-                                                {lastDetection.alertCreated ? 'Alert Created!' : 'No Threats Detected'}
+                                                {lastDetection.alertCreated ? 'Alert Created!' : persistentThreat ? 'Persistence Check...' : 'No Threats Detected'}
                                             </p>
                                         </div>
+
+                                        {persistentThreat && !persistentThreat.hasAlerted && (
+                                            <div className="space-y-2">
+                                                <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-amber-600">
+                                                    <span>Validating Persistent Threat</span>
+                                                    <span>{Math.max(0, Math.ceil((120000 - (Date.now() - persistentThreat.startTime)) / 1000))}s</span>
+                                                </div>
+                                                <div className="w-full h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+                                                    <div
+                                                        className="h-full bg-amber-500 transition-all duration-300"
+                                                        style={{ width: `${Math.min(100, ((Date.now() - persistentThreat.startTime) / 120000) * 100)}%` }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
 
                                         {lastDetection.detections && lastDetection.detections.length > 0 && (
                                             <div>

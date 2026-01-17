@@ -1,1 +1,1 @@
-{"tfjsVersion":"1.7.4","tmVersion":"2.4.10","packageVersion":"0.8.4-alpha2","packageName":"@teachablemachine/image","timeStamp":"2026-01-16T11:47:44.666Z","userMetadata":{},"modelName":"tm-my-image-model","labels":["ACCIDENT ","Traffic","Garbage"],"imageSize":224}
+{"tfjsVersion":"1.7.4","tmVersion":"2.4.10","packageVersion":"0.8.4-alpha2","packageName":"@teachablemachine/image","timeStamp":"2026-01-16T13:09:55.705Z","userMetadata":{},"modelName":"tm-my-image-model","labels":["traffic","accident ","garbage"],"imageSize":224}
