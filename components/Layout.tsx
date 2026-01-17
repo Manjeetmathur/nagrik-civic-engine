@@ -12,7 +12,8 @@ import {
     Menu,
     X,
     MapPin,
-    MessageSquare
+    MessageSquare,
+    Mail
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -44,6 +45,7 @@ const Layout: React.FC<LayoutProps> = ({
         { id: 'analytics' as View, label: 'Analytics', icon: BarChart3 },
         { id: 'cameras' as View, label: 'Cameras', icon: Video },
         { id: 'feedback-reports' as View, label: 'Feedback Reports', icon: MessageSquare },
+        { id: 'authority-contact' as View, label: 'Authority Contact', icon: Mail },
     ];
 
     return (
