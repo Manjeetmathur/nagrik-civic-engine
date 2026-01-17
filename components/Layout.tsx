@@ -72,6 +72,9 @@ const Layout: React.FC<LayoutProps> = ({
                                     className="object-cover h-16"
                                 />
                             </div>
+                            <h1 className="font-bold text-zinc-900 tracking-tight">
+                                Nagrik <span className="text-indigo-600">Admin</span>
+                            </h1>
                         </div>
                         <button
                             onClick={() => setSidebarOpen(false)}

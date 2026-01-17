@@ -90,9 +90,9 @@ export default function CitizenPortal() {
             <CheckCircle size={32} />
           </div>
           <h2 className="text-2xl font-bold text-zinc-900 mb-2 tracking-tight">Report Received</h2>
-          <p className="text-sm text-zinc-500 mb-8 leading-relaxed">Thank you for your vigilance. Our AI-driven maintenance department is now analyzing your submission.</p>
+          <p className="text-sm text-zinc-900 mb-8 leading-relaxed">Thank you for your vigilance. Our AI-driven maintenance department is now analyzing your submission.</p>
           <div className="bg-zinc-50 p-6 rounded-xl mb-8 border border-zinc-100">
-            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Live Tracking ID</p>
+            <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest mb-1">Live Tracking ID</p>
             <p className="text-2xl font-mono font-bold text-zinc-900 tracking-wider">{submissionId}</p>
           </div>
           <button
@@ -134,7 +134,7 @@ export default function CitizenPortal() {
           <div className="relative bg-white rounded-2xl p-8 w-full max-w-sm shadow-2xl animate-in zoom-in-95 duration-300 border border-zinc-200">
             <button onClick={() => setShowTrackModal(false)} className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-zinc-600"><X size={20} /></button>
             <h3 className="text-xl font-bold text-zinc-900 mb-2">Track Status</h3>
-            <p className="text-sm text-zinc-500 mb-6">Enter your alphanumeric tracking ID.</p>
+            <p className="text-sm text-zinc-900 mb-6">Enter your alphanumeric tracking ID.</p>
             <div className="space-y-4">
               <input
                 type="text"
@@ -172,20 +172,26 @@ export default function CitizenPortal() {
               <nav className="flex items-center gap-1 bg-zinc-100 p-1 rounded-none">
                 <button
                   onClick={() => setActiveTab('report')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded-none transition-all ${activeTab === 'report' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
+                  className={`px-4 py-1.5 text-xs font-bold rounded-none transition-all ${activeTab === 'report' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-700 hover:text-zinc-900'}`}
                 >
                   File Report
                 </button>
                 <button
                   onClick={() => setActiveTab('live')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded-none transition-all flex items-center gap-2 ${activeTab === 'live' ? 'bg-white text-indigo-600 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
+                  className={`px-4 py-1.5 text-xs font-bold rounded-none transition-all flex items-center gap-2 ${activeTab === 'live' ? 'bg-white text-indigo-600 shadow-sm' : 'text-zinc-700 hover:text-zinc-900'}`}
                 >
                   <Radio size={14} className={activeTab === 'live' ? 'animate-pulse' : ''} /> Area Updates
+                </button>
+                <button
+                  onClick={() => router.push('/voice')}
+                  className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-2 text-zinc-700 hover:text-zinc-900 `}
+                >
+                  <Mic size={14} /> Voice Recognition
                 </button>
               </nav>
 
               <div className="flex items-center gap-3">
-                <button onClick={() => setShowTrackModal(true)} className="hidden md:block text-xs font-bold text-zinc-500 hover:text-zinc-900">Track ID</button>
+                <button onClick={() => setShowTrackModal(true)} className="hidden md:block text-xs font-bold text-zinc-700 hover:text-zinc-900">Track ID</button>
                 <button onClick={() => router.push('/admin')} className="px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold rounded-none uppercase tracking-wider shadow-sm">Admin Access</button>
               </div>
             </div>
@@ -197,7 +203,7 @@ export default function CitizenPortal() {
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center mb-12 space-y-2">
                 <h2 className="text-3xl font-extrabold text-zinc-900 tracking-tight">Report Safety Incident</h2>
-                <p className="text-zinc-500 text-sm max-w-lg mx-auto leading-relaxed">Integrated computer vision processing for automated municipal response.</p>
+                <p className="text-zinc-900 text-sm max-w-lg mx-auto leading-relaxed">Integrated computer vision processing for automated municipal response.</p>
               </div>
 
               <div className="bg-white rounded-none shadow-sm border border-zinc-200 overflow-hidden max-w-3xl mx-auto">
@@ -229,20 +235,20 @@ export default function CitizenPortal() {
 
                   <section className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-zinc-100">
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">Report Category</label>
+                      <label className="text-[10px] font-bold text-zinc-900 uppercase tracking-tight">Report Category</label>
                       <select value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value as IssueType })} className="shadcn-input w-full px-4 py-2.5 text-sm">
                         {Object.values(IssueType).map(t => <option key={t} value={t}>{t}</option>)}
                       </select>
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">Detected Location</label>
+                      <label className="text-[10px] font-bold text-zinc-900 uppercase tracking-tight">Detected Location</label>
                       <div className="relative">
                         <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
                         <input required type="text" placeholder="Street or Area" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} className="shadcn-input w-full pl-9 pr-4 py-2.5 text-sm" />
                       </div>
                     </div>
                     <div className="md:col-span-2 space-y-1.5">
-                      <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">Contextual Description</label>
+                      <label className="text-[10px] font-bold text-zinc-900 uppercase tracking-tight">Contextual Description</label>
                       <textarea required rows={3} placeholder="Describe what requires attention..." value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} className="shadcn-input w-full px-4 py-2.5 text-sm resize-none"></textarea>
                     </div>
                   </section>
@@ -250,15 +256,15 @@ export default function CitizenPortal() {
                   <section className="pt-6 border-t border-zinc-100">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">Full Name</label>
+                        <label className="text-[10px] font-bold text-zinc-900 uppercase tracking-tight">Full Name</label>
                         <input required type="text" placeholder="Your Full Name" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="shadcn-input w-full px-4 py-2 text-sm" />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">Phone Number</label>
+                        <label className="text-[10px] font-bold text-zinc-900 uppercase tracking-tight">Phone Number</label>
                         <input required type="tel" placeholder="+91 XXXX XXXX" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className="shadcn-input w-full px-4 py-2 text-sm" />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">Email Address</label>
+                        <label className="text-[10px] font-bold text-zinc-900 uppercase tracking-tight">Email Address</label>
                         <input required type="email" placeholder="email@example.com" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="shadcn-input w-full px-4 py-2 text-sm" />
                       </div>
                     </div>
@@ -275,13 +281,13 @@ export default function CitizenPortal() {
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
                   <h2 className="text-3xl font-extrabold text-zinc-900 tracking-tight">City-Wide Safety Feed</h2>
-                  <p className="text-zinc-500 text-sm flex items-center gap-2 mt-1">
+                  <p className="text-zinc-900 text-sm flex items-center gap-2 mt-1">
                     <Navigation size={12} /> Syncing alerts for your current zone.
                   </p>
                 </div>
                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${isBackendLive ? 'bg-indigo-50 border-indigo-100' : 'bg-zinc-100 border-zinc-200'}`}>
                   <span className={`h-2 w-2 rounded-full ${isBackendLive ? 'bg-indigo-600 animate-pulse' : 'bg-zinc-400'}`}></span>
-                  <span className={`text-[10px] font-bold uppercase tracking-wider ${isBackendLive ? 'text-indigo-700' : 'text-zinc-500'}`}>
+                  <span className={`text-[10px] font-bold uppercase tracking-wider ${isBackendLive ? 'text-indigo-700' : 'text-zinc-900'}`}>
                     {isBackendLive ? 'Live System Sync' : 'Local Engine'}
                   </span>
                 </div>
@@ -291,7 +297,7 @@ export default function CitizenPortal() {
                 {allAlerts.length === 0 ? (
                   <div className="py-20 text-center shadcn-card border-dashed">
                     <ShieldAlert size={40} className="mx-auto text-zinc-200 mb-4" />
-                    <p className="text-zinc-500 font-medium">No live safety alerts detected in this zone.</p>
+                    <p className="text-zinc-900 font-medium">No live safety alerts detected in this zone.</p>
                   </div>
                 ) : (
                   allAlerts.map((alert) => (
@@ -308,7 +314,7 @@ export default function CitizenPortal() {
                             <span className="text-[10px] text-zinc-400 font-mono tracking-tighter truncate max-w-[80px]">{alert.id}</span>
                           </div>
                           <h4 className="font-bold text-zinc-900 mb-1">{alert.location}</h4>
-                          <p className="text-xs text-zinc-500 line-clamp-1">{alert.description}</p>
+                          <p className="text-xs text-zinc-900 line-clamp-1">{alert.description}</p>
                         </div>
                         <div className="mt-4 flex flex-wrap items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400">
                           <span className="flex items-center gap-1.5"><Clock size={12} /> {new Date(alert.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
@@ -335,7 +341,7 @@ export default function CitizenPortal() {
         </main>
 
         <footer className="py-12 border-t border-zinc-100 text-center">
-          <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-[0.3em]">Nagar Safety Engine • 1.0.2 Stable Build</p>
+          <p className="text-[10px] text-zinc-900 font-bold uppercase tracking-[0.3em]">Nagrik Civic Engine • 1.0.2 Stable Build</p>
         </footer>
       </div>
     </>

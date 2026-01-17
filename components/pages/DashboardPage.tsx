@@ -154,7 +154,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex flex-col gap-1">
                     <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Dashboard</h1>
-                    <p className="text-zinc-500">Real-time smart city safety monitoring overview.</p>
+                    <p className="text-zinc-900">Real-time smart city safety monitoring overview.</p>
                 </div>
                 <button
                     onClick={fetchData}
@@ -169,7 +169,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
                 {stats.map((stat, i) => (
                     <div key={i} className="shadcn-card p-6 flex flex-col justify-between group hover:border-zinc-300 transition-all">
                         <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">{stat.label}</span>
+                            <span className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">{stat.label}</span>
                             <div className={`${stat.bg} p-1.5 rounded-none`}>
                                 <stat.icon size={16} className={stat.color} />
                             </div>
@@ -187,7 +187,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
                     <div className="flex items-center justify-between mb-8">
                         <div className="space-y-1">
                             <h3 className="font-bold text-zinc-900">Incident Frequency</h3>
-                            <p className="text-xs text-zinc-500">Visualized distribution of safety reports over time.</p>
+                            <p className="text-xs text-zinc-900">Visualized distribution of safety reports over time.</p>
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="h-2 w-2 rounded-none bg-indigo-500 animate-pulse"></span>
@@ -233,7 +233,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
                         <div className="flex-1 flex flex-col justify-center space-y-4">
                             <div className="space-y-2">
                                 <div className="flex justify-between text-xs font-medium">
-                                    <span className="text-zinc-500 flex items-center gap-1.5"><Video size={12} /> AI Cameras</span>
+                                    <span className="text-zinc-700 flex items-center gap-1.5"><Video size={12} /> AI Cameras</span>
                                     <span className="text-zinc-900">{summary?.stats ? Math.round((summary.stats.onlineCameras / summary.stats.totalCameras) * 100) : 72}%</span>
                                 </div>
                                 <div className="w-full h-2 bg-zinc-100 rounded-none overflow-hidden">
@@ -242,7 +242,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
                             </div>
                             <div className="space-y-2">
                                 <div className="flex justify-between text-xs font-medium">
-                                    <span className="text-zinc-500 flex items-center gap-1.5"><UserIcon size={12} /> Citizen Reports</span>
+                                    <span className="text-zinc-700 flex items-center gap-1.5"><UserIcon size={12} /> Citizen Reports</span>
                                     <span className="text-zinc-900">28%</span>
                                 </div>
                                 <div className="w-full h-2 bg-zinc-100 rounded-none overflow-hidden">
@@ -266,19 +266,19 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
                     <h2 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-cyan-500 bg-clip-text text-transparent mb-4">System Status</h2>
                     <div className="space-y-3 text-sm">
                         <div className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg">
-                            <span className="text-zinc-600">Voice Detection Engine</span>
+                            <span className="text-zinc-900">Voice Detection Engine</span>
                             <div className="flex items-center gap-2">
                                 <span className="text-green-600">Active</span>
                             </div>
                         </div>
                         <div className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg">
-                            <span className="text-zinc-600">Geolocation Service</span>
+                            <span className="text-zinc-900">Geolocation Service</span>
                             <div className="flex items-center gap-2">
                                 <span className="text-green-600">Operational</span>
                             </div>
                         </div>
                         <div className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg">
-                            <span className="text-zinc-600">Database Connection</span>
+                            <span className="text-zinc-900">Database Connection</span>
                             <div className="flex items-center gap-2">
                                 <span className="text-green-600">Connected</span>
                             </div>
@@ -371,7 +371,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
                                         </span>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <div className="flex items-center gap-1.5 text-zinc-600 text-xs">
+                                        <div className="flex items-center gap-1.5 text-zinc-800 text-xs">
                                             <MapPin size={12} /> {alert.location}
                                         </div>
                                     </td>
