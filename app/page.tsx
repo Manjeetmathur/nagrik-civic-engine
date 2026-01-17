@@ -364,6 +364,13 @@ export default function CitizenPortal() {
                   File Report
                 </button>
 
+              
+                <button
+                  onClick={() => setShowTrackModal(true)}
+                  className="px-4 py-2 text-sm font-semibold rounded-md transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                >
+                  <Search size={14} /> Track ID
+                </button>
                 <button
                   onClick={() => router.push('/voice')}
                   className="px-4 py-2 text-sm font-semibold rounded-md transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50"
@@ -373,14 +380,13 @@ export default function CitizenPortal() {
               </nav>
 
               <div className="flex items-center gap-3">
-                <button onClick={() => setShowTrackModal(true)} className="hidden md:block text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Track ID</button>
                 <button onClick={() => router.push('/admin')} className="px-4 py-2 bg-gradient-to-r from-slate-900 to-slate-800 text-white text-sm font-semibold rounded-lg shadow-lg shadow-slate-900/30 hover:shadow-xl hover:-translate-y-0.5 transition-all">Admin Access</button>
               </div>
             </div>
           </div>
         </header>
 
-        <main className="max-w-5xl mx-auto px-4 py-12">
+        <main className="max-w-7xl mx-auto px-4 py-12">
           {activeTab === 'report' ? (
             <div className="animate-in  fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center mb-12 space-y-3">
@@ -489,6 +495,39 @@ export default function CitizenPortal() {
                 {/* Left Sidebar - Issue Tracking System & AQI */}
                 <div className="lg:col-span-3">
                   <div className="sticky top-24 space-y-4">
+                    {/* AQI Status Card */}
+                    <div className="shadcn-card p-5 bg-gradient-to-br from-white to-slate-50">
+                      <h3 className="font-bold text-slate-900 mb-4 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Wind size={16} className="text-blue-600" />
+                          Air Quality Index
+                        </div>
+                        <span className={`px-2 py-0.5 text-[10px] rounded-full uppercase font-bold tracking-wider border ${getAqiColor(aqi || 0)}`}>
+                          {getAqiLabel(aqi || 0)}
+                        </span>
+                      </h3>
+                      <div className="flex items-end justify-between mb-4">
+                        <div>
+                          <p className="text-4xl font-bold text-slate-900 tracking-tight">{aqi !== null ? Math.round(aqi) : '--'}</p>
+                          <p className="text-[10px] text-slate-500 font-semibold uppercase mt-1">PM2.5 Concentration</p>
+                        </div>
+                        <div className={`w-16 h-16 rounded-full border-4 border-slate-100 flex items-center justify-center -rotate-45 transition-all duration-1000`} style={{ borderTopColor: aqi !== null ? (aqi <= 50 ? '#10b981' : aqi <= 100 ? '#84cc16' : aqi <= 200 ? '#eab308' : aqi <= 300 ? '#f97316' : '#ef4444') : '#f1f5f9' }}>
+                          <span className="rotate-45 text-xs font-bold text-slate-600">{(aqi || 0) > 100 ? '100+' : Math.round((aqi || 0) * 0.2)}%</span>
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                          <div className={`h-full transition-all duration-1000 ${getAqiProgressColor(aqi || 0)}`} style={{ width: `${Math.min(100, (aqi || 0) / 5)}%` }} />
+                        </div>
+                        <p className="text-xs text-slate-600 leading-relaxed italic">
+                          {aqi === null ? 'Loading live environment telemetry...' :
+                            aqi <= 50 ? 'Air quality is satisfactory, and air pollution poses little or no risk.' :
+                              aqi <= 100 ? 'Air quality is acceptable; however, for some pollutants there may be a moderate health concern.' :
+                                aqi <= 200 ? 'Members of sensitive groups may experience health effects.' :
+                                  'Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects.'}
+                        </p>
+                      </div>
+                    </div>
                     {/* Issue Tracking Card */}
                     <div className="shadcn-card p-5">
                       <h3 className="font-bold text-zinc-900 mb-4 flex items-center gap-2">
@@ -537,39 +576,7 @@ export default function CitizenPortal() {
                       </div>
                     </div>
 
-                    {/* AQI Status Card */}
-                    <div className="shadcn-card p-5 bg-gradient-to-br from-white to-slate-50">
-                      <h3 className="font-bold text-slate-900 mb-4 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Wind size={16} className="text-blue-600" />
-                          Air Quality Index
-                        </div>
-                        <span className={`px-2 py-0.5 text-[10px] rounded-full uppercase font-bold tracking-wider border ${getAqiColor(aqi || 0)}`}>
-                          {getAqiLabel(aqi || 0)}
-                        </span>
-                      </h3>
-                      <div className="flex items-end justify-between mb-4">
-                        <div>
-                          <p className="text-4xl font-bold text-slate-900 tracking-tight">{aqi !== null ? Math.round(aqi) : '--'}</p>
-                          <p className="text-[10px] text-slate-500 font-semibold uppercase mt-1">PM2.5 Concentration</p>
-                        </div>
-                        <div className={`w-16 h-16 rounded-full border-4 border-slate-100 flex items-center justify-center -rotate-45 transition-all duration-1000`} style={{ borderTopColor: aqi !== null ? (aqi <= 50 ? '#10b981' : aqi <= 100 ? '#84cc16' : aqi <= 200 ? '#eab308' : aqi <= 300 ? '#f97316' : '#ef4444') : '#f1f5f9' }}>
-                          <span className="rotate-45 text-xs font-bold text-slate-600">{(aqi || 0) > 100 ? '100+' : Math.round((aqi || 0) * 0.2)}%</span>
-                        </div>
-                      </div>
-                      <div className="space-y-3">
-                        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                          <div className={`h-full transition-all duration-1000 ${getAqiProgressColor(aqi || 0)}`} style={{ width: `${Math.min(100, (aqi || 0) / 5)}%` }} />
-                        </div>
-                        <p className="text-xs text-slate-600 leading-relaxed italic">
-                          {aqi === null ? 'Loading live environment telemetry...' :
-                            aqi <= 50 ? 'Air quality is satisfactory, and air pollution poses little or no risk.' :
-                              aqi <= 100 ? 'Air quality is acceptable; however, for some pollutants there may be a moderate health concern.' :
-                                aqi <= 200 ? 'Members of sensitive groups may experience health effects.' :
-                                  'Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects.'}
-                        </p>
-                      </div>
-                    </div>
+
                   </div>
                 </div>
 

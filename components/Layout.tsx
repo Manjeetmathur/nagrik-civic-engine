@@ -16,7 +16,8 @@ import {
     MapPin,
     MessageSquare,
     Wind,
-    Mail
+    Mail,
+    Bell
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -40,16 +41,19 @@ const Layout: React.FC<LayoutProps> = ({
 
     const navItems = [
         { id: 'dashboard' as View, label: 'Dashboard', icon: LayoutDashboard },
-        { id: 'map' as View, label: 'Voice Map', icon: MapPin },
+        { id: 'alerts' as View, label: 'All Alerts', icon: Bell },
+         { id: 'cameras' as View, label: 'Cameras', icon: Video },
+        { id: 'air-quality' as View, label: 'Air Quality', icon: Wind },
+        { id: 'citizen-reports' as View, label: 'Citizen Reports', icon: Users },
+
         { id: 'citizen-map' as View, label: 'Citizen Map', icon: MapPin },
+        { id: 'analytics' as View, label: 'Analytics', icon: BarChart3 },
+        { id: 'feedback-reports' as View, label: 'Feedback Reports', icon: MessageSquare },
+        { id: 'authority-contact' as View, label: 'Authority Contact', icon: Mail },
         { id: 'voice-reports' as View, label: 'Voice Reports', icon: ShieldAlert },
         { id: 'voice-analytics' as View, label: 'Voice Analytics', icon: BarChart3 },
-        { id: 'citizen-reports' as View, label: 'Citizen Reports', icon: Users },
-        { id: 'analytics' as View, label: 'Analytics', icon: BarChart3 },
-        { id: 'cameras' as View, label: 'Cameras', icon: Video },
-        { id: 'feedback-reports' as View, label: 'Feedback Reports', icon: MessageSquare },
-        { id: 'air-quality' as View, label: 'Air Quality', icon: Wind },
-        { id: 'authority-contact' as View, label: 'Authority Contact', icon: Mail },
+        { id: 'map' as View, label: 'Voice Map', icon: MapPin },
+       
     ];
 
     return (
