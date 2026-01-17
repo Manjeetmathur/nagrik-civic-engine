@@ -83,6 +83,58 @@
   @apply bg-rose-50 text-rose-700 border border-rose-200;
 }
 
+/* Global Design System Utilities */
+
+/* Typography */
+.page-title {
+  @apply text-2xl font-semibold text-slate-900 tracking-tight;
+}
+
+.section-title {
+  @apply text-sm text-muted-foreground uppercase tracking-wide font-medium;
+}
+
+/* Enhanced Card Styling */
+.admin-card {
+  @apply bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200;
+}
+
+/* Button with Icon Pattern */
+.btn-icon {
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200;
+}
+
+.btn-icon-primary {
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30 hover:shadow-xl hover:-translate-y-0.5;
+}
+
+.btn-icon-secondary {
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 bg-white text-slate-700 border-2 border-slate-200 hover:border-slate-300 hover:bg-slate-50;
+}
+
+/* Spacing Utilities */
+.section-gap {
+  @apply space-y-6;
+}
+
+.grid-gap {
+  @apply gap-6;
+}
+
+/* Empty State Pattern */
+.empty-state {
+  @apply flex flex-col items-center justify-center py-12 px-4 text-center;
+}
+
+.empty-state-icon {
+  @apply w-12 h-12 text-muted-foreground mb-4;
+}
+
+.empty-state-message {
+  @apply text-sm text-muted-foreground mb-4;
+}
+
+
 /* Animation classes */
 @keyframes fade-in {
   from {
