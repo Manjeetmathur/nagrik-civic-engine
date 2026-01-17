@@ -11,18 +11,28 @@ export default function AdminLogin() {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(false);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+        setError(false);
 
         // Simulate loading for better UX
         await new Promise(resolve => setTimeout(resolve, 800));
 
-        // Simple demo login - store user in localStorage
-        const user: User = { name: 'Admin User', email: email, role: 'admin' };
-        localStorage.setItem('nagar_user', JSON.stringify(user));
-        router.push('/admin/dashboard');
+        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+        const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+
+        if (email === adminEmail && password === adminPassword) {
+            // Simple demo login - store user in localStorage
+            const user: User = { name: 'Admin User', email: email, role: 'admin' };
+            localStorage.setItem('nagar_user', JSON.stringify(user));
+            router.push('/admin/dashboard');
+        } else {
+            setError(true);
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -54,6 +64,15 @@ export default function AdminLogin() {
                         <h1 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Admin Access</h1>
                         <p className="text-base text-slate-600">Sign in to the Nagrik Civic Dashboard</p>
                     </div>
+
+                    {error && (
+                        <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-xl animate-in fade-in zoom-in-95 duration-300">
+                            <div className="flex items-center gap-3 text-rose-700">
+                                <ShieldAlert size={18} className="shrink-0" />
+                                <p className="text-sm font-semibold">Invalid email or password. Please try again.</p>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Login Form */}
                     <form onSubmit={handleLogin} className="space-y-5">
@@ -130,13 +149,6 @@ export default function AdminLogin() {
                             Secure access to municipal operations and civic monitoring
                         </p>
                     </div>
-                </div>
-
-                {/* Info Card */}
-                <div className="mt-4 bg-blue-50/50 backdrop-blur-sm border border-blue-200 rounded-xl p-4">
-                    <p className="text-xs text-blue-800 text-center">
-                        🔒 <strong>Demo Mode:</strong> Use any email and password to access the dashboard
-                    </p>
                 </div>
             </div>
         </div>
