@@ -91,7 +91,12 @@ class ApiService {
                     body: JSON.stringify({ status })
                 });
                 if (res.ok) return await res.json();
-            } catch { }
+                console.error("Update Status Failed", res.status, await res.text());
+            } catch (e) {
+                console.error("Update Status Exception", e);
+            }
+        } else {
+            console.warn("Backend not live, skipping updateStatus");
         }
         return null;
     }

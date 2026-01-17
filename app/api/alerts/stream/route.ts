@@ -6,29 +6,38 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
     const encoder = new TextEncoder();
 
+    let cleanup: () => void;
+
     const stream = new ReadableStream({
         start(controller) {
             const onNewAlert = (alert: any) => {
-                const data = `data: ${JSON.stringify(alert)}\n\n`;
-                controller.enqueue(encoder.encode(data));
+                try {
+                    const data = `data: ${JSON.stringify(alert)}\n\n`;
+                    controller.enqueue(encoder.encode(data));
+                } catch (e) {
+                    console.error('Error sending alert:', e);
+                }
             };
 
             alertEvents.on('new-alert', onNewAlert);
 
-            // Cleanup on close
-            const cleanup = () => {
-                alertEvents.off('new-alert', onNewAlert);
-            };
-
             // Keep connection alive with heartbeat
             const heartbeat = setInterval(() => {
-                controller.enqueue(encoder.encode(': heartbeat\n\n'));
+                try {
+                    controller.enqueue(encoder.encode(': heartbeat\n\n'));
+                } catch (e) {
+                    // Ignore errors if controller is closed
+                    if (cleanup) cleanup();
+                }
             }, 30000);
 
-            return () => {
-                cleanup();
+            cleanup = () => {
+                alertEvents.off('new-alert', onNewAlert);
                 clearInterval(heartbeat);
             };
+        },
+        cancel() {
+            if (cleanup) cleanup();
         },
     });
 

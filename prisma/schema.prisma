@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Alert {
+  id           String   @id @default(cuid())
+  type         String
+  confidence   Float
+  location     String
+  timestamp    DateTime @default(now())
+  status       String
+  thumbnailUrl String
+  fullImageUrl String
+  cameraId     String?
+  description  String
+  detections   Json?
+  notes        String?
+  source       String
+  reporter     Json?
+  feedback     Json?
+}
+
+model Camera {
+  id         String   @id @default(cuid())
+  name       String
+  location   String
+  status     String   @default("offline")
+  lastPing   DateTime @default(now())
+  ip         String
+  streamUrl  String?
+  sourceType String   @default("webcam") // 'webcam' or 'remote'
+}

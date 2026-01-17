@@ -66,7 +66,7 @@ export default function CitizenPortal() {
     setIsSubmitting(true);
 
     const payload = {
-      type: formData.type.toUpperCase(),
+      type: formData.type,
       location: formData.location,
       description: formData.description,
       imageUrl: imagePreview || 'https://picsum.photos/800/600',
