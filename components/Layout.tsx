@@ -10,7 +10,8 @@ import {
     Video,
     LogOut,
     Menu,
-    X
+    X,
+    MapPin
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -34,6 +35,9 @@ const Layout: React.FC<LayoutProps> = ({
 
     const navItems = [
         { id: 'dashboard' as View, label: 'Dashboard', icon: LayoutDashboard },
+        { id: 'map' as View, label: 'Live Map', icon: MapPin },
+        { id: 'voice-reports' as View, label: 'Voice Reports', icon: ShieldAlert },
+        { id: 'voice-analytics' as View, label: 'Voice Analytics', icon: BarChart3 },
         { id: 'alerts' as View, label: 'All Alerts', icon: ShieldAlert },
         { id: 'citizen-reports' as View, label: 'Citizen Reports', icon: Users },
         { id: 'analytics' as View, label: 'Analytics', icon: BarChart3 },
@@ -138,8 +142,8 @@ const Layout: React.FC<LayoutProps> = ({
                         <div className="flex-1" />
 
                         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${isBackendLive
-                                ? 'bg-indigo-50 border-indigo-100'
-                                : 'bg-zinc-100 border-zinc-200'
+                            ? 'bg-indigo-50 border-indigo-100'
+                            : 'bg-zinc-100 border-zinc-200'
                             }`}>
                             <span className={`h-2 w-2 rounded-full ${isBackendLive ? 'bg-indigo-600 animate-pulse' : 'bg-zinc-400'
                                 }`} />

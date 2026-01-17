@@ -60,6 +60,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -70,6 +71,7 @@
     transform: translateY(0.5rem);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -81,6 +83,7 @@
     transform: translateY(1rem);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -91,6 +94,7 @@
   from {
     transform: translateX(100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -101,6 +105,7 @@
     transform: scale(0.95);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -194,12 +199,9 @@ body {
   font-family: noth;
   src: url("/nothing.woff2");
 }
-*{
-    scrollbar-width: none;
-}
-.noth{
-  font-family: noth;
 
+* {
+  scrollbar-width: none;
 }
 
 .emergency-marker {
@@ -231,19 +233,29 @@ body {
   animation: pulse 2s infinite;
 }
 
-.marker-high { --color: #ef4444; }
-.marker-medium { --color: #ca9700; }
-.marker-low { --color: #009436; }
+.marker-high {
+  --color: #ef4444;
+}
+
+.marker-medium {
+  --color: #ca9700;
+}
+
+.marker-low {
+  --color: #009436;
+}
 
 @keyframes pulse {
   0% {
     transform: scale(0.7);
     opacity: 0.5;
   }
+
   70% {
     transform: scale(1.6);
     opacity: 0;
   }
+
   100% {
     opacity: 0;
   }
@@ -322,6 +334,7 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

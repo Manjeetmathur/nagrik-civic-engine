@@ -14,6 +14,7 @@ export async function GET() {
         longitude: true,
         severity: true,
         createdAt: true,
+        imageUrl: true,
         // @ts-ignore 
         speechStressData: {
           select: {

@@ -42,6 +42,7 @@ model Report {
   // Voice detection
   keyword     String
   description String
+  imageUrl    String?
 
   // Categorization
   category ReportCategory

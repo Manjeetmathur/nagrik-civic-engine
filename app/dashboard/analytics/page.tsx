@@ -4,7 +4,7 @@ import { AnalyticsCharts } from "@/components/analytics-charts"
 
 export default function AnalyticsPage() {
   return (
-    <div className="flex flex-col h-full noth bg-black">
+    <div className="flex flex-col h-full noth">
       {/* Header */}
       <div className="p-6 lg:p-8 border-b border-white/10">
         <h1 className="text-3xl font-semibold bg-gradient-to-r from-indigo-400 to-cyan-200 bg-clip-text text-transparent mb-2">
