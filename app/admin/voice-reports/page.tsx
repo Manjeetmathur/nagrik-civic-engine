@@ -65,7 +65,7 @@ export default function AdminVoiceReportsPage() {
         router.push('/');
     };
 
-    if (isLoading) {
+    if (!user) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-[#fafafa] gap-4">
                 <div className="w-12 h-12 border-2 border-zinc-200 border-t-zinc-900 rounded-full animate-spin"></div>
@@ -83,20 +83,27 @@ export default function AdminVoiceReportsPage() {
             user={user}
             isBackendLive={true}
         >
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Voice Reports</h1>
-                    <p className="text-zinc-500 mt-1">Detailed log of emergency voice reports with stress analysis</p>
+            {isLoading ? (
+                <div className="flex flex-col items-center justify-center h-[calc(100vh-12rem)]">
+                    <div className="w-12 h-12 border-2 border-zinc-200 border-t-zinc-900 rounded-full animate-spin"></div>
+                    <p className="mt-4 text-zinc-500 font-medium">Loading Voice Reports...</p>
                 </div>
-
-                {loadingReports ? (
-                    <div className="flex items-center justify-center h-48">
-                        <div className="w-8 h-8 border-2 border-zinc-200 border-t-zinc-900 rounded-full animate-spin"></div>
+            ) : (
+                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Voice Reports</h1>
+                        <p className="text-zinc-500 mt-1">Detailed log of emergency voice reports with stress analysis</p>
                     </div>
-                ) : (
-                    <AdminVoiceReportsTable data={reports} />
-                )}
-            </div>
+
+                    {loadingReports ? (
+                        <div className="flex items-center justify-center h-48">
+                            <div className="w-8 h-8 border-2 border-zinc-200 border-t-zinc-900 rounded-full animate-spin"></div>
+                        </div>
+                    ) : (
+                        <AdminVoiceReportsTable data={reports} />
+                    )}
+                </div>
+            )}
         </Layout>
     );
 }

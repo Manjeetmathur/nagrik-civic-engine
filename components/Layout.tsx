@@ -45,7 +45,7 @@ const Layout: React.FC<LayoutProps> = ({
     ];
 
     return (
-        <div className="min-h-screen bg-[#fafafa] flex">
+        <div className="h-screen bg-[#fafafa] flex overflow-hidden">
             {/* Mobile sidebar backdrop */}
             {sidebarOpen && (
                 <div
@@ -81,7 +81,7 @@ const Layout: React.FC<LayoutProps> = ({
                     </div>
 
                     {/* Navigation */}
-                    <nav className="flex-1 p-4 space-y-1">
+                    <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
                         {navItems.map((item) => {
                             const Icon = item.icon;
                             const isActive = currentView === item.id;

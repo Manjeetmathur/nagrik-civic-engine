@@ -67,7 +67,7 @@ export default function AdminMapPage() {
         router.push('/');
     };
 
-    if (isLoading) {
+    if (!user) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-[#fafafa] gap-4">
                 <div className="w-12 h-12 border-2 border-zinc-200 border-t-zinc-900 rounded-full animate-spin"></div>
@@ -118,8 +118,8 @@ export default function AdminMapPage() {
                                     key={report.id}
                                     onClick={() => setSelectedReport(report)}
                                     className={`w-full text-left p-3 rounded-lg border transition-all ${selectedReport?.id === report.id
-                                            ? 'bg-indigo-50 border-indigo-200 shadow-sm'
-                                            : 'bg-white border-transparent hover:bg-zinc-50 hover:border-zinc-200'
+                                        ? 'bg-indigo-50 border-indigo-200 shadow-sm'
+                                        : 'bg-white border-transparent hover:bg-zinc-50 hover:border-zinc-200'
                                         }`}
                                 >
                                     <div className="flex justify-between mb-1">
@@ -129,8 +129,8 @@ export default function AdminMapPage() {
                                         </span>
                                         {report.speechStressData && (
                                             <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${report.speechStressData.confidence >= 60 ? 'bg-red-100 text-red-700' :
-                                                    report.speechStressData.confidence >= 40 ? 'bg-yellow-100 text-yellow-700' :
-                                                        'bg-green-100 text-green-700'
+                                                report.speechStressData.confidence >= 40 ? 'bg-yellow-100 text-yellow-700' :
+                                                    'bg-green-100 text-green-700'
                                                 }`}>
                                                 {report.speechStressData.confidence}%
                                             </span>

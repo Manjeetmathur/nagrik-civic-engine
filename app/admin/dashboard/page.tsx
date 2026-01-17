@@ -71,7 +71,7 @@ export default function AdminDashboardPage() {
         router.push(`/admin/${view}`);
     };
 
-    if (isLoading) {
+    if (!user) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-[#fafafa] gap-4">
                 <div className="w-12 h-12 border-2 border-zinc-200 border-t-zinc-900 rounded-full animate-spin"></div>
@@ -108,13 +108,20 @@ export default function AdminDashboardPage() {
                 user={user}
                 isBackendLive={isBackendLive}
             >
-                <DashboardPage
-                    setView={(view) => handleNavigate(view)}
-                    alerts={allAlerts}
-                    onLoadMore={handleLoadMore}
-                    hasMore={hasMore}
-                    isFetchingMore={isFetchingMore}
-                />
+                {isLoading ? (
+                    <div className="flex flex-col items-center justify-center h-[calc(100vh-12rem)]">
+                        <div className="w-12 h-12 border-2 border-zinc-200 border-t-zinc-900 rounded-full animate-spin"></div>
+                        <p className="mt-4 text-zinc-500 font-medium">Loading Dashboard...</p>
+                    </div>
+                ) : (
+                    <DashboardPage
+                        setView={(view) => handleNavigate(view)}
+                        alerts={allAlerts}
+                        onLoadMore={handleLoadMore}
+                        hasMore={hasMore}
+                        isFetchingMore={isFetchingMore}
+                    />
+                )}
             </Layout>
         </>
     );
