@@ -10,7 +10,8 @@ import {
     Video,
     LogOut,
     Menu,
-    X
+    X,
+    MapPin
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -34,6 +35,9 @@ const Layout: React.FC<LayoutProps> = ({
 
     const navItems = [
         { id: 'dashboard' as View, label: 'Dashboard', icon: LayoutDashboard },
+        { id: 'map' as View, label: 'Live Map', icon: MapPin },
+        { id: 'voice-reports' as View, label: 'Voice Reports', icon: ShieldAlert },
+        { id: 'voice-analytics' as View, label: 'Voice Analytics', icon: BarChart3 },
         { id: 'alerts' as View, label: 'All Alerts', icon: ShieldAlert },
         { id: 'citizen-reports' as View, label: 'Citizen Reports', icon: Users },
         { id: 'analytics' as View, label: 'Analytics', icon: BarChart3 },

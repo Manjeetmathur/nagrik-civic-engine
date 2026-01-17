@@ -45,7 +45,7 @@ export default function MapPage() {
   }, [])
 
   return (
-    <div className="flex flex-col h-full bg-black">
+    <div className="flex flex-col h-full ">
       {/* Header */}
       <div className="p-6 border-b border-white/10">
         <h1 className="text-3xl font-semibold bg-gradient-to-r from-indigo-400 to-cyan-200 bg-clip-text text-transparent mb-2">
@@ -76,7 +76,7 @@ export default function MapPage() {
 
             <div className="flex-1 overflow-auto p-4 space-y-2">
               {loading && <p className="text-cyan-400">Loading…</p>}
-              
+
               {!loading && reports.length === 0 && (
                 <p className="text-muted-foreground text-sm text-center py-4">
                   No reports found
@@ -90,24 +90,22 @@ export default function MapPage() {
                   <button
                     key={report.id}
                     onClick={() => setSelectedReport(report)}
-                    className={`w-full text-left p-3 rounded-lg transition ${
-                      isSelected
+                    className={`w-full text-left p-3 rounded-lg transition ${isSelected
                         ? "bg-cyan-500/20"
                         : "hover:bg-white/10"
-                    }`}
+                      }`}
                   >
                     <div className="flex justify-between mb-1">
                       <span className="text-xs text-cyan-400">
                         {report.id.slice(0, 8).toUpperCase()}
                       </span>
                       {report.speechStressData && (
-                        <span className={`text-xs px-2 py-0.5 rounded ${
-                          (report.speechStressData.confidence || 0) >= 60
+                        <span className={`text-xs px-2 py-0.5 rounded ${(report.speechStressData.confidence || 0) >= 60
                             ? "bg-red-500/20 text-red-300"
                             : (report.speechStressData.confidence || 0) >= 40
                               ? "bg-yellow-500/20 text-yellow-300"
                               : "bg-green-500/20 text-green-300"
-                        }`}>
+                          }`}>
                           {report.speechStressData.confidence || 0}%
                         </span>
                       )}

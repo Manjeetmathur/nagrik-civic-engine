@@ -47,7 +47,7 @@ export default function ReportsPage() {
 
 
   return (
-    <div className="flex flex-col h-full noth bg-black">
+    <div className="flex flex-col h-full noth ">
       {/* Header */}
       <div className="p-6 lg:p-8 border-b border-white/10">
         <h1 className="text-3xl font-semibold bg-gradient-to-r from-indigo-400 to-cyan-200 bg-clip-text text-transparent mb-2">
@@ -83,70 +83,70 @@ export default function ReportsPage() {
             </h3>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-  <Detail label="Category" value={selectedReport.category} />
-  <Detail
-    label="Severity"
-    value={selectedReport.severity.toUpperCase()}
-    severity={selectedReport.severity}
-  />
-  <Detail label="Latitude" value={selectedReport.latitude} mono />
-  <Detail label="Longitude" value={selectedReport.longitude} mono />
-  {selectedReport.speechStressData ? (
-    <Detail 
-      label="Stress Confidence" 
-      value={`${selectedReport.speechStressData.confidence}%`} 
-      severity={selectedReport.speechStressData.confidence >= 60 ? "high" : selectedReport.speechStressData.confidence >= 40 ? "medium" : "low"}
-    />
-  ) : (
-    <Detail label="Stress Confidence" value="N/A" />
-  )}
-  <Detail
-    label="Time"
-    value={new Date(selectedReport.createdAt).toLocaleString()}
-  />
-  <div className="col-span-2 md:col-span-3">
-    <p className="text-muted-foreground mb-1">Description</p>
-    <p className="text-white">{selectedReport.description}</p>
-  </div>
-  
-  {/* Speech Stress Details */}
-  {selectedReport.speechStressData && (
-    <div className="col-span-2 md:col-span-3 mt-4 pt-4 border-t border-white/10">
-      <h4 className="text-md font-bold text-cyan-300 mb-3">Speech Stress Analysis</h4>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Detail label="Words/Second" value={typeof selectedReport.speechStressData.wordsPerSecond === 'number' ? selectedReport.speechStressData.wordsPerSecond.toFixed(1) : '0.0'} mono />
-        <Detail label="Repeated Words" value={selectedReport.speechStressData.repeatedWords} />
-        <Detail label="Pause Count" value={selectedReport.speechStressData.pauseCount} />
-        <Detail label="Avg Pause (ms)" value={Math.round(selectedReport.speechStressData.averagePauseDuration)} mono />
-      </div>
-      {(() => {
-        try {
-          const indicators = JSON.parse(selectedReport.speechStressData.stressIndicators) as string[]
-          if (indicators.length > 0) {
-            return (
-              <div className="mt-3">
-                <p className="text-muted-foreground mb-2 text-xs">Stress Indicators:</p>
-                <div className="flex flex-wrap gap-2">
-                  {indicators.map((indicator, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-1 bg-red-500/20 border border-red-500/30 rounded text-xs text-red-300"
-                    >
-                      {indicator}
-                    </span>
-                  ))}
-                </div>
+              <Detail label="Category" value={selectedReport.category} />
+              <Detail
+                label="Severity"
+                value={selectedReport.severity.toUpperCase()}
+                severity={selectedReport.severity}
+              />
+              <Detail label="Latitude" value={selectedReport.latitude} mono />
+              <Detail label="Longitude" value={selectedReport.longitude} mono />
+              {selectedReport.speechStressData ? (
+                <Detail
+                  label="Stress Confidence"
+                  value={`${selectedReport.speechStressData.confidence}%`}
+                  severity={selectedReport.speechStressData.confidence >= 60 ? "high" : selectedReport.speechStressData.confidence >= 40 ? "medium" : "low"}
+                />
+              ) : (
+                <Detail label="Stress Confidence" value="N/A" />
+              )}
+              <Detail
+                label="Time"
+                value={new Date(selectedReport.createdAt).toLocaleString()}
+              />
+              <div className="col-span-2 md:col-span-3">
+                <p className="text-muted-foreground mb-1">Description</p>
+                <p className="text-white">{selectedReport.description}</p>
               </div>
-            )
-          }
-        } catch (e) {
-          // Ignore parse errors
-        }
-        return null
-      })()}
-    </div>
-  )}
-</div>
+
+              {/* Speech Stress Details */}
+              {selectedReport.speechStressData && (
+                <div className="col-span-2 md:col-span-3 mt-4 pt-4 border-t border-white/10">
+                  <h4 className="text-md font-bold text-cyan-300 mb-3">Speech Stress Analysis</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <Detail label="Words/Second" value={typeof selectedReport.speechStressData.wordsPerSecond === 'number' ? selectedReport.speechStressData.wordsPerSecond.toFixed(1) : '0.0'} mono />
+                    <Detail label="Repeated Words" value={selectedReport.speechStressData.repeatedWords} />
+                    <Detail label="Pause Count" value={selectedReport.speechStressData.pauseCount} />
+                    <Detail label="Avg Pause (ms)" value={Math.round(selectedReport.speechStressData.averagePauseDuration)} mono />
+                  </div>
+                  {(() => {
+                    try {
+                      const indicators = JSON.parse(selectedReport.speechStressData.stressIndicators) as string[]
+                      if (indicators.length > 0) {
+                        return (
+                          <div className="mt-3">
+                            <p className="text-muted-foreground mb-2 text-xs">Stress Indicators:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {indicators.map((indicator, idx) => (
+                                <span
+                                  key={idx}
+                                  className="px-2 py-1 bg-red-500/20 border border-red-500/30 rounded text-xs text-red-300"
+                                >
+                                  {indicator}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )
+                      }
+                    } catch (e) {
+                      // Ignore parse errors
+                    }
+                    return null
+                  })()}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>

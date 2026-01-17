@@ -29,54 +29,54 @@ type SpeechStressStats = {
 
 export default function DashboardPage() {
   const [stats, setStats] = useState({
-  totalReports: 0,
-  criticalAlerts: 0,
-  inProgress: 0,
-});
+    totalReports: 0,
+    criticalAlerts: 0,
+    inProgress: 0,
+  });
 
-const [recent, setRecent] = useState<RecentReport[]>([]);
-const [speechStressStats, setSpeechStressStats] = useState<SpeechStressStats>({
-  averageConfidence: 0,
-  highStressReports: 0,
-  averageWordsPerSecond: 0,
-  totalAnalyzed: 0,
-  commonIndicators: [],
-});
+  const [recent, setRecent] = useState<RecentReport[]>([]);
+  const [speechStressStats, setSpeechStressStats] = useState<SpeechStressStats>({
+    averageConfidence: 0,
+    highStressReports: 0,
+    averageWordsPerSecond: 0,
+    totalAnalyzed: 0,
+    commonIndicators: [],
+  });
 
-    useEffect(() => {
-  const fetchDashboard = async () => {
-    try {
-      const res = await fetch("/api/dashboard");
-      if (!res.ok) throw new Error("Failed to fetch dashboard");
-      const data = await res.json();
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const res = await fetch("/api/dashboard");
+        if (!res.ok) throw new Error("Failed to fetch dashboard");
+        const data = await res.json();
 
-      setStats({
-        totalReports: data.totalReports || 0,
-        criticalAlerts: data.criticalAlerts || 0,
-        inProgress: data.inProgress || 0,
-      });
+        setStats({
+          totalReports: data.totalReports || 0,
+          criticalAlerts: data.criticalAlerts || 0,
+          inProgress: data.inProgress || 0,
+        });
 
-      setRecent(Array.isArray(data.recentReports) ? data.recentReports : []);
-      setSpeechStressStats(data.speechStressStats || {
-        averageConfidence: 0,
-        highStressReports: 0,
-        averageWordsPerSecond: 0,
-        totalAnalyzed: 0,
-        commonIndicators: [],
-      });
-    } catch (err) {
-      console.error("Dashboard fetch failed", err);
-    }
-  };
+        setRecent(Array.isArray(data.recentReports) ? data.recentReports : []);
+        setSpeechStressStats(data.speechStressStats || {
+          averageConfidence: 0,
+          highStressReports: 0,
+          averageWordsPerSecond: 0,
+          totalAnalyzed: 0,
+          commonIndicators: [],
+        });
+      } catch (err) {
+        console.error("Dashboard fetch failed", err);
+      }
+    };
 
-  fetchDashboard();
-  const interval = setInterval(fetchDashboard, 5000); // realtime-ish
+    fetchDashboard();
+    const interval = setInterval(fetchDashboard, 5000); // realtime-ish
 
-  return () => clearInterval(interval);
-}, []);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className="flex flex-col h-full noth bg-black">
+    <div className="flex flex-col h-full noth ">
       <div className="p-6 lg:p-8 border-b border-white/10">
         <h1 className="text-3xl font-semibold bg-gradient-to-r from-indigo-400 to-cyan-200 bg-clip-text text-transparent mb-2">Realtime Monitoring Control</h1>
         <p className="text-muted-foreground ">Real-time emergency alert monitoring and response coordination</p>
@@ -89,9 +89,9 @@ const [speechStressStats, setSpeechStressStats] = useState<SpeechStressStats>({
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-muted-foreground text-sm mb-1">Total Reports</p>
-               <p className="text-3xl bg-gradient-to-r from-indigo-400 to-cyan-200 bg-clip-text text-transparent pl-1">
-  {stats.totalReports}
-</p>
+                <p className="text-3xl bg-gradient-to-r from-indigo-400 to-cyan-200 bg-clip-text text-transparent pl-1">
+                  {stats.totalReports}
+                </p>
 
               </div>
               <IconTrendingUp className="w-5 h-5 text-indigo-300 " />
@@ -104,8 +104,8 @@ const [speechStressStats, setSpeechStressStats] = useState<SpeechStressStats>({
               <div>
                 <p className="text-muted-foreground text-sm mb-1">Critical Alerts</p>
                 <p className="text-3xl text-red-400">
-  {stats.criticalAlerts}
-</p>
+                  {stats.criticalAlerts}
+                </p>
 
               </div>
               <IconAlertTriangle className="w-5 h-5 text-red-400 " />
@@ -118,8 +118,8 @@ const [speechStressStats, setSpeechStressStats] = useState<SpeechStressStats>({
               <div>
                 <p className="text-muted-foreground text-sm mb-1">In Progress</p>
                 <p className="text-3xl text-lime-400">
-  {stats.inProgress}
-</p>
+                  {stats.inProgress}
+                </p>
 
               </div>
               <IconArrowUpRight className="w-5 h-5 text-lime-400 opacity-50" />
@@ -204,66 +204,66 @@ const [speechStressStats, setSpeechStressStats] = useState<SpeechStressStats>({
         {/* Recent Activity */}
         <div className="bg-black/30 backdrop-blur-md border border-white/10 rounded-lg p-6 ring ring-indigo-200/40 bg-gradient-to-r from-indigo-700/10 to-cyan-400/10">
           <h2 className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-200 bg-clip-text text-transparent mb-4">Recent Activity</h2>
-         <div className="space-y-2 text-sm">
-  {recent.map((r) => {
-    let stressIndicators: string[] = [];
-    try {
-      if (r.speechStressData?.stressIndicators) {
-        stressIndicators = JSON.parse(r.speechStressData.stressIndicators);
-      }
-    } catch (e) {
-      // Ignore parse errors
-    }
+          <div className="space-y-2 text-sm">
+            {recent.map((r) => {
+              let stressIndicators: string[] = [];
+              try {
+                if (r.speechStressData?.stressIndicators) {
+                  stressIndicators = JSON.parse(r.speechStressData.stressIndicators);
+                }
+              } catch (e) {
+                // Ignore parse errors
+              }
 
-    return (
-      <div
-        key={r.id}
-        className="p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
-      >
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-muted-foreground">
-            {r.keyword.toUpperCase()} — {r.description}
-          </span>
-          <span className="text-xs text-muted-foreground">
-            {new Date(r.createdAt).toLocaleTimeString()}
-          </span>
-        </div>
-        {r.speechStressData && (
-          <div className="mt-2 pt-2 border-t border-white/10 space-y-1">
-            <div className="flex items-center gap-4 text-xs">
-              <span className="text-muted-foreground">
-                Confidence: <span className={(r.speechStressData.confidence || 0) >= 60 ? "text-red-400" : "text-yellow-400"}>
-                  {r.speechStressData.confidence || 0}%
-                </span>
-              </span>
-              <span className="text-muted-foreground">
-                Speed: {typeof r.speechStressData.wordsPerSecond === 'number' ? r.speechStressData.wordsPerSecond.toFixed(1) : '0.0'} wps
-              </span>
-            </div>
-            {stressIndicators.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-1">
-                {stressIndicators.slice(0, 2).map((indicator, idx) => (
-                  <span
-                    key={idx}
-                    className="px-1.5 py-0.5 bg-red-500/20 border border-red-500/30 rounded text-xs text-red-300"
-                  >
-                    {indicator}
-                  </span>
-                ))}
+              return (
+                <div
+                  key={r.id}
+                  className="p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-muted-foreground">
+                      {r.keyword.toUpperCase()} — {r.description}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(r.createdAt).toLocaleTimeString()}
+                    </span>
+                  </div>
+                  {r.speechStressData && (
+                    <div className="mt-2 pt-2 border-t border-white/10 space-y-1">
+                      <div className="flex items-center gap-4 text-xs">
+                        <span className="text-muted-foreground">
+                          Confidence: <span className={(r.speechStressData.confidence || 0) >= 60 ? "text-red-400" : "text-yellow-400"}>
+                            {r.speechStressData.confidence || 0}%
+                          </span>
+                        </span>
+                        <span className="text-muted-foreground">
+                          Speed: {typeof r.speechStressData.wordsPerSecond === 'number' ? r.speechStressData.wordsPerSecond.toFixed(1) : '0.0'} wps
+                        </span>
+                      </div>
+                      {stressIndicators.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {stressIndicators.slice(0, 2).map((indicator, idx) => (
+                            <span
+                              key={idx}
+                              className="px-1.5 py-0.5 bg-red-500/20 border border-red-500/30 rounded text-xs text-red-300"
+                            >
+                              {indicator}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {recent.length === 0 && (
+              <div className="text-muted-foreground text-center text-xs py-4">
+                No recent activity
               </div>
             )}
           </div>
-        )}
-      </div>
-    );
-  })}
-
-  {recent.length === 0 && (
-    <div className="text-muted-foreground text-center text-xs py-4">
-      No recent activity
-    </div>
-  )}
-</div>
 
         </div>
       </div>
