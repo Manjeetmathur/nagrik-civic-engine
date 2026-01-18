@@ -338,9 +338,9 @@ export default function CitizenPortal() {
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 font-sans">
         {/* Header */}
-        <header className="bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-8">
-            <div className="flex justify-between items-center h-16">
+        <header className="bg-white/80  backdrop-blur-lg border-b border-slate-100  sticky top-0 z-30 pb-3">
+          <div className="max-w-7xl mx-auto  px-4 sm:px-8">
+            <div className="flex justify-between  items-center h-16">
               <div className="flex items-center    gap-2.5">
                 <div className="  mt-2">
                   <img
@@ -351,7 +351,7 @@ export default function CitizenPortal() {
                 </div>
               </div>
 
-              <nav className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-lg">
+              <nav className="flex items-center mt-3 rounded-xl gap-1 bg-slate-100 p-1.5 ">
                 <button
                   onClick={() => setActiveTab('live')}
                   className={`px-4 py-2 text-sm font-semibold transition-all flex items-center rounded gap-2 ${activeTab === 'live' ? 'bg-white text-blue-600 ' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
@@ -409,7 +409,6 @@ export default function CitizenPortal() {
                           <div className="absolute bottom-3 right-3">
                             <div className="scale-75 origin-bottom-right">
                               <CloudinaryUpload
-
                                 currentImage={imagePreview}
                                 onUploadSuccess={setImagePreview}
                               />

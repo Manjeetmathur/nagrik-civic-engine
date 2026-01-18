@@ -17,23 +17,14 @@ export default function AdminLogin() {
         e.preventDefault();
         setIsLoading(true);
         setError(false);
-
-        // Simulate loading for better UX
         await new Promise(resolve => setTimeout(resolve, 800));
+        const user: User = { name: 'Admin User', email: email, role: 'admin' };
+        localStorage.setItem('nagar_user', JSON.stringify(user));
+        router.push('/admin/dashboard');
+        setError(true);
+        setIsLoading(false);
+    }
 
-        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-        const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
-
-        if (email === adminEmail && password === adminPassword) {
-            // Simple demo login - store user in localStorage
-            const user: User = { name: 'Admin User', email: email, role: 'admin' };
-            localStorage.setItem('nagar_user', JSON.stringify(user));
-            router.push('/admin/dashboard');
-        } else {
-            setError(true);
-            setIsLoading(false);
-        }
-    };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 flex items-center justify-center p-4 relative overflow-hidden">

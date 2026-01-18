@@ -3,6 +3,7 @@ import { prisma } from "@/utils/db";
 import { checkRepeatedReports } from "@/utils/checker";
 import { generateIncidentSummary } from "@/utils/aireports";
 import { sendAlertEmail } from "@/utils/emergencymailer";
+import { enhanceReportDescription } from "@/utils/enhanceDescription";
 
 export async function POST(req: NextRequest) {
     try {
@@ -25,10 +26,20 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             );
         }
+
+        // Enhance description using Gemini API
+        console.log('Original description:', description);
+        const enhancedDescription = await enhanceReportDescription(
+            description,
+            category,
+            `${latitude}, ${longitude}`
+        );
+        console.log('Enhanced description:', enhancedDescription);
+
         const report = await prisma.report.create({
             data: {
                 keyword,
-                description,
+                description: enhancedDescription, // Use enhanced description
                 category,
                 severity,
                 latitude,
