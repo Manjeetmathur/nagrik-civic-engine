@@ -22,7 +22,6 @@ Nagrik Civic Engine is an intelligent civic monitoring system that leverages AI 
 
 ## 📋 Table of Contents
 <img width="1920" height="1080" alt="Screenshot 2026-01-18 101443" src="https://github.com/user-attachments/assets/502ad0ae-78e4-4770-baff-8cb72e892cb5" />
-<img width="1920" height="1080" alt="Screenshot 2026-01-18 101008" src="https://github.com/user-attachments/assets/f0fb9eca-328e-4078-ad3a-59e46428c87d" />
 
 - [Features](#features)
 - [Pages & Routes](#pages--routes)
@@ -62,6 +61,8 @@ Nagrik Civic Engine is an intelligent civic monitoring system that leverages AI 
 
 ### Public Pages
 
+<img width="1920" height="1080" alt="Screenshot 2026-01-18 102032" src="https://github.com/user-attachments/assets/dd9d0e02-a03f-4fa1-92e2-f3dc9d522f6c" />
+
 #### 1. **Home Page** (`/`)
 The main citizen portal with dual functionality:
 
@@ -73,6 +74,7 @@ The main citizen portal with dual functionality:
 - Community feedback system
 - Social sharing buttons (Email, WhatsApp, Twitter)
 
+<img width="1920" height="1080" alt="Screenshot 2026-01-18 101443" src="https://github.com/user-attachments/assets/f94021b1-eb58-4e36-a687-4cf122aaaee8" />
 **File Report Tab:**
 - Multi-step report submission form
 - Issue type selection (Accident, Traffic, Pothole, etc.)
@@ -87,6 +89,7 @@ The main citizen portal with dual functionality:
 - Real-time toast notifications
 - Track report by ID modal
 
+<img width="1920" height="1080" alt="Screenshot 2026-01-18 101507" src="https://github.com/user-attachments/assets/08759d7d-7744-411b-a248-e0b358f8ad29" />
 #### 2. **Voice Reporting** (`/voice`)
 Hands-free emergency reporting interface:
 
@@ -105,7 +108,9 @@ Hands-free emergency reporting interface:
 - Stress confidence score
 - Stress indicators visualization
 
+<img width="1920" height="1080" alt="Screenshot 2026-01-18 101008" src="https://github.com/user-attachments/assets/b784360b-e651-46ce-87f5-85dd87be19f9" />
 #### 3. **Admin Login** (`/admin`)
+
 Secure authentication portal:
 
 **Features:**
@@ -115,7 +120,7 @@ Secure authentication portal:
 - Professional login UI
 
 ### Admin Dashboard Pages
-
+<img width="1920" height="1080" alt="Screenshot 2026-01-18 101008" src="https://github.com/user-attachments/assets/6800cc04-365e-4d24-a03a-fd332ce77ca9" />
 #### 4. **Dashboard** (`/admin/dashboard`)
 Central command center:
 
@@ -135,7 +140,8 @@ Central command center:
 - Latest incidents timeline
 - Status indicators
 - Quick action buttons
-
+  
+<img width="1920" height="1080" alt="Screenshot 2026-01-18 101110" src="https://github.com/user-attachments/assets/18d086ab-240b-4d5c-af1d-c688f38fbd48" />
 #### 5. **All Alerts** (`/admin/alerts`)
 Comprehensive alert management:
 
@@ -156,10 +162,11 @@ Comprehensive alert management:
 - Timestamp and source
 - Status badge
 - Reporter information (if available)
-
+  
+<img width="1920" height="1080" alt="Screenshot 2026-01-18 101232" src="https://github.com/user-attachments/assets/0628a94c-00be-4750-a848-09352db69925" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-18 101159" src="https://github.com/user-attachments/assets/785fbc24-fcbc-4511-8377-31d06ecead1c" />
 #### 6. **Voice Map** (`/admin/map`)
 Deprecated - Voice reports visualization (legacy)
-
 #### 7. **Citizen Map** (`/admin/citizen-map`)
 Interactive citizen reports map:
 
@@ -177,6 +184,8 @@ Interactive citizen reports map:
   - Nearest Police Station
 - Fullscreen map mode
 - User location tracking
+
+<img width="1920" height="1080" alt="Screenshot 2026-01-18 101232" src="https://github.com/user-attachments/assets/c48d5a50-9ba1-42a1-8647-1733fb3f071f" />
 
 #### 8. **Voice Reports** (`/admin/voice-reports`)
 Voice report management table:
@@ -212,6 +221,7 @@ Voice report analytics dashboard:
 - Time-based trends
 - Category breakdown
 
+<img width="1920" height="1080" alt="Screenshot 2026-01-18 101148" src="https://github.com/user-attachments/assets/bcb6b35c-2dbe-4a7e-8737-0476b267fb52" />
 #### 10. **Citizen Reports** (`/admin/citizen-reports`)
 Citizen-submitted reports management:
 
@@ -221,6 +231,7 @@ Citizen-submitted reports management:
 - Full CRUD operations
 - Status management
 
+<img width="1920" height="1080" alt="Screenshot 2026-01-18 101008" src="https://github.com/user-attachments/assets/d032a64a-a16e-445a-827d-ffa40b5efb26" />
 #### 11. **Analytics** (`/admin/analytics`)
 Comprehensive analytics dashboard:
 
@@ -231,6 +242,8 @@ Comprehensive analytics dashboard:
 - Resolution time metrics
 - Geographic heat zones
 - Peak incident hours
+
+<img width="1920" height="1080" alt="Screenshot 2026-01-18 101125" src="https://github.com/user-attachments/assets/e13894a1-e572-4a1e-8509-360c275fcda9" />
 
 #### 12. **Cameras** (`/admin/cameras`)
 Camera network management:
