@@ -1,74 +1,74 @@
 import nodemailer from 'nodemailer';
 
 interface EmailOptions {
-    to: string | string[];
-    subject: string;
-    html: string;
-    text?: string;
+  to: string | string[];
+  subject: string;
+  html: string;
+  text?: string;
 }
 
 interface AccidentAlert {
-    id: string;
-    type: string;
-    location: string;
-    timestamp: Date;
-    confidence?: number;
-    cameraId?: string;
-    latitude?: number;
-    longitude?: number;
-    imageUrl?: string;
+  id: string;
+  type: string;
+  location: string;
+  timestamp: Date;
+  confidence?: number;
+  cameraId?: string;
+  latitude?: number;
+  longitude?: number;
+  imageUrl?: string;
 }
 
 // Create reusable transporter
 const createTransporter = () => {
-    return nodemailer.createTransporter({
-        host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-        port: parseInt(process.env.EMAIL_PORT || '587'),
-        secure: false, // true for 465, false for other ports
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASSWORD,
-        },
-    });
+  return nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.EMAIL_PORT || '587'),
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
 };
 
 export async function sendEmail(options: EmailOptions) {
-    try {
-        const transporter = createTransporter();
+  try {
+    const transporter = createTransporter();
 
-        const mailOptions = {
-            from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
-            to: Array.isArray(options.to) ? options.to.join(', ') : options.to,
-            subject: options.subject,
-            html: options.html,
-            text: options.text || options.html.replace(/<[^>]*>/g, ''), // Strip HTML for text version
-        };
+    const mailOptions = {
+      from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+      to: Array.isArray(options.to) ? options.to.join(', ') : options.to,
+      subject: options.subject,
+      html: options.html,
+      text: options.text || options.html.replace(/<[^>]*>/g, ''), // Strip HTML for text version
+    };
 
-        const info = await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully:', info.messageId);
-        return { success: true, messageId: info.messageId };
-    } catch (error) {
-        console.error('Error sending email:', error);
-        return { success: false, error };
-    }
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return { success: false, error };
+  }
 }
 
 export async function sendAccidentAlert(alert: AccidentAlert) {
-    const recipients = process.env.ALERT_EMAIL_RECIPIENTS?.split(',') || [];
+  const recipients = process.env.ALERT_EMAIL_RECIPIENTS?.split(',') || [];
 
-    if (recipients.length === 0) {
-        console.warn('No email recipients configured for accident alerts');
-        return { success: false, error: 'No recipients configured' };
-    }
+  if (recipients.length === 0) {
+    console.warn('No email recipients configured for accident alerts');
+    return { success: false, error: 'No recipients configured' };
+  }
 
-    const trackingUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/?trackId=${alert.id}`;
-    const mapsUrl = alert.latitude && alert.longitude
-        ? `https://www.google.com/maps?q=${alert.latitude},${alert.longitude}`
-        : null;
+  const trackingUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/?trackId=${alert.id}`;
+  const mapsUrl = alert.latitude && alert.longitude
+    ? `https://www.google.com/maps?q=${alert.latitude},${alert.longitude}`
+    : null;
 
-    const subject = `🚨 URGENT: ${alert.type} Detected - ${alert.location}`;
+  const subject = `🚨 URGENT: ${alert.type} Detected - ${alert.location}`;
 
-    const html = `
+  const html = `
     <!DOCTYPE html>
     <html>
     <head>
@@ -163,9 +163,9 @@ export async function sendAccidentAlert(alert: AccidentAlert) {
     </html>
   `;
 
-    return await sendEmail({
-        to: recipients,
-        subject,
-        html,
-    });
+  return await sendEmail({
+    to: recipients,
+    subject,
+    html,
+  });
 }

@@ -43,4 +43,4 @@ Enhanced Description:`;
         // Return original description if Gemini fails
         return originalDescription;
     }
-}
+} 

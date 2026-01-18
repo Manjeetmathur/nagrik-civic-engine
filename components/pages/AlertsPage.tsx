@@ -143,8 +143,8 @@ const AlertsPage: React.FC<AlertsPageProps> = ({
 
                                 <div className="flex-1 flex flex-col justify-between">
                                     <div>
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className={`text-xs font-bold uppercase tracking-wider ${alert.type === IssueType.ACCIDENT ? 'text-red-600' :
+                                        <div className="flex items-center justify-between mb-3">
+                                            <span className={`text-lg font-bold uppercase tracking-wider ${alert.type === IssueType.ACCIDENT ? 'text-red-600' :
                                                 alert.type === IssueType.TRAFFIC ? 'text-amber-600' :
                                                     alert.type === IssueType.POTHOLE ? 'text-orange-600' :
                                                         'text-indigo-600'
@@ -159,7 +159,7 @@ const AlertsPage: React.FC<AlertsPageProps> = ({
                                             </span>
                                         </div>
 
-                                        <h3 className="font-bold text-zinc-900 text-lg mb-1">{alert.location}</h3>
+                                        <h3 className="font-medium text-zinc-500 text-xs mb-1">{alert.location}</h3>
                                         <p className="text-sm text-zinc-600 line-clamp-2 mb-3">{alert.description}</p>
 
                                         <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-500">
