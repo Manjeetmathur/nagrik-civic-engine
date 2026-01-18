@@ -10,7 +10,8 @@ A next-generation AI-powered civic monitoring and emergency response platform th
 ## 🌟 Overview
 
 Nagrik Civic Engine is an intelligent civic monitoring system that leverages AI and IoT to detect, report, and respond to urban incidents in real-time. The platform integrates:
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/4ce6626d-7c39-4d7f-ab6c-949f0ac6ed8e" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/2acb9baf-35f6-4e64-9166-652598580bba" />
+
 
 - **AI Camera Detection** - Automated incident detection using computer vision
 - **Voice Reporting** - Speech-to-text emergency reporting with stress analysis
