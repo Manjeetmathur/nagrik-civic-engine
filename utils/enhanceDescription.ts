@@ -40,7 +40,6 @@ Enhanced Description:`;
         return enhancedDescription;
     } catch (error) {
         console.error('Error enhancing description with Gemini:', error);
-        // Return original description if Gemini fails
         return originalDescription;
     }
 } 
