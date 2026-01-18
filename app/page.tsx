@@ -354,13 +354,13 @@ export default function CitizenPortal() {
               <nav className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-lg">
                 <button
                   onClick={() => setActiveTab('live')}
-                  className={`px-4 py-2 text-sm font-semibold rounded-md transition-all flex items-center gap-2 ${activeTab === 'live' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
+                  className={`px-4 py-2 text-sm font-semibold transition-all flex items-center rounded gap-2 ${activeTab === 'live' ? 'bg-white text-blue-600 ' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
                 >
                   <Radio size={14} className={activeTab === 'live' ? 'animate-pulse' : ''} /> Area Updates
                 </button>
                 <button
                   onClick={() => setActiveTab('report')}
-                  className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${activeTab === 'report' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
+                  className={`px-4 py-2 text-sm font-semibold transition-all rounded ${activeTab === 'report' ? 'bg-white text-slate-900 ' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
                 >
                   File Report
                 </button>
